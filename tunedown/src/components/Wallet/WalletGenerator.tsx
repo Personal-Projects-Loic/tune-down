@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import "./Wallet.css";
 
 const WalletGenerator: React.FC = () => {
   const [wallet, setWallet] = useState<{
@@ -24,9 +25,13 @@ const WalletGenerator: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="component-container">
       <h1>Générateur de Wallet XRPL</h1>
-      <button onClick={generateWallet} disabled={loading}>
+      <button
+        className="auth-button"
+        onClick={generateWallet}
+        disabled={loading}
+      >
         {loading ? "Génération en cours..." : "Générer un Wallet"}
       </button>
       {wallet && (
@@ -36,7 +41,7 @@ const WalletGenerator: React.FC = () => {
           <p>Clé privée : {wallet.private_key}</p>
         </div>
       )}
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p className="error-message">{error}</p>}
     </div>
   );
 };

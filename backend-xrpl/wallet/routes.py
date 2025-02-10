@@ -6,7 +6,6 @@ router = APIRouter()
 
 @router.get("/generate-wallet", response_model=WalletResponse)
 def generate_wallet_route():
-    print("prout")
     return generate_wallet()
 
 @router.post("/validate-wallet", response_model=ValidationResponse)

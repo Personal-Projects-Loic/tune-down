@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios, { AxiosError } from "axios";
+import "./Wallet.css";
 
 interface ApiErrorResponse {
   detail: string;
@@ -19,7 +20,6 @@ const WalletValidator: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const validateWallet = async () => {
-    // Basic frontend validation
     if (!classicAddress.trim() || !seed.trim()) {
       setError("Veuillez remplir tous les champs");
       return;
@@ -51,57 +51,48 @@ const WalletValidator: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="component-container">
       <h1>Validateur de Wallet XRPL</h1>
-
-      <div>
-        <div>
-          <label>
-            Adresse publique (Classic Address) :
-            <input
-              type="text"
-              value={classicAddress}
-              onChange={(e) => setClassicAddress(e.target.value)}
-            />
-          </label>
-        </div>
-
-        <div>
-          <label>
-            Clé privée (Seed) :
-            <input
-              type="text"
-              value={seed}
-              onChange={(e) => setSeed(e.target.value)}
-            />
-          </label>
-        </div>
-
-        <button onClick={validateWallet} disabled={loading}>
-          {loading ? "Validation en cours..." : "Valider le Wallet"}
-        </button>
-
-        {error && (
-          <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded">
-            {error}
-          </div>
-        )}
-
-        {validationResult && (
-          <div
-            className={`p-3 rounded ${
-              validationResult.is_valid
-                ? "bg-green-100 border border-green-400 text-green-700"
-                : "bg-red-100 border border-red-400 text-red-700"
-            }`}
-          >
-            <h2 className="font-bold">
-              {validationResult.is_valid ? "Wallet valide" : "Wallet invalide"}
-            </h2>
-            <p>{validationResult.message}</p>
-          </div>
-        )}
+      <div className="form-group">
+        <label>
+          Adresse publique (Classic Address) :
+          <input
+            type="text"
+            value={classicAddress}
+            onChange={(e) => setClassicAddress(e.target.value)}
+          />
+        </label>
       </div>
+      <div className="form-group">
+        <label>
+          Clé privée (Seed) :
+          <input
+            type="text"
+            value={seed}
+            onChange={(e) => setSeed(e.target.value)}
+          />
+        </label>
+      </div>
+      <button
+        className="auth-button"
+        onClick={validateWallet}
+        disabled={loading}
+      >
+        {loading ? "Validation en cours..." : "Valider le Wallet"}
+      </button>
+      {error && <div className="error-message">{error}</div>}
+      {validationResult && (
+        <div
+          className={`validation-message ${
+            validationResult.is_valid ? "success" : "error"
+          }`}
+        >
+          <h2>
+            {validationResult.is_valid ? "Wallet valide" : "Wallet invalide"}
+          </h2>
+          <p>{validationResult.message}</p>
+        </div>
+      )}
     </div>
   );
 };
