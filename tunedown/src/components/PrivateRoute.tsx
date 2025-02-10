@@ -15,3 +15,5 @@ const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({
 };
 
 export default PrivateRoute;
+
+/* Pas de JWT, verification grace a firebase. Donc à chaque refresh = retour /login */

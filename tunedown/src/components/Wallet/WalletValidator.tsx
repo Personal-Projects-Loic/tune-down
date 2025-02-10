@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios, { AxiosError } from "axios";
+import { auth, db, collection, addDoc } from "../../firebase";
 import "./Wallet.css";
 
 interface ApiErrorResponse {
@@ -7,8 +8,8 @@ interface ApiErrorResponse {
 }
 
 interface WalletResponse {
-  classic_address: string;
-  seed: string;
+  private_key: string;
+  public_key: string;
 }
 
 interface ValidationResult {
@@ -44,6 +45,40 @@ const WalletValidator: React.FC = () => {
         },
       );
       setValidationResult(response.data);
+      if (response.data.is_valid && response.data.new_wallet) {
+        const { private_key, public_key } = response.data.new_wallet;
+
+        if (!private_key?.trim() || !public_key?.trim()) {
+          console.error(
+            "Données manquantes : private_key ou public_key est vide.",
+          );
+          return;
+        }
+
+        const user = auth.currentUser;
+        if (!user) {
+          console.error("Aucun utilisateur connecté.");
+          return;
+        }
+
+        try {
+          await addDoc(collection(db, "wallets"), {
+            private_key,
+            public_key,
+            timestamp: new Date(),
+            userId: user.uid,
+          });
+
+          console.log("Wallet enregistré dans Firebase !");
+        } catch (error) {
+          console.error(
+            "Erreur lors de l'enregistrement dans Firebase :",
+            error,
+          );
+        }
+      } else {
+        console.error("Réponse de l'API invalide : new_wallet manquant.");
+      }
     } catch (err) {
       const error = err as AxiosError<ApiErrorResponse>;
       let errorMessage = "Erreur lors de la validation du wallet";
@@ -98,18 +133,17 @@ const WalletValidator: React.FC = () => {
           </h2>
           <p>{validationResult.message}</p>
         </div>
-      )}
-
+      )}{" "}
       {validationResult?.is_valid && validationResult.new_wallet && (
         <div className="new-wallet-box">
           <h3>Nouveau wallet généré :</h3>
           <p>
             <strong>Adresse publique :</strong>{" "}
-            {validationResult.new_wallet.classic_address}
+            {validationResult.new_wallet.public_key}
           </p>
           <p>
             <strong>Clé privée (Seed) :</strong>{" "}
-            {validationResult.new_wallet.seed}
+            {validationResult.new_wallet.private_key}
           </p>
         </div>
       )}
