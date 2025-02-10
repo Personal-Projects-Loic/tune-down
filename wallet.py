@@ -87,10 +87,11 @@ def display_balance(wallet):
             print("Échec de l'activation du compte via le faucet.")
 
 def main():
-    wallet = "prout"
-    # wallet = wallet_creation()
-    send_xrpl(amount=10, destination=destination_adress, sender_seed=test_wallet_private)
-    display_balance(wallet)
+    # wallet = "prout"
+    # # wallet = wallet_creation()
+    # send_xrpl(amount=10, destination=destination_adress, sender_seed=test_wallet_private)
+    # display_balance(wallet)
+    wallet_creation()
 
 if __name__ == "__main__":
     main()
