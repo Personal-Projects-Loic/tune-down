@@ -40,10 +40,13 @@ const WalletValidator: React.FC = () => {
       setValidationResult(response.data);
     } catch (err) {
       const error = err as AxiosError<ApiErrorResponse>;
-      setError(
-        error.response?.data?.detail ||
-          "Erreur lors de la validation du wallet",
-      );
+      let errorMessage = "Erreur lors de la validation du wallet";
+      if (error.response?.data) {
+        errorMessage = JSON.stringify(
+          error.response.data,
+        ); /* uhhhhhhhhhhhhhhh erreur a cause de ce truc de con : JSON.stringify 😭 */
+      }
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

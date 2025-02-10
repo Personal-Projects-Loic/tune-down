@@ -8,7 +8,7 @@ app = FastAPI()
 
 # Configuration CORS
 origins = [
-    "http://localhost:5173",  # Remplacez par l'URL de votre application React
+    "http://localhost:5173",
 ]
 
 app.add_middleware(
@@ -24,8 +24,8 @@ class WalletResponse(BaseModel):
     private_key: str
 
 class WalletRequest(BaseModel):
-    is_valid: bool
-    message: str
+    classic_address: str
+    seed: str
 
 class ValidationResponse(BaseModel):
     is_valid: bool
@@ -43,10 +43,9 @@ def generate_wallet():
 
 def is_valid_xrpl_wallet(classic_address: str, seed: str) -> tuple[bool, str]:
     try:
-        wallet = Wallet(seed=seed)
+        wallet = Wallet.from_seed(seed)
         if wallet.classic_address != classic_address:
             return False, "L'adresse publique ne correspond pas à la clé privée fournie."
-        # TODO : ajouter la verification du wallet ici (faut verifier que le wallet ai au moins 1 XRP)
         return True, "Le wallet est valide et l'adresse correspond à la clé privée."
 
     except Exception as e:
