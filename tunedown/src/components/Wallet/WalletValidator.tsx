@@ -6,9 +6,15 @@ interface ApiErrorResponse {
   detail: string;
 }
 
+interface WalletResponse {
+  classic_address: string;
+  seed: string;
+}
+
 interface ValidationResult {
   is_valid: boolean;
   message: string;
+  new_wallet?: WalletResponse;
 }
 
 const WalletValidator: React.FC = () => {
@@ -91,6 +97,20 @@ const WalletValidator: React.FC = () => {
             {validationResult.is_valid ? "Wallet valide" : "Wallet invalide"}
           </h2>
           <p>{validationResult.message}</p>
+        </div>
+      )}
+
+      {validationResult?.is_valid && validationResult.new_wallet && (
+        <div className="new-wallet-box">
+          <h3>Nouveau wallet généré :</h3>
+          <p>
+            <strong>Adresse publique :</strong>{" "}
+            {validationResult.new_wallet.classic_address}
+          </p>
+          <p>
+            <strong>Clé privée (Seed) :</strong>{" "}
+            {validationResult.new_wallet.seed}
+          </p>
         </div>
       )}
     </div>

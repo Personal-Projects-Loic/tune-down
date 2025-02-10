@@ -8,6 +8,8 @@ class WalletRequest(BaseModel):
     classic_address: str
     seed: str
 
+
 class ValidationResponse(BaseModel):
     is_valid: bool
     message: str
+    new_wallet: WalletResponse | None = None

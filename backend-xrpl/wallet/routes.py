@@ -10,12 +10,22 @@ def generate_wallet_route():
 
 @router.post("/validate-wallet", response_model=ValidationResponse)
 async def validate_wallet_route(wallet_request: WalletRequest):
-    print("prout")
     try:
+        # Valider le wallet
         is_valid, message = is_valid_xrpl_wallet(
             wallet_request.classic_address,
             wallet_request.seed
         )
-        return ValidationResponse(is_valid=is_valid, message=message)
+
+        # Si le wallet est valide, générer un nouveau wallet
+        new_wallet = None
+        if is_valid:
+            new_wallet = generate_wallet()
+
+        return ValidationResponse(
+            is_valid=is_valid,
+            message=message,
+            new_wallet=new_wallet  # Ajouter le nouveau wallet à la réponse
+        )
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

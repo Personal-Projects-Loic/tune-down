@@ -91,6 +91,23 @@
     color: #721c24;
 }
 
+.new-wallet-box {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #4caf50;
+    border-radius: 5px;
+    background-color: #e8f5e9;
+}
+
+.new-wallet-box h3 {
+    margin-top: 0;
+    color: #2e7d32;
+}
+
+.new-wallet-box p {
+    margin: 5px 0;
+}
+
 @media (max-width: 680px) {
     .component-container {
         padding: 1rem;
