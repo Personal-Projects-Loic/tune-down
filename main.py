@@ -8,7 +8,7 @@ app = FastAPI()
 
 # Configuration CORS
 origins = [
-    "http://localhost:5173",
+    "http://localhost:5173",  # Remplacez par l'URL de votre application React
 ]
 
 app.add_middleware(
@@ -24,8 +24,8 @@ class WalletResponse(BaseModel):
     private_key: str
 
 class WalletRequest(BaseModel):
-    classic_address: str
-    seed: str
+    is_valid: bool
+    message: str
 
 class ValidationResponse(BaseModel):
     is_valid: bool
@@ -38,33 +38,31 @@ def generate_wallet():
         return WalletResponse(public_key=wallet.classic_address, private_key=wallet.seed)
     except Exception as e:
         print(f"Erreur lors de la génération du wallet : {e}")
-        raise HTTPException(status_code=500, detail="Erreur lors de la génération du wallet")
+        return {"error": "Erreur lors de la génération du wallet"}
+
 
 def is_valid_xrpl_wallet(classic_address: str, seed: str) -> tuple[bool, str]:
-    # Vérifier le format de l'adresse publique
-    if not is_valid_classic_address(classic_address):
-        return False, "Adresse publique invalide."
-
-    # Vérifier le format de la clé privée
-    if not seed.startswith('s') or not (29 <= len(seed) <= 35):
-        return False, "Clé privée invalide."
-
-    # Vérifier la correspondance entre l'adresse publique et la clé privée
     try:
         wallet = Wallet(seed=seed)
         if wallet.classic_address != classic_address:
-            return False, "L'adresse publique ne correspond pas à la clé privée."
-    except Exception as e:
-        return False, f"Erreur lors de la vérification du wallet : {e}"
+            return False, "L'adresse publique ne correspond pas à la clé privée fournie."
+        # TODO : ajouter la verification du wallet ici (faut verifier que le wallet ai au moins 1 XRP)
+        return True, "Le wallet est valide et l'adresse correspond à la clé privée."
 
-    return True, "Wallet valide."
+    except Exception as e:
+        return False, f"Erreur de validation du wallet: {str(e)}"
 
 @app.post("/validate-wallet", response_model=ValidationResponse)
-def validate_wallet(wallet_request: WalletRequest):
-    is_valid, message = is_valid_xrpl_wallet(wallet_request.classic_address, wallet_request.seed)
-    if not is_valid:
-        raise HTTPException(status_code=400, detail=message)
-    return ValidationResponse(is_valid=is_valid, message=message)
+async def validate_wallet(wallet_request: WalletRequest):
+    try:
+        is_valid, message = is_valid_xrpl_wallet(
+            wallet_request.classic_address,
+            wallet_request.seed
+        )
+        return ValidationResponse(is_valid=is_valid, message=message)
+
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 if __name__ == "__main__":
     import uvicorn
