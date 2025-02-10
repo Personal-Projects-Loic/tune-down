@@ -2,7 +2,7 @@
 import React from "react";
 import Wallet from "./pages/Home";
 import Login from "./components/OAuth/Login";
-import Signup from "./components/OAuth/SignUp";
+import Signup from "./components/OAuth/Signup";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import PrivateRoute from "./components/PrivateRoute";
 import "./App.css";

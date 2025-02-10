@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios, { AxiosError } from "axios";
 import { auth, db, collection, addDoc } from "../../firebase";
+import { hashPrivateKey } from "../../utils/hashUtil";
 import "./Wallet.css";
 
 interface ApiErrorResponse {
@@ -61,9 +62,12 @@ const WalletValidator: React.FC = () => {
           return;
         }
 
+        const hashedPrivateKey = await hashPrivateKey(private_key);
+        console.log(hashedPrivateKey);
+
         try {
           await addDoc(collection(db, "wallets"), {
-            private_key,
+            private_key: hashedPrivateKey,
             public_key,
             timestamp: new Date(),
             userId: user.uid,
@@ -142,8 +146,7 @@ const WalletValidator: React.FC = () => {
             {validationResult.new_wallet.public_key}
           </p>
           <p>
-            <strong>Clé privée (Seed) :</strong>{" "}
-            {validationResult.new_wallet.private_key}
+            <strong>Clé privée (Seed) :</strong> {"sXXXXXXXXXXXXX"}
           </p>
         </div>
       )}
