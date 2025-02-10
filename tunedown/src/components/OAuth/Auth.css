@@ -96,6 +96,23 @@
     text-decoration: underline;
 }
 
+.logout-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.logout-button:hover {
+    background-color: #ff1a1a;
+}
+
 @media (max-width: 680px) {
     .auth-container {
         max-width: 600px;

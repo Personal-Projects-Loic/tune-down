@@ -1,5 +1,6 @@
 import WalletGenerator from "../components/Wallet/WalletGenerator";
 import WalletValidator from "../components/Wallet/WalletValidator";
+import DeconnectionButton from "../components/OAuth/DeconnectionButton";
 import "../App.css";
 
 function Home() {
@@ -10,6 +11,9 @@ function Home() {
       </div>
       <div>
         <WalletGenerator />
+      </div>
+      <div>
+        <DeconnectionButton />
       </div>
     </div>
   );
