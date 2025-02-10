@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebase";
 import { useNavigate } from "react-router-dom";
+import "./Auth.css";
+import logo from "../../assets/tunedown.png";
 
 const Signup: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -26,11 +28,11 @@ const Signup: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="auth-container">
+      <img src={logo} alt="tunedown" className="auth-logo" />
       <h2>Signup</h2>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <form onSubmit={handleSignup}>
-        <div>
+      <form className="auth-form" onSubmit={handleSignup}>
+        <div className="form-group">
           <label>Email:</label>
           <input
             type="email"
@@ -39,7 +41,7 @@ const Signup: React.FC = () => {
             required
           />
         </div>
-        <div>
+        <div className="form-group">
           <label>Password:</label>
           <input
             type="password"
@@ -48,9 +50,12 @@ const Signup: React.FC = () => {
             required
           />
         </div>
-        <button type="submit">Signup</button>
+        {error && <p className="error-message">{error}</p>}
+        <button type="submit" className="auth-button">
+          Signup
+        </button>
       </form>
-      <p>
+      <p className="auth-link">
         Already have an account? <a href="/login">Login</a>
       </p>
     </div>
