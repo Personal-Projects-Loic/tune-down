@@ -33,6 +33,7 @@ npm install
 cd ./tunedown
 docker build . -t "tunedown"
 docker images # verifier que l'image a été créee
+npm install serve -g # optionnel, seulement si serve n'est pas installé
 npm run dev   # vérifier que ca tourne encore (ctrl-C apres avoir vérifié)
 npm run build
 serve -s dist
