@@ -10,7 +10,11 @@ RUN npm i -g serve
 
 COPY . .
 
+COPY .env .env
+
 RUN npm run build
+
+RUN ls -la
 
 EXPOSE 3000
 
