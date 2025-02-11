@@ -11,13 +11,11 @@ def generate_wallet_route():
 @router.post("/validate-wallet", response_model=ValidationResponse)
 async def validate_wallet_route(wallet_request: WalletRequest):
     try:
-        # Valider le wallet
         is_valid, message = is_valid_xrpl_wallet(
             wallet_request.classic_address,
             wallet_request.seed
         )
 
-        # Si le wallet est valide, générer un nouveau wallet
         new_wallet = None
         if is_valid:
             new_wallet = generate_wallet()
