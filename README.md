@@ -20,6 +20,14 @@ Pour quitter l'env :
 deactivate
 ```
 
+# Docker
+
+```bash
+cd ./tunedown
+docker build -t tunedown .
+```
+Ensuite faut run l'image mais jle run depuis docker desktop donc la commande jsp exactement
+
 # Pour le front
 
 ```bash
@@ -27,5 +35,6 @@ cd tunedown
 npm install
 npm run dev
 ```
+
 
 ensuite faut aller sur le localhost de vite c'est un port chelou
