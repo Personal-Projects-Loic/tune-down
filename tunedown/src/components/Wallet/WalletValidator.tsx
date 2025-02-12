@@ -202,27 +202,25 @@ const WalletValidator: React.FC = () => {
           <p>{validationResult.message}</p>
         </div>
       )}
-          {userWallets.length > 0 && (
-            <div className="user-wallets">
-              <h2>Vos Wallets :</h2>
-              {userWallets.map((wallet, index) => (
-                <div key={index} className="wallet-item">
-                  <p>
-                    <strong>Adresse publique :</strong> {wallet.public_key}
-                  </p>
-                  <p>
-                    <strong>Clé privée (Seed) :</strong> {"sXXXXXXXXXXXXX"}
-                  </p>
-                  <button
-                    className="delete-button"
-                    onClick={() => deleteWallet(wallet.id)}
-                  >
-                    Supprimer
-                  </button>
-                </div>
-              ))}
+      {userWallets.length > 0 && (
+        <div className="user-wallets">
+          <h2>Vos Wallets :</h2>
+          {userWallets.map((wallet, index) => (
+            <div key={index} className="wallet-item">
+              <p>
+                <strong>Adresse publique :</strong> {wallet.public_key}
+              </p>
+              <p>
+                <strong>Clé privée (Seed) :</strong> {"sXXXXXXXXXXXXX"}
+              </p>
+              <button
+                className="delete-button"
+                onClick={() => deleteWallet(wallet.id)}
+              >
+                Supprimer
+              </button>
             </div>
-          )}
+          ))}
         </div>
       )}
     </div>
