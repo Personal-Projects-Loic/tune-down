@@ -25,7 +25,7 @@ deactivate
 ```bash
 cd tunedown
 npm install
-npm run dev
+docker compose up --build
 ```
 
 ensuite faut aller sur le localhost de vite c'est un port chelou
