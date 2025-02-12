@@ -1,5 +1,20 @@
 # Commandes à faire :
 
+## Backend
+
+```bash
+docker compose up --build
+```
+
+## Frontend
+
+# Pour le front
+
+```bash
+cd tunedown
+docker compose up --build
+```
+
 ## C'est important que vous fassiez ca pour que ça marche
 
 ```bash
