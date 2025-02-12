@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 
 class WalletResponse(BaseModel):
     public_key: str
@@ -11,4 +12,4 @@ class WalletRequest(BaseModel):
 class ValidationResponse(BaseModel):
     is_valid: bool
     message: str
-    new_wallet: WalletResponse | None = None
+    new_wallet: Optional[WalletResponse] = None
