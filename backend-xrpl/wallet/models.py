@@ -13,7 +13,6 @@ class WalletRequest(BaseModel):
 class ValidationResponse(BaseModel):
     is_valid: bool
     message: str
-    new_wallet: Optional[WalletResponse] = None
 
 class PaymentRequest(BaseModel):
     sender_seed: str

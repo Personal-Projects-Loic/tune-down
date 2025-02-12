@@ -16,14 +16,14 @@ async def validate_wallet_route(wallet_request: WalletRequest):
             wallet_request.seed
         )
 
-        new_wallet = None
-        if is_valid:
-            new_wallet = generate_wallet()
+        print(ValidationResponse(
+            is_valid=is_valid,
+            message=message,
+        ))
 
         return ValidationResponse(
             is_valid=is_valid,
             message=message,
-            new_wallet=new_wallet
         )
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

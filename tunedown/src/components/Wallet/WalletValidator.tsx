@@ -27,7 +27,6 @@ interface WalletResponse {
 interface ValidationResult {
   is_valid: boolean;
   message: string;
-  new_wallet?: WalletResponse;
 }
 
 const fetchUserWallet = async () => {
@@ -89,8 +88,6 @@ const WalletValidator: React.FC = () => {
     setError(null);
     setValidationResult(null);
 
-    console.log("Je suis la");
-
     try {
       const response = await axios.post<ValidationResult>(
         "http://localhost:8000/validate-wallet",
@@ -99,42 +96,35 @@ const WalletValidator: React.FC = () => {
           seed: seed.trim(),
         },
       );
+
       setValidationResult(response.data);
-      if (response.data.is_valid && response.data.new_wallet) {
-        const { id, private_key, public_key } = response.data.new_wallet;
 
-        if (!private_key?.trim() || !public_key?.trim()) {
-          console.error(
-            "Données manquantes : private_key ou public_key est vide.",
-          );
-          return;
-        }
-
+      if (response.data.is_valid) {
         const user = auth.currentUser;
         if (!user) {
           console.error("Aucun utilisateur connecté.");
           return;
         }
 
-        const hashedPrivateKey = await hashPrivateKey(private_key);
-        console.log(hashedPrivateKey);
-
-        const prout = { id, private_key, public_key };
-        console.log("ICI : ", prout);
+        const hashedPrivateKey = await hashPrivateKey(seed.trim());
 
         try {
-          await addDoc(collection(db, "wallets"), {
-            id,
+          const docRef = await addDoc(collection(db, "wallets"), {
             private_key: hashedPrivateKey,
-            public_key,
+            public_key: classicAddress.trim(),
             timestamp: new Date(),
             userId: user.uid,
           });
 
           console.log("Wallet enregistré dans Firebase !");
+
           setUserWallets([
             ...userWallets,
-            { id, private_key: hashedPrivateKey, public_key },
+            {
+              id: docRef.id,
+              private_key: hashedPrivateKey,
+              public_key: classicAddress.trim(),
+            },
           ]);
         } catch (error) {
           console.error(
@@ -142,8 +132,6 @@ const WalletValidator: React.FC = () => {
             error,
           );
         }
-      } else {
-        console.error("Réponse de l'API invalide : new_wallet manquant.");
       }
     } catch (err) {
       const error = err as AxiosError<ApiErrorResponse>;
@@ -214,37 +202,27 @@ const WalletValidator: React.FC = () => {
           <p>{validationResult.message}</p>
         </div>
       )}
-      {validationResult?.is_valid && validationResult.new_wallet && (
-        <div className="new-wallet-box">
-          <h3>Nouveau wallet généré :</h3>
-          <p>
-            <strong>Adresse publique :</strong>{" "}
-            {validationResult.new_wallet.public_key}
-          </p>
-          <p>
-            <strong>Clé privée (Seed) :</strong> {"sXXXXXXXXXXXXX"}
-          </p>
-        </div>
-      )}
-      {userWallets.length > 0 && (
-        <div className="user-wallets">
-          <h2>Vos Wallets :</h2>
-          {userWallets.map((wallet, index) => (
-            <div key={index} className="wallet-item">
-              <p>
-                <strong>Adresse publique :</strong> {wallet.public_key}
-              </p>
-              <p>
-                <strong>Clé privée (Seed) :</strong> {"sXXXXXXXXXXXXX"}
-              </p>
-              <button
-                className="delete-button"
-                onClick={() => deleteWallet(wallet.id)}
-              >
-                Supprimer
-              </button>
+          {userWallets.length > 0 && (
+            <div className="user-wallets">
+              <h2>Vos Wallets :</h2>
+              {userWallets.map((wallet, index) => (
+                <div key={index} className="wallet-item">
+                  <p>
+                    <strong>Adresse publique :</strong> {wallet.public_key}
+                  </p>
+                  <p>
+                    <strong>Clé privée (Seed) :</strong> {"sXXXXXXXXXXXXX"}
+                  </p>
+                  <button
+                    className="delete-button"
+                    onClick={() => deleteWallet(wallet.id)}
+                  >
+                    Supprimer
+                  </button>
+                </div>
+              ))}
             </div>
-          ))}
+          )}
         </div>
       )}
     </div>
