@@ -1,8 +1,17 @@
 import React, { useState, useEffect } from "react";
 import axios, { AxiosError } from "axios";
-import { auth, db, collection, addDoc } from "../../firebase";
+import {
+  auth,
+  db,
+  collection,
+  addDoc,
+  deleteDoc,
+  getDocs,
+  query,
+  where,
+  doc,
+} from "../../firebase";
 import { hashPrivateKey } from "../../utils/hashUtil";
-import fetchUserWallet from "../../api/FetchUser";
 import "./Wallet.css";
 
 interface ApiErrorResponse {
@@ -10,6 +19,7 @@ interface ApiErrorResponse {
 }
 
 interface WalletResponse {
+  id: string;
   private_key: string;
   public_key: string;
 }
@@ -19,6 +29,34 @@ interface ValidationResult {
   message: string;
   new_wallet?: WalletResponse;
 }
+
+const fetchUserWallet = async () => {
+  const user = auth.currentUser;
+  if (!user) {
+    console.error("Aucun utilisateur connecté.");
+    return null;
+  }
+
+  try {
+    const walletsRef = collection(db, "wallets");
+    const q = query(walletsRef, where("userId", "==", user.uid));
+    const querySnapshot = await getDocs(q);
+
+    if (!querySnapshot.empty) {
+      const walletsData = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as WalletResponse[];
+      return walletsData;
+    } else {
+      console.log("Aucun wallet trouvé pour cet utilisateur.");
+      return [];
+    }
+  } catch (error) {
+    console.error("Erreur lors de la récupération du wallet :", error);
+    return null;
+  }
+};
 
 const WalletValidator: React.FC = () => {
   const [classicAddress, setClassicAddress] = useState("");
@@ -32,9 +70,9 @@ const WalletValidator: React.FC = () => {
   useEffect(() => {
     const fetchWallets = async () => {
       const walletData = await fetchUserWallet();
+      console.log("prouttttt");
       if (walletData) {
-        const wallet = walletData as WalletResponse;
-        setUserWallets([wallet]);
+        setUserWallets(walletData);
       }
     };
 
@@ -51,6 +89,8 @@ const WalletValidator: React.FC = () => {
     setError(null);
     setValidationResult(null);
 
+    console.log("Je suis la");
+
     try {
       const response = await axios.post<ValidationResult>(
         "http://localhost:8000/validate-wallet",
@@ -61,7 +101,7 @@ const WalletValidator: React.FC = () => {
       );
       setValidationResult(response.data);
       if (response.data.is_valid && response.data.new_wallet) {
-        const { private_key, public_key } = response.data.new_wallet;
+        const { id, private_key, public_key } = response.data.new_wallet;
 
         if (!private_key?.trim() || !public_key?.trim()) {
           console.error(
@@ -79,8 +119,12 @@ const WalletValidator: React.FC = () => {
         const hashedPrivateKey = await hashPrivateKey(private_key);
         console.log(hashedPrivateKey);
 
+        const prout = { id, private_key, public_key };
+        console.log("ICI : ", prout);
+
         try {
           await addDoc(collection(db, "wallets"), {
+            id,
             private_key: hashedPrivateKey,
             public_key,
             timestamp: new Date(),
@@ -90,7 +134,7 @@ const WalletValidator: React.FC = () => {
           console.log("Wallet enregistré dans Firebase !");
           setUserWallets([
             ...userWallets,
-            { private_key: hashedPrivateKey, public_key },
+            { id, private_key: hashedPrivateKey, public_key },
           ]);
         } catch (error) {
           console.error(
@@ -110,6 +154,22 @@ const WalletValidator: React.FC = () => {
       setError(errorMessage);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const deleteWallet = async (id: string) => {
+    const user = auth.currentUser;
+    if (!user) {
+      console.error("Aucun utilisateur connecté.");
+      return;
+    }
+
+    try {
+      await deleteDoc(doc(db, "wallets", id));
+      console.log("Wallet supprimé de Firebase !");
+      setUserWallets(userWallets.filter((wallet) => wallet.id !== id));
+    } catch (error) {
+      console.error("Erreur lors de la suppression du wallet :", error);
     }
   };
 
@@ -177,6 +237,12 @@ const WalletValidator: React.FC = () => {
               <p>
                 <strong>Clé privée (Seed) :</strong> {"sXXXXXXXXXXXXX"}
               </p>
+              <button
+                className="delete-button"
+                onClick={() => deleteWallet(wallet.id)}
+              >
+                Supprimer
+              </button>
             </div>
           ))}
         </div>

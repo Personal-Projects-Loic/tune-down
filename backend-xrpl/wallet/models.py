@@ -2,6 +2,7 @@ from pydantic import BaseModel
 from typing import Optional
 
 class WalletResponse(BaseModel):
+    id: str
     public_key: str
     private_key: str
 

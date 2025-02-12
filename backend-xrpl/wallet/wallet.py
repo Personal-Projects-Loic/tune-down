@@ -1,12 +1,19 @@
+import uuid
 from xrpl.wallet import Wallet
+from wallet.models import WalletResponse
 
-def generate_wallet():
+def generate_wallet() -> WalletResponse:
     try:
         wallet = Wallet.create()
-        return {"public_key": wallet.classic_address, "private_key": wallet.seed}
+        wallet_id = str(uuid.uuid4())
+        return WalletResponse(
+            id=wallet_id,
+            public_key=wallet.classic_address,
+            private_key=wallet.seed
+        )
     except Exception as e:
         print(f"Erreur lors de la génération du wallet : {e}")
-        return {"error": "Erreur lors de la génération du wallet"}
+        raise RuntimeError("Erreur lors de la génération du wallet")
 
 def is_valid_xrpl_wallet(classic_address: str, seed: str) -> tuple[bool, str]:
     try:
