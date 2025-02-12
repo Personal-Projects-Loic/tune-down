@@ -14,3 +14,14 @@ class ValidationResponse(BaseModel):
     is_valid: bool
     message: str
     new_wallet: Optional[WalletResponse] = None
+
+class PaymentRequest(BaseModel):
+    sender_seed: str
+    receiver_address: str
+    amount: int
+
+class PaymentResponse(BaseModel):
+    status: str
+    transaction_result: Optional[str] = None
+    transaction_hash: Optional[str] = None
+    message: Optional[str] = None

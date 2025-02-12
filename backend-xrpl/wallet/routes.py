@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
-from wallet.models import WalletResponse, WalletRequest, ValidationResponse
-from wallet.wallet import generate_wallet, is_valid_xrpl_wallet
+from wallet.models import WalletResponse, WalletRequest, ValidationResponse, PaymentResponse, PaymentRequest
+from wallet.wallet import generate_wallet, is_valid_xrpl_wallet, transfer_xrps
 
 router = APIRouter()
 
@@ -25,5 +25,17 @@ async def validate_wallet_route(wallet_request: WalletRequest):
             message=message,
             new_wallet=new_wallet
         )
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@router.post("/transfer-xrps", response_model=PaymentResponse)
+async def transfer_xrps_route(payment_request: PaymentRequest):
+    try:
+        result = await transfer_xrps(
+            payment_request.sender_seed,
+            payment_request.receiver_address,
+            payment_request.amount
+        )
+        return result
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

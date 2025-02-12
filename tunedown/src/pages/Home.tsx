@@ -1,5 +1,6 @@
 import WalletGenerator from "../components/Wallet/WalletGenerator";
 import WalletValidator from "../components/Wallet/WalletValidator";
+import WalletTransaction from "../components/Wallet/WalletTransaction";
 import DeconnectionButton from "../components/OAuth/DeconnectionButton";
 import "../App.css";
 
@@ -11,6 +12,9 @@ function Home() {
       </div>
       <div>
         <WalletGenerator />
+      </div>
+      <div>
+        <WalletTransaction />
       </div>
       <div>
         <DeconnectionButton />
