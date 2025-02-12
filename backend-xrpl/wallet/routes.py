@@ -27,3 +27,6 @@ async def validate_wallet_route(wallet_request: WalletRequest):
         )
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
+# TODO : ajouter les fonctions necessaires pour les transactions

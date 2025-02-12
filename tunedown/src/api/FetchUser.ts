@@ -29,3 +29,6 @@ const fetchUserWallet = async () => {
 };
 
 export default fetchUserWallet;
+
+// TODO : Ici recupérer les wallets des users
+// Utiliser cette fonction pour l'afficher sur le front
