@@ -40,7 +40,7 @@ async def transfer_xrps(sender_seed: str, receiver_address: str, amount: int) ->
             destination=receiver_address
         )
 
-        response = await submit_and_wait(payment, client, sender_wallet)
+        response = await submit_and_wait(payment, client, sender_wallet) # ligne qui casse tout
         return {
             "status": "success",
             "transaction_result": response.result["meta"]["TransactionResult"],
