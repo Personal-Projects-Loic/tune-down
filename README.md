@@ -11,9 +11,10 @@ docker compose up --build
 # Pour le front
 
 ```bash
-cd tunedown
 docker compose up --build
 ```
+
+# DEPRECATED
 
 ## C'est important que vous fassiez ca pour que ça marche
 
