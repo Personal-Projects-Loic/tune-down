@@ -7,11 +7,17 @@ cd backend-xrpl
 docker compose up --build
 ```
 
+Adresse back : http://localhost:8000
+
 ## Frontend
 
 # Pour le front
+
+- Créez un fichier .env au root du projet frontend. Ajouter les infos sur le discord.
 
 ```bash
 cd tunedown
 docker compose up --build
 ```
+
+Adresse front : http://localhost:3000
