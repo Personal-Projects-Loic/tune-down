@@ -7,8 +7,6 @@ cd backend-xrpl
 docker compose up --build
 ```
 
-Adresse back : http://localhost:8000
-
 ## Frontend
 
 # Pour le front
