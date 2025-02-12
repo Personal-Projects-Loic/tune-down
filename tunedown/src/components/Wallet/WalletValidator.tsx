@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios, { AxiosError } from "axios";
 import { auth, db, collection, addDoc } from "../../firebase";
 import { hashPrivateKey } from "../../utils/hashUtil";
+import fetchUserWallet from "../../api/FetchUser";
 import "./Wallet.css";
 
 interface ApiErrorResponse {
@@ -26,6 +27,19 @@ const WalletValidator: React.FC = () => {
     useState<ValidationResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [userWallets, setUserWallets] = useState<WalletResponse[]>([]);
+
+  useEffect(() => {
+    const fetchWallets = async () => {
+      const walletData = await fetchUserWallet();
+      if (walletData) {
+        const wallet = walletData as WalletResponse;
+        setUserWallets([wallet]);
+      }
+    };
+
+    fetchWallets();
+  }, []);
 
   const validateWallet = async () => {
     if (!classicAddress.trim() || !seed.trim()) {
@@ -74,6 +88,10 @@ const WalletValidator: React.FC = () => {
           });
 
           console.log("Wallet enregistré dans Firebase !");
+          setUserWallets([
+            ...userWallets,
+            { private_key: hashedPrivateKey, public_key },
+          ]);
         } catch (error) {
           console.error(
             "Erreur lors de l'enregistrement dans Firebase :",
@@ -128,16 +146,14 @@ const WalletValidator: React.FC = () => {
       {error && <div className="error-message">{error}</div>}
       {validationResult && (
         <div
-          className={`validation-message ${
-            validationResult.is_valid ? "success" : "error"
-          }`}
+          className={`validation-message ${validationResult.is_valid ? "success" : "error"}`}
         >
           <h2>
             {validationResult.is_valid ? "Wallet valide" : "Wallet invalide"}
           </h2>
           <p>{validationResult.message}</p>
         </div>
-      )}{" "}
+      )}
       {validationResult?.is_valid && validationResult.new_wallet && (
         <div className="new-wallet-box">
           <h3>Nouveau wallet généré :</h3>
@@ -148,6 +164,21 @@ const WalletValidator: React.FC = () => {
           <p>
             <strong>Clé privée (Seed) :</strong> {"sXXXXXXXXXXXXX"}
           </p>
+        </div>
+      )}
+      {userWallets.length > 0 && (
+        <div className="user-wallets">
+          <h2>Vos Wallets :</h2>
+          {userWallets.map((wallet, index) => (
+            <div key={index} className="wallet-item">
+              <p>
+                <strong>Adresse publique :</strong> {wallet.public_key}
+              </p>
+              <p>
+                <strong>Clé privée (Seed) :</strong> {"sXXXXXXXXXXXXX"}
+              </p>
+            </div>
+          ))}
         </div>
       )}
     </div>
