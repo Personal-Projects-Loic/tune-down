@@ -23,7 +23,7 @@ async def validate_wallet_route(wallet_request: WalletRequest):
         return ValidationResponse(
             is_valid=is_valid,
             message=message,
-            new_wallet=new_wallet  # Ajouter le nouveau wallet à la réponse
+            new_wallet=new_wallet
         )
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
