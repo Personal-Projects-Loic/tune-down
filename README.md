@@ -27,5 +27,3 @@ cd tunedown
 npm install
 docker compose up --build
 ```
-
-ensuite faut aller sur le localhost de vite c'est un port chelou
