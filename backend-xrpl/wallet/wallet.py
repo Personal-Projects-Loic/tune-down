@@ -1,10 +1,10 @@
 import uuid
 from xrpl.wallet import Wallet
 from wallet.models import WalletResponse
-from xrpl.clients import JsonRpcClient
+from xrpl.asyncio.clients import AsyncJsonRpcClient
 from xrpl.models.transactions import Payment
 from xrpl.utils import xrp_to_drops
-from xrpl.transaction import submit_and_wait
+from xrpl.asyncio.transaction import submit_and_wait
 
 def generate_wallet() -> WalletResponse:
     try:
@@ -29,10 +29,11 @@ def is_valid_xrpl_wallet(classic_address: str, seed: str) -> tuple[bool, str]:
         return False, f"Erreur de validation du wallet: {str(e)}"
 
 async def transfer_xrps(sender_seed: str, receiver_address: str, amount: int) -> dict:
-    client = JsonRpcClient("https://s.altnet.rippletest.net:51234")
+    client = AsyncJsonRpcClient("https://s.altnet.rippletest.net:51234/")
 
     try:
         sender_wallet = Wallet.from_seed(sender_seed)
+        print("Sender Wallet:", sender_wallet)
 
         payment = Payment(
             account=sender_wallet.classic_address,
@@ -40,7 +41,14 @@ async def transfer_xrps(sender_seed: str, receiver_address: str, amount: int) ->
             destination=receiver_address
         )
 
+        print("Payment:", payment)
+
+        print("Je suis ici")
+
         response = await submit_and_wait(payment, client, sender_wallet) # ligne qui casse tout
+        print("Je suis passé")
+
+        print("response", response)
         return {
             "status": "success",
             "transaction_result": response.result["meta"]["TransactionResult"],
