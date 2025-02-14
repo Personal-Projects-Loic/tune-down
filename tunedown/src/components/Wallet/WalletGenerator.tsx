@@ -6,6 +6,8 @@ const WalletGenerator: React.FC = () => {
   const [wallet, setWallet] = useState<{
     public_key: string;
     private_key: string;
+    classic_address: string;
+    address: string;
   } | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -39,6 +41,8 @@ const WalletGenerator: React.FC = () => {
           <h2>Wallet généré</h2>
           <p>Clé publique : {wallet.public_key}</p>
           <p>Clé privée : {wallet.private_key}</p>
+          <p>Adresse classique : {wallet.classic_address}</p>
+          <p>Adresse : {wallet.address}</p>
         </div>
       )}
       {error && <p className="error-message">{error}</p>}

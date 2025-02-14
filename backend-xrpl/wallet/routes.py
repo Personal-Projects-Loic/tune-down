@@ -1,8 +1,9 @@
 from fastapi import APIRouter, HTTPException
 from wallet.models import WalletResponse, WalletRequest, ValidationResponse, PaymentResponse, PaymentRequest
 from wallet.wallet import generate_wallet, is_valid_xrpl_wallet, transfer_xrps
-
+from wallet.account import fetch_account_info
 router = APIRouter()
+from pydantic import BaseModel
 
 @router.get("/generate-wallet", response_model=WalletResponse)
 def generate_wallet_route():
@@ -39,3 +40,18 @@ async def transfer_xrps_route(payment_request: PaymentRequest):
         return result
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+class AccountResponse(BaseModel):
+    address: str
+    balance: str
+    sequence: int
+    ledger_index: int
+    flags: int
+    owner_count: int
+    previous_txn_id: str
+    previous_txn_lgr_seq: int
+
+
+@router.get("/account-info/{public_key}", response_model=AccountResponse)
+async def account_info_route(public_key: str):
+    return await fetch_account_info(public_key)

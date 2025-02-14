@@ -5,6 +5,9 @@ class WalletResponse(BaseModel):
     id: str
     public_key: str
     private_key: str
+    classic_address: str
+    address: str
+
 
 class WalletRequest(BaseModel):
     classic_address: str
