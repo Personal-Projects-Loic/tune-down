@@ -1,20 +1,10 @@
 # Commandes à faire :
 
-## Backend
+- Créez un fichier .env au root du projet frontend -> (tunedown). Ajouter les infos sur le discord.
+
+- Aller à la racine de l'app et exécuter la commande suivante :
 
 ```bash
-cd backend-xrpl
-docker compose up --build
-```
-
-## Frontend
-
-# Pour le front
-
-- Créez un fichier .env au root du projet frontend. Ajouter les infos sur le discord.
-
-```bash
-cd tunedown
 docker compose up --build
 ```
 
