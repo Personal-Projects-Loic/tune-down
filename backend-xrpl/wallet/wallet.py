@@ -43,10 +43,7 @@ async def transfer_xrps(sender_seed: str, receiver_address: str, amount: int) ->
 
         print("Payment:", payment)
 
-        print("Je suis ici")
-
-        response = await submit_and_wait(payment, client, sender_wallet) # ligne qui casse tout
-        print("Je suis passé")
+        response = await submit_and_wait(payment, client, sender_wallet)
 
         print("response", response)
         return {
