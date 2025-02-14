@@ -16,14 +16,16 @@ RUN npm install
 
 RUN npm i -g serve
 
-COPY . .
+# COPY . .
+# COPY package.json package-lock.json ./
 
 COPY .env .env
 
-RUN npm run build
+# RUN npm run build
 
-RUN ls -la
+# RUN ls -la
 
-EXPOSE 3000
+EXPOSE 5173
 
-CMD [ "serve", "-s", "dist" ]
+# CMD [ "serve", "-s", "dist" ]
+CMD [ "npm", "run", "dev" ]
