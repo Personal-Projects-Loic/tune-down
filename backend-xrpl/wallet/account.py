@@ -54,7 +54,6 @@ async def fetch_account_info(address: str):
 async def get_account_info(address: str):
     try:
         async with AsyncJsonRpcClient(testnet_url) as client:
-            # Create an AccountInfo request
             account_info_request = AccountInfo(
                 account=address,
                 ledger_index="validated",
@@ -62,12 +61,11 @@ async def get_account_info(address: str):
             )
 
             response = await client.request(account_info_request)
-
             account_data = response.result["account_data"]
 
             return AccountResponse(
                 address=account_data["Account"],
-                balance=str(int(account_data["Balance"]) / 1000000),  # Convert drops to XRP
+                balance=str(int(account_data["Balance"]) / 1000000),  # conversion en drop (1.000.000 drops = 1 XRP)
                 sequence=account_data["Sequence"],
                 ledger_index=response.result["ledger_index"],
                 flags=account_data["Flags"],

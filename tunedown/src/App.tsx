@@ -1,4 +1,3 @@
-// App.tsx
 import React from "react";
 import Wallet from "./pages/Home";
 import Login from "./components/OAuth/Login";

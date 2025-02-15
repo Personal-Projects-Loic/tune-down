@@ -57,19 +57,6 @@ const fetchUserWallet = async () => {
   }
 };
 
-//const getXrplAccountInfo = async (classicAddress: string) => {
-//  try {
-//    const response = await axios.get<ValidationResult>(
-//      `http://localhost:8000/account-info/${classicAddress.trim()}`
-//    );
-//
-//    console.log("Informations du compte XRPL :", response.data);
-//  } catch (err) {
-//    console.error("Erreur lors de la récupération des informations du compte :", err);
-//    return null;
-//  }
-//}
-
 const WalletValidator: React.FC = () => {
   const [classicAddress, setClassicAddress] = useState("");
   const [seed, setSeed] = useState("");
@@ -82,10 +69,8 @@ const WalletValidator: React.FC = () => {
   useEffect(() => {
     const fetchWallets = async () => {
       const walletData = await fetchUserWallet();
-      console.log("prouttttt");
       if (walletData) {
         setUserWallets(walletData);
-       // getXrplAccountInfo(walletData[0].public_key);
       }
     };
 
