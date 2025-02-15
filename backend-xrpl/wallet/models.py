@@ -8,7 +8,6 @@ class WalletResponse(BaseModel):
     classic_address: str
     address: str
 
-
 class WalletRequest(BaseModel):
     classic_address: str
     seed: str
