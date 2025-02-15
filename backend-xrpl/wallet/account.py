@@ -34,7 +34,6 @@ async def fetch_account_info(address: str):
             previous_txn_lgr_seq=result["account_data"]["PreviousTxnLgrSeq"]
         )
     except XRPLRequestFailureException as xrpl_error:
-            # Gestion des erreurs spécifiques XRPL
             if "actNotFound" in str(xrpl_error):
                 raise HTTPException(
                     status_code=404,
@@ -54,7 +53,6 @@ async def fetch_account_info(address: str):
 
 async def get_account_info(address: str):
     try:
-        # Connect to the XRPL network using async client
         async with AsyncJsonRpcClient(testnet_url) as client:
             # Create an AccountInfo request
             account_info_request = AccountInfo(
@@ -63,10 +61,8 @@ async def get_account_info(address: str):
                 strict=True
             )
 
-            # Send request and get response
             response = await client.request(account_info_request)
 
-            # Extract account data
             account_data = response.result["account_data"]
 
             return AccountResponse(

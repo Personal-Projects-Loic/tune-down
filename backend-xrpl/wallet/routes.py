@@ -2,8 +2,9 @@ from fastapi import APIRouter, HTTPException
 from wallet.models import WalletResponse, WalletRequest, ValidationResponse, PaymentResponse, PaymentRequest, AccountResponse
 from wallet.wallet import generate_wallet, is_valid_xrpl_wallet, transfer_xrps
 from wallet.account import fetch_account_info
-router = APIRouter()
 from pydantic import BaseModel
+
+router = APIRouter()
 
 @router.get("/generate-wallet", response_model=WalletResponse)
 def generate_wallet_route():
