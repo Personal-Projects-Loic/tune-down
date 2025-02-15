@@ -2,10 +2,9 @@ import uuid
 from xrpl.wallet import Wallet
 from wallet.models import WalletResponse
 from xrpl.asyncio.clients import AsyncJsonRpcClient
-
 from xrpl.models.transactions import Payment
 from xrpl.utils import xrp_to_drops
-from xrpl.transaction import submit_and_wait
+from xrpl.asyncio.transaction import submit_and_wait
 from xrpl.wallet.wallet_generation import generate_faucet_wallet
 from xrpl.clients.sync_client import SyncClient
 

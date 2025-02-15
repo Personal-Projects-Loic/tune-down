@@ -5,18 +5,9 @@ from fastapi import FastAPI, HTTPException
 from xrpl.asyncio.clients import AsyncJsonRpcClient
 from xrpl.models.requests.account_info import AccountInfo
 from xrpl.asyncio.clients.exceptions import XRPLRequestFailureException
+from wallet.models import AccountResponse
 
 testnet_url = "https://s.altnet.rippletest.net:51234"
-
-class AccountResponse(BaseModel):
-    address: str
-    balance: str
-    sequence: int
-    ledger_index: int
-    flags: int
-    owner_count: int
-    previous_txn_id: str
-    previous_txn_lgr_seq: int
 
 async def fetch_account_info(address: str):
     try:
@@ -25,7 +16,7 @@ async def fetch_account_info(address: str):
         accountInfos = AccountInfo(account=address)
         response = await client.request(accountInfos)
         result = response.result
-        
+
         if 'error' in result:
             raise HTTPException(
                 status_code=500,
@@ -74,10 +65,10 @@ async def get_account_info(address: str):
 
             # Send request and get response
             response = await client.request(account_info_request)
-            
+
             # Extract account data
             account_data = response.result["account_data"]
-            
+
             return AccountResponse(
                 address=account_data["Account"],
                 balance=str(int(account_data["Balance"]) / 1000000),  # Convert drops to XRP
@@ -95,4 +86,3 @@ async def get_account_info(address: str):
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    

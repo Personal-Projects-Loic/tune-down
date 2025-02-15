@@ -27,3 +27,13 @@ class PaymentResponse(BaseModel):
     transaction_result: Optional[str] = None
     transaction_hash: Optional[str] = None
     message: Optional[str] = None
+
+class AccountResponse(BaseModel):
+    address: str
+    balance: str
+    sequence: int
+    ledger_index: int
+    flags: int
+    owner_count: int
+    previous_txn_id: str
+    previous_txn_lgr_seq: int
