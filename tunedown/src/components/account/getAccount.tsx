@@ -19,38 +19,39 @@ const GetAccount: React.FC = () => {
 
     setLoading(true);
     setError(null);
-  
+
     try {
-      const response = await axios.get(`http://localhost:8000/account-info/${classicAddress.trim()}`);
+      const response = await axios.get(
+        `http://localhost:8000/account-info/${classicAddress.trim()}`,
+      );
       console.log(response.data);
       setAccount(response.data);
     } catch (err) {
       const errorResponse = err as AxiosError<ApiErrorResponse>;
-      setError(errorResponse.response?.data.detail || "Erreur lors de la récupération du compte");
+      setError(
+        errorResponse.response?.data.detail ||
+          "Erreur lors de la récupération du compte",
+      );
       console.error(err);
     } finally {
       setLoading(false);
     }
   };
-  
+
   return (
     <div className="component-container">
       <h1>Get Account Balance</h1>
       <div className="form-group">
         <label>
-          Adresse publique (Classic Address) :
+          Clé publique (Classic Address) :
           <input
             type="text"
             value={classicAddress}
             onChange={(e) => setClassicAddress(e.target.value)}
           />
-        </label>      
+        </label>
       </div>
-      <button
-        className="auth-button"
-        onClick={onGetAccount}
-        disabled={loading}
-      >
+      <button className="auth-button" onClick={onGetAccount} disabled={loading}>
         {loading ? "Validation en cours..." : "get account"}
       </button>
       {error && <div className="error-message">{error}</div>}
@@ -61,7 +62,7 @@ const GetAccount: React.FC = () => {
         </div>
       )}
     </div>
-  )
+  );
 };
 
 export default GetAccount;
