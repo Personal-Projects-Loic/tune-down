@@ -5,8 +5,8 @@ from xrpl.models.transactions import NFTokenMint
 from xrpl.models.requests import AccountNFTs
 from xrpl.models.transactions import NFTokenMintFlag
 from xrpl.asyncio.transaction import submit_and_wait
-from xrpl.utils import str_to_hex
-from wallet.models import NFTCreationResponse
+from xrpl.utils import str_to_hex, hex_to_str
+from wallet.models import NFTCreationResponse, NFTs
 from fastapi import FastAPI, HTTPException
 
 
@@ -41,8 +41,30 @@ async def create_and_assign_nft(
     response = await submit_and_wait(nft_tx, client, wallet)
 
     return parse_result(response.result)
+
+def parse_nfts(nfts: list[dict]) -> list[dict]:
+    return [
+        {
+            "id": nft["NFTokenID"],
+            "uri": hex_to_str(nft["URI"]),
+            "flags": nft["Flags"],
+            "taxon": nft["NFTokenTaxon"]
+        }
+        for nft in nfts
+    ]
+
+async def fetch_account_nfts(address: str):
+    client = AsyncJsonRpcClient(testnet_url)
+    account_nfts_request = AccountNFTs(account=address)
+    nfts_response = await client.request(account_nfts_request)
+
+    if not nfts_response.is_successful():
+        raise HTTPException(status_code=400, detail="Error while fetching NFTs")
     
-    # account_nfts_request = AccountNFTs(account=wallet.classic_address)
-    # nfts_response = await client.request(account_nfts_request)
-    # print("Wallet NFTs:")
-    # print(nfts_response.result)        
+    nfts = nfts_response.result["account_nfts"]
+    nfts_list = parse_nfts(nfts)
+
+    return NFTs(
+        status="200",
+        nfts=nfts_list
+    )

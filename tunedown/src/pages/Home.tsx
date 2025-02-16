@@ -5,6 +5,7 @@ import DeconnectionButton from "../components/OAuth/DeconnectionButton";
 import GetAccount from "../components/account/getAccount";
 import "../App.css";
 import WalletCreateNFT from "../components/Wallet/WalletCreateNFT";
+import WalletGetNfts from "../components/Wallet/WalletGetNFTs";
 
 function Home() {
   return (
@@ -41,6 +42,9 @@ function Home() {
       </div>
       <div>
         <WalletCreateNFT />
+      </div>
+      <div>
+        <WalletGetNfts />
       </div>
       <div>
         <DeconnectionButton />

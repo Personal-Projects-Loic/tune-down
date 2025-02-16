@@ -1,9 +1,9 @@
 from fastapi import APIRouter, HTTPException
-from wallet.models import WalletResponse, WalletRequest, ValidationResponse, PaymentResponse, PaymentRequest, AccountResponse, NFTCreationResponse, NFTCreationRequest
+from wallet.models import WalletResponse, WalletRequest, ValidationResponse, PaymentResponse, PaymentRequest, AccountResponse, NFTCreationResponse, NFTCreationRequest, NFTs
 from wallet.wallet import generate_wallet, is_valid_xrpl_wallet, transfer_xrps
 from wallet.account import fetch_account_info
 from pydantic import BaseModel
-from wallet.nft import create_and_assign_nft
+from wallet.nft import create_and_assign_nft, fetch_account_nfts
 
 router = APIRouter()
 
@@ -60,3 +60,7 @@ async def create_and_assign_nft_route(nft_creation_request: NFTCreationRequest):
     )
 
     return res
+
+@router.get("/get-nfts/{public_key}", response_model=NFTs)
+async def get_nfts(public_key: str):
+    return await fetch_account_nfts(public_key)

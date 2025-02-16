@@ -45,3 +45,13 @@ class NFTCreationResponse(BaseModel):
     status: str
     transaction_hash: str
     message: Optional[str] = None
+
+class NFT(BaseModel):
+    id: str
+    uri: str
+    flags: int
+    taxon: int
+
+class NFTs(BaseModel):
+    status: str
+    nfts: list[NFT]
