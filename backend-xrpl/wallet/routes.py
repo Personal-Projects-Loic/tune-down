@@ -1,8 +1,9 @@
 from fastapi import APIRouter, HTTPException
-from wallet.models import WalletResponse, WalletRequest, ValidationResponse, PaymentResponse, PaymentRequest, AccountResponse
+from wallet.models import WalletResponse, WalletRequest, ValidationResponse, PaymentResponse, PaymentRequest, AccountResponse, NFTCreationResponse, NFTCreationRequest
 from wallet.wallet import generate_wallet, is_valid_xrpl_wallet, transfer_xrps
 from wallet.account import fetch_account_info
 from pydantic import BaseModel
+from wallet.nft import create_and_assign_nft
 
 router = APIRouter()
 
@@ -32,16 +33,30 @@ async def validate_wallet_route(wallet_request: WalletRequest):
 
 @router.post("/transfer-xrps", response_model=PaymentResponse)
 async def transfer_xrps_route(payment_request: PaymentRequest):
-    try:
-        result = await transfer_xrps(
-            payment_request.sender_seed,
-            payment_request.receiver_address,
-            payment_request.amount
-        )
-        return result
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    res =  await transfer_xrps(
+        payment_request.sender_seed,
+        payment_request.receiver_address,
+        payment_request.amount
+    )
+    return PaymentResponse(
+        status=res["status"],
+        transaction_result=res.get("transaction_result"),
+        transaction_hash=res.get("transaction_hash"),
+        message=res.get("message")
+    )
 
 @router.get("/account-info/{public_key}", response_model=AccountResponse)
 async def account_info_route(public_key: str):
     return await fetch_account_info(public_key)
+
+@router.post("/create-nft", response_model=NFTCreationResponse)
+async def create_and_assign_nft_route(nft_creation_request: NFTCreationRequest):
+    res =  await create_and_assign_nft(
+        nft_creation_request.wallet_seed,
+        nft_creation_request.uri,
+        # nft_creation_request.flags,
+        # nft_creation_request.transfer_fee,
+        # nft_creation_request.taxon
+    )
+
+    return res

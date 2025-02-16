@@ -36,3 +36,12 @@ class AccountResponse(BaseModel):
     owner_count: int
     previous_txn_id: str
     previous_txn_lgr_seq: int
+
+class NFTCreationRequest(BaseModel):
+    wallet_seed: str
+    uri: str
+
+class NFTCreationResponse(BaseModel):
+    status: str
+    transaction_hash: str
+    message: Optional[str] = None
