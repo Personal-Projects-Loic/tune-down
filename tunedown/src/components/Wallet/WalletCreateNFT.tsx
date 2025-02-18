@@ -19,7 +19,7 @@ const WalletCreateNFT: React.FC = () => {
     setLoading(true);
     setError(null);
     setTransactionResult(null);
-    
+
     try {
       const response = await axios.post("http://localhost:8000/create-nft", {
         wallet_seed: wallet_seed,
