@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../firebase";
 import { useNavigate } from "react-router-dom";
 import "./Auth.css";
 import logo from "../../assets/tunedown.png";
 
 const Signup: React.FC = () => {
   const [email, setEmail] = useState<string>("");
+  const [pseudo, setPseudo] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
   const navigate = useNavigate();
@@ -16,8 +15,8 @@ const Signup: React.FC = () => {
     setError("");
 
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      navigate("/");
+      //await createUserWithEmailAndPassword(auth, email, password);
+      navigate("/add-wallet");
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
@@ -42,7 +41,16 @@ const Signup: React.FC = () => {
           />
         </div>
         <div className="form-group">
-          <label>Password:</label>
+          <label>Pseudo:</label>
+          <input
+            type="text"
+            value={pseudo}
+            onChange={(e) => setPseudo(e.target.value)}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label>Mot de passe:</label>
           <input
             type="password"
             value={password}
@@ -56,7 +64,7 @@ const Signup: React.FC = () => {
         </button>
       </form>
       <p className="auth-link">
-        Already have an account? <a href="/login">Login</a>
+        Vous avez déjà un compte? <a href="/login">Login</a>
       </p>
     </div>
   );
