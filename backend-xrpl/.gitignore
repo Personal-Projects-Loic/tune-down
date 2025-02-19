@@ -1,4 +1,5 @@
 __pycache__/*
 wallet/__pycache__
+Database/__pycache__
 xrp-ledger-env
 xrpl-env
