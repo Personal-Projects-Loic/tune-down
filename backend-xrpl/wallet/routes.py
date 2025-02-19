@@ -3,29 +3,30 @@ from wallet.models import WalletResponse, WalletRequest, ValidationResponse, Pay
 from wallet.wallet import generate_wallet, is_valid_xrpl_wallet, transfer_xrps
 from wallet.account import fetch_account_info
 from pydantic import BaseModel
-from sqlalchemy.orm import Session
 from Database import crud, schemas, database, modelsDB
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.orm import Session
+from Database import AsyncSessionLocal
 from wallet.nft import create_and_assign_nft, fetch_account_nfts
 
 router = APIRouter()
 router.include_router(router)
 
-def get_db():
-    db = database.SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-@router.post("/login")
-async def login(user: schemas.UserLogin, db: Session = Depends(get_db)):
-    db_user = crud.get_user_by_email(db, email=user.email)
-    if not db_user or db_user.password != user.password:
-        raise HTTPException(status_code=404, detail="User not found or incorrect password")
-    return {"message": "Login successful", "uid": db_user.id}
+async def get_db():
+    async with AsyncSessionLocal() as session:
+        try:
+            yield session
+        finally:
+            await session.close()
+# @router.post("/login")
+# async def login(user: schemas.UserLogin, db: Session = Depends(get_db)):
+#     db_user = crud.get_user_by_email(db, email=user.email)
+#     if not db_user or db_user.password != user.password:
+#         raise HTTPException(status_code=404, detail="User not found or incorrect password")
+#     return {"message": "Login successful", "uid": db_user.id}
 
 @router.post("/signup")
-async def signup(user: schemas.UserCreate, db: Session = Depends(get_db)):
+async def signup(user: schemas.UserCreate, db: AsyncSession = Depends(get_db)):
     try:
         db_user = await crud.get_user_by_email(db, email=user.email)
         if db_user:
