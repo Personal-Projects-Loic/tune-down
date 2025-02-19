@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../firebase";
 import { useNavigate } from "react-router-dom";
 import "./Auth.css";
 import logo from "../../assets/tunedown.png";
@@ -16,7 +14,19 @@ const Login: React.FC = () => {
     setError("");
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const response = await fetch("/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || "Login failed");
+      }
+      // const data = await response.json();
       navigate("/");
     } catch (err: unknown) {
       if (err instanceof Error) {

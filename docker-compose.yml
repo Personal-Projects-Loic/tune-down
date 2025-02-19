@@ -1,4 +1,3 @@
-version: "3.4"
 
 services:
   frontend:
@@ -14,6 +13,7 @@ services:
       - ./tunedown:/app
       - /app/node_modules
     command: npm run dev
+
   backend:
     build:
       context: ./backend-xrpl
@@ -25,3 +25,19 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
     command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    depends_on:
+      - db
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: Hindex8
+      POSTGRES_PASSWORD: azerty123
+      POSTGRES_DB: tunedown-db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

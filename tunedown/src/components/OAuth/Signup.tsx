@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../firebase";
 import { useNavigate } from "react-router-dom";
 import "./Auth.css";
 import logo from "../../assets/tunedown.png";
@@ -14,9 +12,24 @@ const Signup: React.FC = () => {
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const response = await fetch("http://localhost:8000/signup", {
+        method: "POST",
+        credentials: "include",
+        mode: "cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || "Signup failed");
+      }
+
+      const data = await response.json();
+      console.log("Signup successful:", data);
       navigate("/");
     } catch (err: unknown) {
       if (err instanceof Error) {
