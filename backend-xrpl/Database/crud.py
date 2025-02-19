@@ -1,7 +1,12 @@
 from sqlalchemy.orm import Session
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from . import modelsDB, schemas
+
+async def get_user(db: AsyncSession, user_id: int):
+    query = select(modelsDB.User).filter(modelsDB.User.id == user_id)
+    result = await db.execute(query)
+    return result.scalar_one_or_none()
 
 async def get_user_by_email(db: AsyncSession, email: str):
     query = select(modelsDB.User).filter(modelsDB.User.email == email)

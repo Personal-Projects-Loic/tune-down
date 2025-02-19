@@ -6,7 +6,7 @@ services:
     environment:
       NODE_ENV: dev
     ports:
-      - 3000:3000
+      - "3000:3000"
     env_file: ./tunedown/.env
     volumes:
       - ./tunedown:/app
@@ -25,6 +25,7 @@ services:
       - ./backend-xrpl:/app
     environment:
       - PYTHONUNBUFFERED=1
+      - DATABASE_URL=postgresql+asyncpg://hindex8:azerty123@db/tunedown_db
     command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
     depends_on:
       - db
@@ -34,7 +35,7 @@ services:
   db:
     image: postgres:13
     environment:
-      POSTGRES_USER: Hindex8
+      POSTGRES_USER: hindex8
       POSTGRES_PASSWORD: azerty123
       POSTGRES_DB: tunedown_db
     ports:

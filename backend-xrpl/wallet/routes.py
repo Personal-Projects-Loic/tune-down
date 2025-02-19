@@ -6,18 +6,18 @@ from pydantic import BaseModel
 from Database import crud, schemas, database, modelsDB
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import Session
-from Database import AsyncSessionLocal
+from Database.database import SessionLocal
 from wallet.nft import create_and_assign_nft, fetch_account_nfts
 
 router = APIRouter()
-router.include_router(router)
 
 async def get_db():
-    async with AsyncSessionLocal() as session:
+    async with SessionLocal() as session:
         try:
             yield session
         finally:
             await session.close()
+
 # @router.post("/login")
 # async def login(user: schemas.UserLogin, db: Session = Depends(get_db)):
 #     db_user = crud.get_user_by_email(db, email=user.email)
