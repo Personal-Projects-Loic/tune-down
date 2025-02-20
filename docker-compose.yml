@@ -26,6 +26,7 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
       - DATABASE_URL=postgresql+asyncpg://tunedown:azerty123@db:5432/tunedown_db
+      - JWT_SECRET_KEY=a0d848b05c6acfea19953499f1a887fac36b2a28eba2a4fd1c26d7bbc3067682
     command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
     depends_on:
       - db

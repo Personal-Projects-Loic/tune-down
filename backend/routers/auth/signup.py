@@ -8,6 +8,8 @@ from fastapi import status
 
 from db.models import User
 from db.database import get_db
+from utils.password import hash_password
+from utils.jwt import create_jwt
 
 router = APIRouter()
 
@@ -29,11 +31,13 @@ class Request(BaseModel):
         return validate_username(v)
 
 
-class Response(BaseResponse):
+class Response(BaseModel):
+    access_token: str = None
     pass
 
 async def db_create_user(db: AsyncSession, request: Request):
-    new_user = User(email=request.email, username=request.username, password=request.password)
+    crypted_passwd = hash_password(request.password)
+    new_user = User(email=request.email, username=request.username, password=crypted_passwd)
     db.add(new_user)
     try:
         await db.commit()
@@ -45,5 +49,9 @@ async def db_create_user(db: AsyncSession, request: Request):
 
 @router.post("/signup", response_model=Response)
 async def signup(request: Request, db: AsyncSession = Depends(get_db)):
-    await db_create_user(db, request)
-    return Response(message="User created successfully")
+    # await db_create_user(db, request)
+    token_payload = create_jwt({
+        "email": request.email,
+        "username": request.username
+    });
+    return Response(access_token=token_payload)
