@@ -31,7 +31,6 @@ async def init_db():
 async def validation_exception_handler(request, exc):
     # Customize the error response
     errors = []
-    print("aaaaa")
     for error in exc.errors():
         error_details = {
             "field": error["loc"][-1],
