@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from wallet.routes import router
 from fastapi.middleware.cors import CORSMiddleware
+from Database.database import Base, engine
+from contextlib import asynccontextmanager
 
 app = FastAPI()
 
@@ -18,7 +20,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+async def init_db():
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
+
 app.include_router(router)
+
+@asynccontextmanager
+async def lifespan(api: FastAPI):
+    await init_db()
+    yield
+
+app.router.lifespan_context = lifespan
 
 if __name__ == "__main__":
     import uvicorn

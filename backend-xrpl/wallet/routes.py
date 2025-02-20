@@ -14,6 +14,8 @@ from wallet.account import fetch_account_info
 from pydantic import BaseModel
 from wallet.nfts.create_and_get import create_and_assign_nft, fetch_account_nfts
 from wallet.nfts.nft_sell_offers import create_sell_offer, fetch_account_offers
+from Database.modelsDB import User
+from Database.crud import get_user_by_email, create_user
 
 router = APIRouter()
 
@@ -32,15 +34,12 @@ async def get_db():
 #     return {"message": "Login successful", "uid": db_user.id}
 
 @router.post("/signup")
-async def signup(user: schemas.UserCreate, db: AsyncSession = Depends(get_db)):
-    try:
-        db_user = await crud.get_user_by_email(db, email=user.email)
-        if db_user:
-            raise HTTPException(status_code=400, detail="Email already registered")
-        created_user = await crud.create_user(db=db, user=user)
-        return {"message": "User created successfully", "user": created_user}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+async def signup(request: schemas.UserCreate, db: AsyncSession = Depends(get_db)):
+    db_user = await get_user_by_email(db, email=request.email)
+    if db_user:
+        raise HTTPException(status_code=400, detail="Username or email already registered")
+    await create_user(db, request)
+    return {"message": "User created successfully"}
 
 @router.get("/generate-wallet", response_model=WalletResponse)
 def generate_wallet_route():

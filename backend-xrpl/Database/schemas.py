@@ -8,6 +8,7 @@ class UserBase(BaseModel):
         from_attributes = True # en vrai je sais pas encore à quoi ça sert, mais ça permet de créer des instances à partir des données de la base de données
 
 class UserCreate(UserBase):
+    email: str
     password: str
 
 class UserLogin(BaseModel):

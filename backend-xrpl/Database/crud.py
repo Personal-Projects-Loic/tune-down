@@ -4,13 +4,11 @@ from sqlalchemy.future import select
 from . import modelsDB, schemas
 
 async def get_user(db: AsyncSession, user_id: int):
-    query = select(modelsDB.User).filter(modelsDB.User.id == user_id)
-    result = await db.execute(query)
+    result = await db.execute(select(modelsDB.User).filter(modelsDB.User.id == user_id))
     return result.scalar_one_or_none()
 
 async def get_user_by_email(db: AsyncSession, email: str):
-    query = select(modelsDB.User).filter(modelsDB.User.email == email)
-    result = await db.execute(query)
+    result = await db.execute(select(modelsDB.User).filter(modelsDB.User.email == email))
     return result.scalar_one_or_none()
 
 async def create_user(db: AsyncSession, user: schemas.UserCreate):
