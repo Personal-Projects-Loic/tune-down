@@ -39,8 +39,8 @@ services:
       POSTGRES_USER: tunedown
       POSTGRES_PASSWORD: azerty123
       POSTGRES_DB: tunedown_db
-    # ports:
-    #   - "5432:5432"
+    ports:
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:

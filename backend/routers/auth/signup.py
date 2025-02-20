@@ -37,19 +37,25 @@ class Response(BaseModel):
 
 async def db_create_user(db: AsyncSession, request: Request):
     crypted_passwd = hash_password(request.password)
-    new_user = User(email=request.email, username=request.username, password=crypted_passwd)
+    new_user = User(
+        email=request.email,
+        username=request.username,
+        password=crypted_passwd
+    )
     db.add(new_user)
     try:
         await db.commit()
         await db.refresh(new_user)
     except IntegrityError:
-        print(IntegrityError)
         await db.rollback()
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email or username already exists")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email or username already exists"
+        )
 
 @router.post("/signup", response_model=Response)
 async def signup(request: Request, db: AsyncSession = Depends(get_db)):
-    # await db_create_user(db, request)
+    await db_create_user(db, request)
     token_payload = create_jwt({
         "email": request.email,
         "username": request.username
