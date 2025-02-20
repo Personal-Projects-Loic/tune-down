@@ -48,6 +48,7 @@ async def signin(request: Request, db: AsyncSession = Depends(get_db)):
 
     access_token = create_jwt({
         "email": user.email,
-        "username": user.username
+        "username": user.username,
+        "id": user.id
     });
     return Response(access_token=access_token)

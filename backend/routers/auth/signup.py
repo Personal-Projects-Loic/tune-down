@@ -46,6 +46,7 @@ async def db_create_user(db: AsyncSession, request: Request):
     try:
         await db.commit()
         await db.refresh(new_user)
+        return new_user
     except IntegrityError:
         await db.rollback()
         raise HTTPException(
@@ -55,9 +56,11 @@ async def db_create_user(db: AsyncSession, request: Request):
 
 @router.post("/signup", response_model=Response)
 async def signup(request: Request, db: AsyncSession = Depends(get_db)):
-    await db_create_user(db, request)
+    new_user = await db_create_user(db, request)
+    print(new_user)
     token_payload = create_jwt({
         "email": request.email,
-        "username": request.username
+        "username": request.username,
+        "id": new_user.id
     });
     return Response(access_token=token_payload)

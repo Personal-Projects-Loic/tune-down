@@ -1,6 +1,7 @@
 import os
 import jwt
 import datetime
+from fastapi import HTTPException
 
 SECRET_KEY = os.getenv("JWT_SECRET_KEY")
 EXPIRATION_IN_HOURS = 24
@@ -14,6 +15,6 @@ def verify_jwt(token: str) -> dict:
     try:
         return jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
     except jwt.ExpiredSignatureError:
-        return {"error": "Token expired"}
+        raise HTTPException(status_code=401, detail="Token expired")
     except jwt.InvalidTokenError:
-        return {"error": "Invalid token"}
+        raise HTTPException(status_code=401, detail="Invalid token")
