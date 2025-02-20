@@ -13,21 +13,21 @@ function Home() {
   return (
     <div className="row">
       <div className="column">
-      <div>
-        <WalletValidator />
-      </div>
-      <div>
-        <WalletGenerator />
-      </div>
-      <div>
-        <GetAccount />
-      </div>
-      <div>
-        <WalletTransaction />
-      </div>
-      <div>
-        <DeconnectionButton />
-      </div>
+        <div>
+          <WalletValidator />
+        </div>
+        <div>
+          <WalletGenerator />
+        </div>
+        <div>
+          <GetAccount />
+        </div>
+        <div>
+          <WalletTransaction />
+        </div>
+        <div>
+          <DeconnectionButton />
+        </div>
       </div>
       <div className="column">
       <div>
