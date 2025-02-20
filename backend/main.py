@@ -2,9 +2,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from db.database import engine, Base
-
 from routers.main import main_router as router
-
+from fastapi.exception_handlers import RequestValidationError
+from fastapi.responses import JSONResponse
 
 app = FastAPI()
 
@@ -25,6 +25,23 @@ app.add_middleware(
 async def init_db():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request, exc):
+    # Customize the error response
+    errors = []
+    print("aaaaa")
+    for error in exc.errors():
+        error_details = {
+            "field": error["loc"][-1],
+            "message": error["msg"],  # This message comes from the custom validator
+        }
+        errors.append(error_details)
+    return JSONResponse(
+        status_code=400,
+        content={"detail": errors}
+    )
 
 app.include_router(router)
 
