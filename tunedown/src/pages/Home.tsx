@@ -6,6 +6,8 @@ import GetAccount from "../components/account/getAccount";
 import "../App.css";
 import WalletCreateNFT from "../components/Wallet/WalletCreateNFT";
 import WalletGetNfts from "../components/Wallet/WalletGetNFTs";
+import NFTOffers from "../components/Wallet/NFTOffers";
+import NFTSellOfferRequest from "../components/Wallet/NFTSellOfferRequest";
 
 function Home() {
   return (
@@ -45,6 +47,12 @@ function Home() {
       </div>
       <div>
         <WalletGetNfts />
+      </div>
+      <div>
+        <NFTOffers />
+      </div>
+      <div>
+        <NFTSellOfferRequest />
       </div>
       <div>
         <DeconnectionButton />
