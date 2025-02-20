@@ -1,7 +1,10 @@
 from pydantic import BaseModel, field_validator
 from fastapi import APIRouter, Depends, HTTPException
-from routers.schemas import BaseResponse
-from routers.validators import validate_password, validate_email, validate_username
+from routers.validators import (
+    validate_password,
+    validate_email,
+    validate_username
+)
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
 from fastapi import status
@@ -13,6 +16,7 @@ from utils.jwt import create_jwt
 
 router = APIRouter()
 
+
 class Request(BaseModel):
     email: str
     username: str
@@ -21,11 +25,11 @@ class Request(BaseModel):
     @field_validator('password')
     def password_validation(cls, v):
         return validate_password(v)
-    
+
     @field_validator('email')
     def email_validation(cls, v):
         return validate_email(v)
-    
+
     @field_validator('username')
     def username_validation(cls, v):
         return validate_username(v)
@@ -34,6 +38,7 @@ class Request(BaseModel):
 class Response(BaseModel):
     access_token: str = None
     pass
+
 
 async def db_create_user(db: AsyncSession, request: Request):
     crypted_passwd = hash_password(request.password)
@@ -54,6 +59,7 @@ async def db_create_user(db: AsyncSession, request: Request):
             detail="Email or username already exists"
         )
 
+
 @router.post("/signup", response_model=Response)
 async def signup(request: Request, db: AsyncSession = Depends(get_db)):
     new_user = await db_create_user(db, request)
@@ -62,5 +68,5 @@ async def signup(request: Request, db: AsyncSession = Depends(get_db)):
         "email": request.email,
         "username": request.username,
         "id": new_user.id
-    });
+    })
     return Response(access_token=token_payload)

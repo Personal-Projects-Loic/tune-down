@@ -22,6 +22,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 async def init_db():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
@@ -34,7 +35,7 @@ async def validation_exception_handler(request, exc):
     for error in exc.errors():
         error_details = {
             "field": error["loc"][-1],
-            "message": error["msg"],  # This message comes from the custom validator
+            "message": error["msg"],
         }
         errors.append(error_details)
     return JSONResponse(
@@ -43,6 +44,7 @@ async def validation_exception_handler(request, exc):
     )
 
 app.include_router(router)
+
 
 @asynccontextmanager
 async def lifespan(api: FastAPI):

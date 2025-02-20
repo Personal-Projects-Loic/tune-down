@@ -6,10 +6,15 @@ from fastapi import HTTPException
 SECRET_KEY = os.getenv("JWT_SECRET_KEY")
 EXPIRATION_IN_HOURS = 24
 
+
 def create_jwt(payload: dict) -> str:
     to_encode = payload.copy()
-    to_encode["exp"] = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=EXPIRATION_IN_HOURS)
+    to_encode["exp"] = (
+        datetime.datetime.now(datetime.timezone.utc) +
+        datetime.timedelta(hours=EXPIRATION_IN_HOURS)
+    )
     return jwt.encode(payload, SECRET_KEY, algorithm="HS256")
+
 
 def verify_jwt(token: str) -> dict:
     try:
