@@ -1,15 +1,15 @@
 services:
   frontend:
     build:
-      context: ./tunedown
+      context: ./frontend
       dockerfile: dev.Dockerfile
     environment:
       NODE_ENV: dev
     ports:
       - "3000:3000"
-    env_file: ./tunedown/.env
+    env_file: ./frontend/.env
     volumes:
-      - ./tunedown:/app
+      - ./frontend:/app
       - /app/node_modules
     command: npm run dev
     networks:
@@ -17,12 +17,12 @@ services:
 
   backend:
     build:
-      context: ./backend-xrpl
+      context: ./backend
       dockerfile: dev.Dockerfile
     ports:
       - "8000:8000"
     volumes:
-      - ./backend-xrpl:/app
+      - ./backend:/app
     environment:
       - PYTHONUNBUFFERED=1
       - DATABASE_URL=postgresql+asyncpg://tunedown:azerty123@db:5432/tunedown_db
