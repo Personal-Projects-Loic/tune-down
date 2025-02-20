@@ -1,10 +1,8 @@
 from fastapi import FastAPI
+from wallet.routes import router
 from fastapi.middleware.cors import CORSMiddleware
+from Database.database import Base, engine
 from contextlib import asynccontextmanager
-from db.database import engine, Base
-
-from routers.main import main_router as router
-
 
 app = FastAPI()
 

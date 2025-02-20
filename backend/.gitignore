@@ -1,6 +1,4 @@
+# Byte-compiled / optimized / DLL files
 __pycache__/
-*.pyc
-*.pyo
-xrp-ledger-env
-xrpl-env
-.env
+*.py[cod]
+*$py.class
