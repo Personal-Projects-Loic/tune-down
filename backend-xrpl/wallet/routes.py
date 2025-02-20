@@ -7,7 +7,13 @@ from Database import crud, schemas, database, modelsDB
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import Session
 from Database.database import SessionLocal
-from wallet.nft import create_and_assign_nft, fetch_account_nfts
+from fastapi import APIRouter, HTTPException
+from wallet.models import WalletResponse, WalletRequest, ValidationResponse, PaymentResponse, PaymentRequest, AccountResponse, NFTCreationResponse, NFTCreationRequest, NFTs, NFTSellOfferResponse, NFTSellOfferRequest, NFTOffers
+from wallet.wallet import generate_wallet, is_valid_xrpl_wallet, transfer_xrps
+from wallet.account import fetch_account_info
+from pydantic import BaseModel
+from wallet.nfts.create_and_get import create_and_assign_nft, fetch_account_nfts
+from wallet.nfts.nft_sell_offers import create_sell_offer, fetch_account_offers
 
 router = APIRouter()
 
@@ -93,3 +99,17 @@ async def create_and_assign_nft_route(nft_creation_request: NFTCreationRequest):
 @router.get("/get-nfts/{public_key}", response_model=NFTs)
 async def get_nfts(public_key: str):
     return await fetch_account_nfts(public_key)
+
+@router.post("/create-nft-sell-offer", response_model=NFTSellOfferResponse)
+async def create_nft_offer(nft_offer_request: NFTSellOfferRequest):
+    return await create_sell_offer(
+        nft_offer_request.wallet_seed,
+        nft_offer_request.nft_id,
+        nft_offer_request.amount,
+        nft_offer_request.destination,
+        nft_offer_request.expiration
+    );
+
+@router.get("/get-nft-offers/{nft_id}", response_model=NFTOffers)
+async def get_nft_offers(nft_id: str):
+    return await fetch_account_offers(nft_id);

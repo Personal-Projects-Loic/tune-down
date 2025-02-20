@@ -5,7 +5,9 @@ import DeconnectionButton from "../components/OAuth/DeconnectionButton";
 import GetAccount from "../components/account/getAccount";
 import "../App.css";
 import WalletCreateNFT from "../components/Wallet/WalletCreateNFT";
-// import WalletGetNfts from "../components/Wallet/WalletCreateNFT";
+import WalletGetNfts from "../components/Wallet/WalletGetNFTs";
+import NFTOffers from "../components/Wallet/NFTOffers";
+import NFTSellOfferRequest from "../components/Wallet/NFTSellOfferRequest";
 
 function Home() {
   return (
@@ -28,25 +30,33 @@ function Home() {
         </div>
       </div>
       <div className="column">
-        <div>
-          <WalletValidator />
-        </div>
-        <div>
-          <WalletGenerator />
-        </div>
-        <div>
-          <GetAccount />
-        </div>
-        <div>
-          <WalletTransaction />
-        </div>
-        <div>
-          <WalletCreateNFT />
-        </div>
-        <div>{/* <WalletGetNfts /> */}</div>
-        <div>
-          <DeconnectionButton />
-        </div>
+      <div>
+        <WalletValidator />
+      </div>
+      <div>
+        <WalletGenerator />
+      </div>
+      <div>
+        <GetAccount />
+      </div>
+      <div>
+        <WalletTransaction />
+      </div>
+      <div>
+        <WalletCreateNFT />
+      </div>
+      <div>
+        <WalletGetNfts />
+      </div>
+      <div>
+        <NFTOffers />
+      </div>
+      <div>
+        <NFTSellOfferRequest />
+      </div>
+      <div>
+        <DeconnectionButton />
+      </div>
       </div>
     </div>
   );

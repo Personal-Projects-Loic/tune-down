@@ -46,6 +46,28 @@ class NFTCreationResponse(BaseModel):
     transaction_hash: str
     message: Optional[str] = None
 
+class NFTSellOfferRequest(BaseModel):
+    wallet_seed: str
+    nft_id: str
+    amount: int
+    destination: Optional[str] = None
+    expiration: Optional[int] = None
+
+class NFTSellOfferResponse(BaseModel):
+    status: str
+    transaction_hash: str
+
+class NFTOffer(BaseModel):
+    offer_id: str
+    nft_id: str
+    amount: int
+    destination: Optional[str] = None
+    expiration: Optional[int] = None
+
+class NFTOffers(BaseModel):
+    status: str
+    offers: list[NFTOffer]
+
 class NFT(BaseModel):
     id: str
     uri: str
