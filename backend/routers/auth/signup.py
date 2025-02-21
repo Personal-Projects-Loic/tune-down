@@ -12,7 +12,7 @@ from fastapi import status
 from db.models import User
 from db.database import get_db
 from utils.password import hash_password
-from utils.jwt import create_jwt
+from utils.jwt import create_jwt, JWTContent
 
 router = APIRouter()
 
@@ -64,9 +64,12 @@ async def db_create_user(db: AsyncSession, request: Request):
 async def signup(request: Request, db: AsyncSession = Depends(get_db)):
     new_user = await db_create_user(db, request)
     print(new_user)
-    token_payload = create_jwt({
-        "email": request.email,
-        "username": request.username,
-        "id": new_user.id
-    })
+
+    jwt_content = JWTContent(
+        email=request.email,
+        id=new_user.id,
+        username=request.username
+    )
+
+    token_payload = create_jwt(jwt_content)
     return Response(access_token=token_payload)

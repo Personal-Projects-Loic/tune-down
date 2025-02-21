@@ -12,6 +12,10 @@ class BaseModel(Base):
 class User(BaseModel):
     __tablename__ = "users"
 
+    # basic user infos
     email = Column(String, unique=True, index=True)
     username = Column(String, unique=True, index=True)
     password = Column(String)
+
+    # XRPL infos
+    wallet_id = Column(String, nullable=True)
