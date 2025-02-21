@@ -7,7 +7,7 @@ from fastapi import status
 from db.models import User
 from db.database import get_db
 from utils.password import verify_password
-from utils.jwt import create_jwt
+from utils.jwt import create_jwt, JWTContent
 
 GENERAL_ERROR = "Invalid email/username or password"
 
@@ -47,9 +47,10 @@ async def signin(request: Request, db: AsyncSession = Depends(get_db)):
             detail=GENERAL_ERROR
         )
 
-    access_token = create_jwt({
-        "email": user.email,
-        "username": user.username,
-        "id": user.id
-    })
+    jwt_content = JWTContent(
+        email=user.email,
+        id=user.id,
+        username=user.username
+    )
+    access_token = create_jwt(jwt_content)
     return Response(access_token=access_token)

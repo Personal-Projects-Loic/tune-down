@@ -20,3 +20,15 @@ def validate_username(v: str):
     if len(v) < 3:
         raise ValueError('Username must be at least 3 characters long')
     return v
+
+
+def validate_wallet_id(v: str):
+    if (len(v) < 25 or len(v) > 35):
+        raise ValueError('Invalid wallet id')
+    if not v.startswith('r'):
+        raise ValueError('Invalid wallet id')
+    if not v.isalnum():
+        raise ValueError('Invalid wallet id')
+    if '0' in v or 'O' in v or 'I' in v or 'l' in v:
+        raise ValueError('Invalid wallet id')
+    return v
