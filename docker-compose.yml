@@ -53,8 +53,11 @@ services:
       - "9000:9000"
       - "9001:9001"  # Console port
     environment:
-      MINIO_ROOT_USER: tunedown
-      MINIO_ROOT_PASSWORD: tunedownPassword
+      - MINIO_HOST=minio
+      - MINIO_PORT=9000
+      - MINIO_ROOT_USER=tunedown
+      - MINIO_ROOT_PASSWORD=tunedownPassword
+      - MINIO_SECURE=False
     volumes:
       - minio_data:/data
     command: server --console-address ":9001" /data

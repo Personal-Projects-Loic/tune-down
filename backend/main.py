@@ -5,6 +5,7 @@ from db.database import engine, Base
 from routers.main import main_router as router
 from fastapi.exception_handlers import RequestValidationError
 from fastapi.responses import JSONResponse
+from images.minio import test_bucket
 
 app = FastAPI()
 
@@ -49,6 +50,7 @@ app.include_router(router)
 @asynccontextmanager
 async def lifespan(api: FastAPI):
     await init_db()
+    test_bucket()
     yield
 
 app.router.lifespan_context = lifespan
