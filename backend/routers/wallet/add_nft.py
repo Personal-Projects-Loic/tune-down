@@ -7,7 +7,7 @@ from db.helpers import db_get_user
 from middlewares.auth import auth_middleware
 from db.database import get_db
 from utils.jwt import JWTContent
-from utils.xrpl.create_nft import xrpl_create_nft, NFTCreateResponse, NFTInfos
+from utils.xrpl.create_nft import xrpl_create_nft, NFTCreateResponse
 from utils.xrpl.helpers import xrpl_verify_secret_with_address
 from db.models import NFT
 
