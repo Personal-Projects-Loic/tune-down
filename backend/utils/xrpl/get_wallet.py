@@ -5,6 +5,8 @@ from fastapi import HTTPException
 from pydantic import BaseModel
 
 XRPL_RPC_URL = os.getenv("XRPL_RPC_URL")
+BASE_RESERVE = 1 * 10**6
+OWNER_RESERVE = 0.2 * 10**6
 
 
 class XRPLAccountInfo(BaseModel):
@@ -16,10 +18,11 @@ class XRPLAccountInfo(BaseModel):
     owner_count: int
     previous_txn_id: str
     previous_txn_lgr_seq: int
+    sufficient_balance: bool = False
 
 
 def parse_response(result: dict[str, any]) -> XRPLAccountInfo:
-    return XRPLAccountInfo(
+    xrpl_account_info = XRPLAccountInfo(
         address=result["account_data"]["Account"],
         balance=result["account_data"]["Balance"],
         sequence=result["account_data"]["Sequence"],
@@ -29,6 +32,13 @@ def parse_response(result: dict[str, any]) -> XRPLAccountInfo:
         previous_txn_id=result["account_data"]["PreviousTxnID"],
         previous_txn_lgr_seq=result["account_data"]["PreviousTxnLgrSeq"]
     )
+    needed_reserve = (
+        BASE_RESERVE + OWNER_RESERVE * xrpl_account_info.owner_count
+    )
+    xrpl_account_info.sufficient_balance = (
+        int(xrpl_account_info.balance) >= needed_reserve
+    )
+    return xrpl_account_info
 
 
 def handle_error(result: dict[str, any]):

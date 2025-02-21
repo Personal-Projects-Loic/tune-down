@@ -23,7 +23,15 @@ class Request(BaseModel):
 
 
 class Response(BaseModel):
-    message: str
+    address: str
+    balance: str
+    sequence: int
+    ledger_index: int
+    flags: int
+    owner_count: int
+    previous_txn_id: str
+    previous_txn_lgr_seq: int
+    sufficient_balance: bool
 
 
 async def db_update_wallet_id(
@@ -50,12 +58,12 @@ async def db_update_wallet_id(
         )
 
 
-@router.post("/", response_model=Response)
+@router.post("/add_wallet", response_model=Response)
 async def add_wallet(
     request: Request,
     user: JWTContent = Depends(auth_middleware),
     db: AsyncSession = Depends(get_db)
 ):
-    xrpl_get_wallet(request.wallet_id)
+    wallet = await xrpl_get_wallet(request.wallet_id)
     await db_update_wallet_id(db, user.id, request.wallet_id)
-    return Response(message="Wallet added successfully")
+    return Response(**wallet.model_dump())
