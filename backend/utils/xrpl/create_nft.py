@@ -42,7 +42,6 @@ async def get_nft_create_response_from_result(
         fee=int(tx_json["Fee"]),
     )
 
-
 async def xrpl_create_nft(
     wallet_seed: str,
     uri: str,
