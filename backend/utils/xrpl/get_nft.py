@@ -1,17 +1,13 @@
 import os
-from pydantic import BaseModel
-from xrpl.asyncio.transaction import submit_and_wait
-from xrpl.wallet import Wallet
 from xrpl.models.requests import AccountNFTs
 from xrpl.asyncio.clients import AsyncJsonRpcClient
-from xrpl.utils import str_to_hex, hex_to_str
+from xrpl.utils import hex_to_str
 from utils.xrpl.helpers import NFTInfos
 
 XRPL_RPC_URL = os.getenv("XRPL_RPC_URL")
 
 
 def parse_nft_response(nft: dict[str, any], owner_wallet: str):
-    print(nft)
     return NFTInfos(
         flags=nft["Flags"],
         id=nft["NFTokenID"],
@@ -34,7 +30,7 @@ class NFTGetter:
             return parse_nft_response(self.nft_cache[nft_id], nft_owner)
         self.nft_cache[nft_owner] = {}
         return None
-    
+
     def __find_nft_from_result(self, nft_id, nft_owner, result):
         res = None
         for nft in result["account_nfts"]:

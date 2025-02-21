@@ -6,12 +6,10 @@ from sqlalchemy.sql.elements import ColumnElement
 from sqlalchemy import or_, and_
 from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
-from sqlalchemy.sql.selectable import Select
 
 from utils.jwt import JWTContent
 from middlewares.auth import auth_middleware
 from db.database import get_db
-from db.helpers import db_get_user
 from utils.xrpl.get_nft import NFTGetter, NFTInfos
 from db.models import NFT
 
@@ -42,7 +40,7 @@ class Response(BaseModel):
     nft_infos: NFTInfos
 
 
-def get_filter_condition(
+def db_get_filter_condition(
     request: Request,
     request_field: str,
     db_field: ColumnElement
@@ -51,28 +49,30 @@ def get_filter_condition(
     if not field_value:
         return None
     filter_condition = db_field.ilike(f"%{field_value}%")
-    # if getattr(request, f"{request_field}_filter_exclusive"):
-    #     return and_(query, filter_condition)
-    # return or_(query, filter_condition)
     return filter_condition
 
 
-async def db_get_nfts(db: AsyncSession, request: Request):
-    query = select(NFT).options(selectinload(NFT.user))
+def db_get_filters(request: Request) -> Tuple[list, list]:
     excl = []
     incl = []
 
     for i in FILTERS:
-        filter_condition = get_filter_condition(request, *i)
+        filter_condition = db_get_filter_condition(request, *i)
         if filter_condition is None:
             continue
         if getattr(request, f"{i[0]}_filter_exclusive"):
             excl.append(filter_condition)
         else:
             incl.append(filter_condition)
+    return (excl, incl)
+
+
+async def db_get_nfts(db: AsyncSession, request: Request):
+    excl, incl = db_get_filters(request)
+    query = select(NFT).options(selectinload(NFT.user))
+
     inner_query = and_(*excl)
     inner_query = or_(inner_query, *incl)
-
     query = query.filter(inner_query)
     offset = (request.page) * request.limit
     query = query.offset(offset).limit(request.limit)
@@ -90,7 +90,6 @@ async def batch_get_nfts(db_nfts: list[NFT]):
             db_nft.user.wallet_id
         )
         res.append(nft)
-    # print("res", res)
     return res
 
 
@@ -101,7 +100,6 @@ async def list_nfts(
     db: AsyncSession = Depends(get_db)
 ):
     db_nfts = await db_get_nfts(db, Request)
-    print("db_nfts")
     nfts = await batch_get_nfts(db_nfts)
     response = [Response(nft_infos=i) for i in nfts]
     return response
