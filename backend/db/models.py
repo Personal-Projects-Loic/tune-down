@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, DateTime, func, ForeignKey
-from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import mapped_column, relationship
 from db.database import Base
 
 
@@ -21,6 +21,8 @@ class User(BaseModel):
     # XRPL infos
     wallet_id = Column(String, nullable=True, index=True)
 
+    nfts = relationship("NFT", back_populates="user")
+
 
 class NFT(BaseModel):
     __tablename__ = "nfts"
@@ -29,5 +31,7 @@ class NFT(BaseModel):
     nft_id = Column(String, unique=True, index=True)
     name = Column(String, index=True)
     collection = Column(String, index=True)
-    user = mapped_column(Integer, ForeignKey('users.id'))
+    user_id = mapped_column(Integer, ForeignKey('users.id'))
     wallet_id = Column(String, nullable=True)
+
+    user = relationship("User", back_populates="nfts")

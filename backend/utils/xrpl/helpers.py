@@ -1,5 +1,16 @@
+from pydantic import BaseModel
 from xrpl.wallet import Wallet
 from fastapi import HTTPException
+
+
+class NFTInfos(BaseModel):
+    id: str
+    issuer: str
+    owner: str
+    uri: str
+    flags: int
+    transfer_fee: int
+    taxon: int
 
 
 def xrpl_verify_secret_with_address(secret: str, public_address: str) -> bool:

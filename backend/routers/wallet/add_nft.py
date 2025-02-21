@@ -56,7 +56,7 @@ async def add_wallet(
             nft_id=xrpl_res.nft.id,
             name=name,
             collection=collection,
-            user=user.id,
+            user_id=user.id,
             wallet_id=user.wallet_id
         )
     )

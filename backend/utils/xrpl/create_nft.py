@@ -7,17 +7,9 @@ from xrpl.asyncio.clients import AsyncJsonRpcClient
 from xrpl.models.transactions import NFTokenMint
 from xrpl.utils import str_to_hex, hex_to_str
 
+from utils.xrpl.helpers import NFTInfos
+
 XRPL_RPC_URL = os.getenv("XRPL_RPC_URL")
-
-
-class NFTInfos(BaseModel):
-    id: str
-    issuer: str
-    owner: str
-    uri: str
-    flags: int
-    transfer_fee: int
-    taxon: int
 
 
 class NFTCreateResponse(BaseModel):
