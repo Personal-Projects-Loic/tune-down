@@ -1,13 +1,12 @@
 from pydantic import BaseModel
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from fastapi import HTTPException, status
 
 from db.database import get_db
-from db.models import User
 from middlewares.auth import auth_middleware
 from utils.jwt import JWTContent
 from utils.xrpl.get_wallet import xrpl_get_wallet
+from db.helpers import db_get_user
 
 router = APIRouter()
 
@@ -22,16 +21,6 @@ class Response(BaseModel):
     previous_txn_id: str
     previous_txn_lgr_seq: int
     sufficient_balance: bool
-
-
-async def db_get_user(db: AsyncSession, user_id: int):
-    user = await db.get(User, user_id)
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="User not found"
-        )
-    return user
 
 
 @router.get("/", response_model=Response)
