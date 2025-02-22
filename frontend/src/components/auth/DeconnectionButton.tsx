@@ -1,6 +1,4 @@
 import React from "react";
-import { signOut } from "firebase/auth";
-import { auth } from "../../firebase";
 import { useNavigate } from "react-router-dom";
 
 const DeconnectionButton: React.FC = () => {
@@ -8,7 +6,8 @@ const DeconnectionButton: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      await signOut(auth);
+      sessionStorage.removeItem("access_token");
+      console.log("User logged out");
       navigate("/login");
     } catch (error) {
       console.error("Error logging out:", error);
