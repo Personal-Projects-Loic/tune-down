@@ -1,7 +1,7 @@
 import React from "react";
 import Wallet from "./pages/Home";
-import Login from "./components/OAuth/Login";
-import Signup from "./components/OAuth/Signup";
+import Login from "./components/auth/Login";
+import Signup from "./components/auth/Signup";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import PrivateRoute from "./components/PrivateRoute";
 import "./App.css";

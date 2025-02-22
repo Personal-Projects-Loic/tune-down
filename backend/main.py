@@ -38,6 +38,8 @@ async def validation_exception_handler(request, exc):
             "message": error["msg"],
         }
         errors.append(error_details)
+
+    print(errors)
     return JSONResponse(
         status_code=400,
         content={"detail": errors}

@@ -62,6 +62,7 @@ async def db_create_user(db: AsyncSession, request: Request):
 
 @router.post("/signup", response_model=Response)
 async def signup(request: Request, db: AsyncSession = Depends(get_db)):
+    print(request)
     new_user = await db_create_user(db, request)
     print(new_user)
 
