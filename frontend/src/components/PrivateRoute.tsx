@@ -1,13 +1,12 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
-import { auth } from "../firebase";
 
 const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const user = auth.currentUser;
+  const token = sessionStorage.getItem("access_token");
 
-  if (!user) {
+  if (!token) {
     return <Navigate to="/login" />;
   }
 
@@ -15,5 +14,3 @@ const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({
 };
 
 export default PrivateRoute;
-
-/* Pas de JWT, verification grace a firebase. Donc à chaque refresh = retour /login */

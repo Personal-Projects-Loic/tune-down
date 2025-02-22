@@ -42,6 +42,10 @@ const Login: React.FC = () => {
       const data = await response.json();
       console.log("Login successful:", data);
 
+      if (!data.access_token) {
+        throw new Error("No access token received");
+      }
+
       sessionStorage.setItem("access_token", data.access_token);
 
       navigate("/");

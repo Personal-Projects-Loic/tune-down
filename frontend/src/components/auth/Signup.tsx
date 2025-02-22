@@ -41,7 +41,7 @@ const Signup: React.FC = () => {
 
       sessionStorage.setItem("access_token", data.access_token);
 
-      navigate("/login");
+      navigate("/");
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
