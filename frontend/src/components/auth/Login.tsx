@@ -4,7 +4,7 @@ import "./Auth.css";
 import logo from "../../assets/tunedown.png";
 
 const Login: React.FC = () => {
-  const [email, setEmail] = useState<string>("");
+  const [emailOrUsername, setEmailOrUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
   const navigate = useNavigate();
@@ -14,19 +14,36 @@ const Login: React.FC = () => {
     setError("");
 
     try {
-      const response = await fetch("/login", {
+      const requestBody = JSON.stringify({
+        email_or_username: emailOrUsername,
+        password: password,
+      });
+      console.log("Request Body:", requestBody);
+
+      const response = await fetch("http://localhost:8000/auth/signin", {
         method: "POST",
+        credentials: "include",
+        mode: "cors",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: requestBody,
       });
+
+      console.log(response);
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.detail || "Login failed");
+        setError(errorData.detail[0].message);
+        console.error("Login failed:", errorData.detail[0].message);
+        throw new Error(errorData.detail[0].message || "Login failed");
       }
-      // const data = await response.json();
+
+      const data = await response.json();
+      console.log("Login successful:", data);
+
+      sessionStorage.setItem("access_token", data.access_token);
+
       navigate("/");
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -39,14 +56,15 @@ const Login: React.FC = () => {
 
   return (
     <div className="auth-container">
-      <img src={logo} alt="tunedown" className="auth-logo" /> <h2>Login</h2>
+      <img src={logo} alt="tunedown" className="auth-logo" />
+      <h2>Login</h2>
       <form className="auth-form" onSubmit={handleLogin}>
         <div className="form-group">
-          <label>Email:</label>
+          <label>Email or Username:</label>
           <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            type="text"
+            value={emailOrUsername}
+            onChange={(e) => setEmailOrUsername(e.target.value)}
             required
           />
         </div>
