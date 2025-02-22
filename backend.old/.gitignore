@@ -1,7 +1,0 @@
-__pycache__/
-Database/__pycache__
-*.pyc
-*.pyo
-xrp-ledger-env
-xrpl-env
-.env
