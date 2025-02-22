@@ -36,8 +36,13 @@ class Request(BaseModel):
     limit: Optional[int] = 10
 
 
+class User(BaseModel):
+    username: str
+
+
 class Response(BaseModel):
     nft_infos: NFTInfos
+    user: User
 
 
 def db_get_filter_condition(
@@ -101,5 +106,10 @@ async def list_nfts(
 ):
     db_nfts = await db_get_nfts(db, Request)
     nfts = await batch_get_nfts(db_nfts)
-    response = [Response(nft_infos=i) for i in nfts]
+    response = [
+        Response(
+            nft_infos=nft,
+            user=User(username=db_nfts[i].user.username)
+        ) for i, nft in enumerate(nfts)
+    ]
     return response
