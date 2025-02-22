@@ -12,51 +12,29 @@ import NFTSellOfferRequest from "../components/Wallet/NFTSellOfferRequest";
 function Home() {
   return (
     <div className="row">
-      <div className="column">
-        <div>
-          <WalletValidator />
-        </div>
-        <div>
-          <WalletGenerator />
-        </div>
-        <div>
-          <GetAccount />
-        </div>
-        <div>
-          <WalletTransaction />
-        </div>
-        <div>
-          <DeconnectionButton />
-        </div>
+      <div>
+        <WalletValidator />
       </div>
-      <div className="column">
-        <div>
-          <WalletValidator />
-        </div>
-        <div>
-          <WalletGenerator />
-        </div>
-        <div>
-          <GetAccount />
-        </div>
-        <div>
-          <WalletTransaction />
-        </div>
-        <div>
-          <WalletCreateNFT />
-        </div>
-        <div>
-          <WalletGetNfts />
-        </div>
-        <div>
-          <NFTOffers />
-        </div>
-        <div>
-          <NFTSellOfferRequest />
-        </div>
-        <div>
-          <DeconnectionButton />
-        </div>
+      <div>
+        <GetAccount />
+      </div>
+      <div>
+        <WalletTransaction />
+      </div>
+      <div>
+        <WalletCreateNFT />
+      </div>
+      <div>
+        <WalletGetNfts />
+      </div>
+      <div>
+        <NFTOffers />
+      </div>
+      <div>
+        <NFTSellOfferRequest />
+      </div>
+      <div>
+        <DeconnectionButton />
       </div>
     </div>
   );

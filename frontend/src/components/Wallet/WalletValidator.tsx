@@ -111,7 +111,6 @@ const WalletManager: React.FC = () => {
       </button>
       {error && <div className="error-message">{error}</div>}
 
-      {/* Afficher les détails du wallet ajouté */}
       {walletData && (
         <div className="wallet-details">
           <h2>Détails du Wallet ajouté :</h2>
@@ -124,7 +123,6 @@ const WalletManager: React.FC = () => {
         </div>
       )}
 
-      {/* Afficher les détails du wallet stocké */}
       {storedWallet && (
         <div className="wallet-details">
           <h2>Détails du Wallet stocké :</h2>
