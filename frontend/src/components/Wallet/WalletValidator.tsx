@@ -11,7 +11,6 @@ import {
   where,
   doc,
 } from "../../firebase";
-import { hashPrivateKey } from "../../utils/hashUtil";
 import "./Wallet.css";
 
 interface ApiErrorResponse {
@@ -105,11 +104,9 @@ const WalletValidator: React.FC = () => {
           return;
         }
 
-        const hashedPrivateKey = await hashPrivateKey(seed.trim());
-
         try {
           const docRef = await addDoc(collection(db, "wallets"), {
-            private_key: hashedPrivateKey,
+            private_key: seed,
             public_key: classicAddress.trim(),
             timestamp: new Date(),
             userId: user.uid,
@@ -121,7 +118,7 @@ const WalletValidator: React.FC = () => {
             ...userWallets,
             {
               id: docRef.id,
-              private_key: hashedPrivateKey,
+              private_key: seed,
               public_key: classicAddress.trim(),
             },
           ]);

@@ -15,7 +15,6 @@ const Signup: React.FC = () => {
     setError("");
     try {
       const requestBody = JSON.stringify({ email, username, password });
-      console.log("Request Body:", requestBody);
 
       const response = await fetch("http://localhost:8000/auth/signup", {
         method: "POST",
@@ -26,8 +25,6 @@ const Signup: React.FC = () => {
         },
         body: requestBody,
       });
-
-      console.log(response);
 
       if (!response.ok) {
         const errorData = await response.json();
