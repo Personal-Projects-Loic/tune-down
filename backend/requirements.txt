@@ -70,3 +70,4 @@ uvicorn==0.34.0
 websockets==13.1
 wrapt==1.17.2
 xrpl-py==4.0.0
+minio==7.2.15
