@@ -1,7 +1,6 @@
 from fastapi import UploadFile, APIRouter, File, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
-from fastapi.responses import JSONResponse
 from db.helpers import db_get_user
 from middlewares.auth import auth_middleware
 from db.database import get_db
@@ -51,7 +50,7 @@ async def upload_nft_picture(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Only images are allowed"
             )
-        
+
         file_data = await file.read()
         file_size = len(file_data)
 
@@ -60,7 +59,7 @@ async def upload_nft_picture(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Empty file"
             )
-        
+
         # Generate a unique filename
         file_extension = os.path.splitext(file.filename)[1]
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -78,25 +77,26 @@ async def upload_nft_picture(
         )
 
         url = f"http://minio:9000/nft-tests/{new_filename}"
-        
-        return JSONResponse(
-            status_code=201,
-            content={
-                "message": "Picture uploaded successfully",
-                "filename": new_filename,
-                "original_filename": file.filename,
-                "size": file_size,
-                "content_type": content_type,
-                "object_name": new_filename,
-                "url": url
-            }
-        )
+
+        # return JSONResponse(
+        #     status_code=201,
+        #     content={
+        #         "message": "Picture uploaded successfully",
+        #         "filename": new_filename,
+        #         "original_filename": file.filename,
+        #         "size": file_size,
+        #         "content_type": content_type,
+        #         "object_name": new_filename,
+        #         "url": url
+        #     }
+        # )
+        return url
     except Exception as e:
         raise HTTPException(
             status_code=500, 
             detail=f"Error uploading file: {str(e)}"
         )
-    
+
 
 @router.post("/add_nft", response_model=NFTCreateResponse)
 async def add_wallet(
@@ -107,11 +107,10 @@ async def add_wallet(
     user: JWTContent = Depends(auth_middleware),
     db: AsyncSession = Depends(get_db),
     minio: Minio = Depends(minio_client)
-
 ):
     user = await db_get_user(db, user.id)
-    await upload_nft_picture(file, minio)
-    link = TEMP_LINK
+    link = await upload_nft_picture(file, minio)
+
     xrpl_res = await xrpl_create_nft(wallet_secret, link)
     await db_create_nft(
         db,
@@ -124,4 +123,3 @@ async def add_wallet(
         )
     )
     return (xrpl_res)
-    
