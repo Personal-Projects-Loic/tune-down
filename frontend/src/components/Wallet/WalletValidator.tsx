@@ -21,8 +21,8 @@ const WalletManager: React.FC = () => {
   const [walletId, setWalletId] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [walletData, setWalletData] = useState<WalletResponse | null>(null);
-  const [storedWallet, setStoredWallet] = useState<WalletResponse | null>(null);
+  const [wallet, setWallet] = useState<WalletResponse | null>(null);
+  const [noWallet, setNoWallet] = useState(false);
 
   const addWallet = async () => {
     if (!walletId.trim()) {
@@ -32,7 +32,6 @@ const WalletManager: React.FC = () => {
 
     setLoading(true);
     setError(null);
-    setWalletData(null);
 
     try {
       const response = await fetch("http://localhost:8000/wallet/add_wallet", {
@@ -52,10 +51,8 @@ const WalletManager: React.FC = () => {
       }
 
       const data: WalletResponse = await response.json();
-      setWalletData(data);
+      setWallet(data);
       console.log("Wallet ajouté avec succès :", data);
-
-      await fetchWallet();
     } catch (err) {
       const error = err as Error;
       setError(error.message);
@@ -73,7 +70,20 @@ const WalletManager: React.FC = () => {
         },
       });
 
+      /* La console du navigateur pense que 404 est une erreur HTTP mais non,
+      c'est ce que renvoie le back pour préciser que cet utilisateur n'a pas de wallet
+     A voir si c'est pas possible de faire mieux */
+
       if (!response.ok) {
+        if (response.status === 404) {
+          console.log("No wallet found for this user yet");
+          setNoWallet(true);
+          setWallet(null);
+          return;
+        }
+        if (response.status === 500) {
+          throw new Error("Une erreur interne s'est produite.");
+        }
         const errorData: ApiErrorResponse = await response.json();
         throw new Error(
           errorData.detail || "Erreur lors de la récupération du wallet",
@@ -81,7 +91,8 @@ const WalletManager: React.FC = () => {
       }
 
       const data: WalletResponse = await response.json();
-      setStoredWallet(data);
+      setWallet(data);
+      setNoWallet(false);
       console.log("Wallet récupéré avec succès :", data);
     } catch (err) {
       const error = err as Error;
@@ -111,28 +122,22 @@ const WalletManager: React.FC = () => {
       </button>
       {error && <div className="error-message">{error}</div>}
 
-      {walletData && (
+      {noWallet ? (
         <div className="wallet-details">
-          <h2>Détails du Wallet ajouté :</h2>
-          <p>
-            <strong>Adresse publique :</strong> {walletData.address}
-          </p>
-          <p>
-            <strong>Balance :</strong> {walletData.balance}
-          </p>
+          <h2>Pas de wallet</h2>
         </div>
-      )}
-
-      {storedWallet && (
-        <div className="wallet-details">
-          <h2>Détails du Wallet stocké :</h2>
-          <p>
-            <strong>Adresse publique :</strong> {storedWallet.address}
-          </p>
-          <p>
-            <strong>Balance :</strong> {storedWallet.balance}
-          </p>
-        </div>
+      ) : (
+        wallet && (
+          <div className="wallet-details">
+            <h2>Détails du Wallet :</h2>
+            <p>
+              <strong>Adresse publique :</strong> {wallet.address}
+            </p>
+            <p>
+              <strong>Balance :</strong> {wallet.balance}
+            </p>
+          </div>
+        )
       )}
     </div>
   );
