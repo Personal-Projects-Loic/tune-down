@@ -26,16 +26,25 @@ const Wallet: React.FC = () => {
     setWalletBalance(null);
 
     try {
-      const response = await fetch("http://localhost:8000/wallet/add_wallet/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
+      const response = await fetch(
+        `http://localhost:8000/wallet/?wallet_id=${classicAddress.trim()}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
+          },
         },
-        body: JSON.stringify({
-          wallet_id: classicAddress.trim(),
-        }),
-      });
+      );
+
+      if (response.status === 204) {
+        setError("Aucun portefeuille trouvé pour cette adresse.");
+        return;
+      }
+
+      if (response.status === 244) {
+        setError("Erreur lors de la récupération du solde");
+        return;
+      }
 
       if (!response.ok) {
         const errorData: ApiErrorResponse = await response.json();
@@ -45,7 +54,7 @@ const Wallet: React.FC = () => {
       }
 
       const data: WalletResponse = await response.json();
-      setWalletBalance(data.balance); // On extrait uniquement la balance
+      setWalletBalance(data.balance);
       console.log("Solde récupéré avec succès :", data.balance);
     } catch (err) {
       const error = err as Error;
