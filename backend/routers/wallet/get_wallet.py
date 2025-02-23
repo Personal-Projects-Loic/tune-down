@@ -1,6 +1,7 @@
 from pydantic import BaseModel
-from fastapi import APIRouter, Depends, HTTPException, Response as FastAPIResponse
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi import status
 
 from db.database import get_db
 from middlewares.auth import auth_middleware
@@ -29,12 +30,23 @@ async def get_wallet(
     try:
         user = await db_get_user(db, user.id)
         if not user or not user.wallet_id:
-            return FastAPIResponse(status_code=204)
+            raise HTTPException(
+                status_code=status.HTTP_204_NO_CONTENT,
+                detail="No wallet found"
+            )
 
         wallet = await xrpl_get_wallet(user.wallet_id)
         if not wallet:
-            return FastAPIResponse(status_code=204)
+            raise HTTPException(
+                status_code=status.HTTP_204_NO_CONTENT,
+                detail="No wallet found"
+            )
 
         return WalletResponse(**wallet.model_dump())
+    except HTTPException as http_exc:
+        raise http_exc
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(e)
+        )
