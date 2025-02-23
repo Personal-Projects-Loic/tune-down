@@ -52,6 +52,7 @@ const WalletManager: React.FC = () => {
 
       const data: WalletResponse = await response.json();
       setWallet(data);
+      setNoWallet(false);
       console.log("Wallet ajouté avec succès :", data);
     } catch (err) {
       const error = err as Error;
@@ -78,9 +79,6 @@ const WalletManager: React.FC = () => {
       }
 
       if (!response.ok) {
-        if (response.status === 500) {
-          throw new Error("Une erreur interne s'est produite.");
-        }
         const errorData: ApiErrorResponse = await response.json();
         throw new Error(
           errorData.detail || "Erreur lors de la récupération du wallet",

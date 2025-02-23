@@ -1,4 +1,3 @@
-import WalletGenerator from "../components/Wallet/WalletGenerator";
 import WalletValidator from "../components/Wallet/WalletValidator";
 import WalletTransaction from "../components/Wallet/WalletTransaction";
 import DeconnectionButton from "../components/auth/DeconnectionButton";
