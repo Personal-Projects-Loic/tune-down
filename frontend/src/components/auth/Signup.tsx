@@ -5,6 +5,7 @@ import logo from "../../assets/tunedown.png";
 
 const Signup: React.FC = () => {
   const [email, setEmail] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
   const navigate = useNavigate();
@@ -13,23 +14,30 @@ const Signup: React.FC = () => {
     e.preventDefault();
     setError("");
     try {
-      const response = await fetch("http://localhost:8000/signup", {
+      const requestBody = JSON.stringify({ email, username, password });
+
+      const response = await fetch("http://localhost:8000/auth/signup", {
         method: "POST",
         credentials: "include",
         mode: "cors",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: requestBody,
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.detail || "Signup failed");
+        setError(errorData.detail[0].message);
+        console.error("Signup failed:", errorData.detail[0].message);
+        throw new Error(errorData.detail[0].message || "Signup failed");
       }
 
       const data = await response.json();
       console.log("Signup successful:", data);
+
+      sessionStorage.setItem("access_token", data.access_token);
+
       navigate("/");
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -51,6 +59,15 @@ const Signup: React.FC = () => {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label>Username:</label>
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
             required
           />
         </div>

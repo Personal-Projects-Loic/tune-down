@@ -6,8 +6,7 @@ from db.helpers import db_get_user
 from middlewares.auth import auth_middleware
 from db.database import get_db
 from utils.jwt import JWTContent
-#from utils.xrpl.create_nft import xrpl_create_nft, NFTCreateResponse
-#from utils.xrpl.helpers import xrpl_verify_secret_with_address
+from utils.xrpl.create_nft import xrpl_create_nft, NFTCreateResponse
 from db.models import NFT
 from images.minio import minio_client, Minio
 import os
@@ -99,7 +98,7 @@ async def upload_nft_picture(
         )
     
 
-@router.post("/add_nft")
+@router.post("/add_nft", response_model=NFTCreateResponse)
 async def add_wallet(
     wallet_secret: str,
     name: str,
@@ -111,20 +110,18 @@ async def add_wallet(
 
 ):
     user = await db_get_user(db, user.id)
-    return await upload_nft_picture(file, minio)
-
-#xrpl_verify_secret_with_address(wallet_secret, user.wallet_id)
-    # add image to bucket and get the link
-    #link = TEMP_LINK
-    #xrpl_res = await xrpl_create_nft(wallet_secret, link)
-    #await db_create_nft(
-    #    db,
-    #    nft=NFT(
-    #        nft_id=xrpl_res.nft.id,
-    #        name=name,
-    #        collection=collection,
-    #        user=user.id,
-    #        wallet_id=user.wallet_id
-    #    )
-    #)
-    #return (xrpl_res)
+    await upload_nft_picture(file, minio)
+    link = TEMP_LINK
+    xrpl_res = await xrpl_create_nft(wallet_secret, link)
+    await db_create_nft(
+        db,
+        nft=NFT(
+            nft_id=xrpl_res.nft.id,
+            name=name,
+            collection=collection,
+            user_id=user.id,
+            wallet_id=user.wallet_id
+        )
+    )
+    return (xrpl_res)
+    

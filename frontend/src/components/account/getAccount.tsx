@@ -1,38 +1,61 @@
 import React, { useState } from "react";
-import axios, { AxiosError } from "axios";
 import "../Wallet/Wallet.css";
 
 interface ApiErrorResponse {
   detail: string;
 }
 
-const GetAccount: React.FC = () => {
+interface WalletResponse {
+  balance: string;
+}
+
+const Wallet: React.FC = () => {
   const [classicAddress, setClassicAddress] = useState<string>("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [account, setAccount] = useState<any | null>(null);
-  const onGetAccount = async () => {
+  const [walletBalance, setWalletBalance] = useState<string | null>(null);
+
+  const handleGetBalance = async () => {
     if (!classicAddress) {
-      setError("Veuillez remplir tous les champs");
+      setError("Veuillez entrer une adresse publique.");
       return;
     }
 
     setLoading(true);
     setError(null);
-  
+    setWalletBalance(null);
+
     try {
-      const response = await axios.get(`http://localhost:8000/account-info/${classicAddress.trim()}`);
-      console.log(response.data);
-      setAccount(response.data);
+      const response = await fetch("http://localhost:8000/wallet/add_wallet/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
+        },
+        body: JSON.stringify({
+          wallet_id: classicAddress.trim(),
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData: ApiErrorResponse = await response.json();
+        throw new Error(
+          errorData.detail || "Erreur lors de la récupération du solde",
+        );
+      }
+
+      const data: WalletResponse = await response.json();
+      setWalletBalance(data.balance); // On extrait uniquement la balance
+      console.log("Solde récupéré avec succès :", data.balance);
     } catch (err) {
-      const errorResponse = err as AxiosError<ApiErrorResponse>;
-      setError(errorResponse.response?.data.detail || "Erreur lors de la récupération du compte");
+      const error = err as Error;
+      setError(error.message);
       console.error(err);
     } finally {
       setLoading(false);
     }
   };
-  
+
   return (
     <div className="component-container">
       <h1>Get Account Balance</h1>
@@ -44,24 +67,24 @@ const GetAccount: React.FC = () => {
             value={classicAddress}
             onChange={(e) => setClassicAddress(e.target.value)}
           />
-        </label>      
+        </label>
       </div>
       <button
         className="auth-button"
-        onClick={onGetAccount}
+        onClick={handleGetBalance}
         disabled={loading}
       >
-        {loading ? "Validation en cours..." : "get account"}
+        {loading ? "Validation en cours..." : "Get Balance"}
       </button>
       {error && <div className="error-message">{error}</div>}
-      {account && (
+      {walletBalance && (
         <div>
-          <h2>Account</h2>
-          <p>Balance : {account.balance}</p>
+          <h2>Balance</h2>
+          <p>{walletBalance}</p>
         </div>
       )}
     </div>
-  )
+  );
 };
 
-export default GetAccount;
+export default Wallet;
