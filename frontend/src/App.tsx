@@ -1,26 +1,43 @@
 import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Wallet from "./pages/Home";
 import Login from "./components/auth/Login";
 import Signup from "./components/auth/Signup";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import NewHome from "./pages/(protected)/home";
+import TestNftPage from "./pages/(protected)/nftPage";
+import Profil from "./pages/(protected)/profil";
 import PrivateRoute from "./components/PrivateRoute";
 import "./App.css";
+
+// Define route configurations
+const protectedRoutes = [
+  { path: "/", element: <Wallet /> },
+  { path: "/profil", element: <Profil /> },
+  { path: "/home", element: <NewHome /> },
+  { path: "/nft/:id", element: <TestNftPage /> },
+];
+
+const publicRoutes = [
+  { path: "/login", element: <Login /> },
+  { path: "/sign-up", element: <Signup /> },
+];
 
 const App: React.FC = () => {
   return (
     <Router>
       <div className="App">
         <Routes>
-          <Route
-            path="/"
-            element={
-              <PrivateRoute>
-                <Wallet />
-              </PrivateRoute>
-            }
-          />
-          <Route path="/login" element={<Login />} />
-          <Route path="/sign-up" element={<Signup />} />
+          {protectedRoutes.map(({ path, element }) => (
+            <Route
+              key={path}
+              path={path}
+              element={<PrivateRoute>{element}</PrivateRoute>}
+            />
+          ))}
+
+          {publicRoutes.map(({ path, element }) => (
+            <Route key={path} path={path} element={element} />
+          ))}
         </Routes>
       </div>
     </Router>
