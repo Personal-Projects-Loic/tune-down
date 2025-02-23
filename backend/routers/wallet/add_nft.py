@@ -93,7 +93,7 @@ async def upload_nft_picture(
         return url
     except Exception as e:
         raise HTTPException(
-            status_code=500, 
+            status_code=500,
             detail=f"Error uploading file: {str(e)}"
         )
 

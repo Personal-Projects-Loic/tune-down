@@ -29,7 +29,7 @@ async def get_nft_picture(
         # Check if the bucket exists
         if not minio_client.bucket_exists(bucket_name):
             raise HTTPException(
-                status_code=404, 
+                status_code=404,
                 detail=f"Bucket '{bucket_name}' not found"
             )
         # Get object data
@@ -43,7 +43,7 @@ async def get_nft_picture(
         if not content_type.startswith('image/'):
             response.close()
             raise HTTPException(
-                status_code=400, 
+                status_code=400,
                 detail=f"Object is not an image (Content-Type: {content_type})"
             )
         # Read the data
@@ -66,6 +66,6 @@ async def get_nft_picture(
         )
     except Exception as e:
         raise HTTPException(
-            status_code=500, 
+            status_code=500,
             detail=f"Failed to retrieve image: {str(e)}"
         )

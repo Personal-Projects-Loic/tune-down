@@ -11,6 +11,7 @@ from db.helpers import db_get_user
 
 router = APIRouter()
 
+
 class WalletResponse(BaseModel):
     address: str
     balance: str
@@ -22,7 +23,13 @@ class WalletResponse(BaseModel):
     previous_txn_lgr_seq: int
     sufficient_balance: bool
 
-@router.get("/", response_model=WalletResponse, responses={204: {"description": "No wallet found"}})
+
+@router.get(
+    "/",
+    response_model=WalletResponse, responses={
+        204: {"description": "No wallet found"}
+    }
+)
 async def get_wallet(
     user: JWTContent = Depends(auth_middleware),
     db: AsyncSession = Depends(get_db)
