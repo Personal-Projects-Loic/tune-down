@@ -32,7 +32,7 @@ function Home() {
       <div>
         <NFTSellOfferRequest />
       </div>
-      <div>
+      <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
         <DeconnectionButton />
       </div>
     </div>

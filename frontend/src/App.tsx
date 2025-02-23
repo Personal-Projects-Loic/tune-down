@@ -1,8 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Wallet from "./pages/Home";
-import Login from "./components/auth/Login";
-import Signup from "./components/auth/Signup";
+import Login from "./pages/auth/Login";
+import Signup from "./pages/auth/Signup";
 import NewHome from "./pages/(protected)/home";
 import TestNftPage from "./pages/(protected)/nftPage";
 import Profil from "./pages/(protected)/profil";
