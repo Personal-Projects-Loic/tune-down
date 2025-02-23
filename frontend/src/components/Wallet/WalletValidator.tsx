@@ -70,17 +70,14 @@ const WalletManager: React.FC = () => {
         },
       });
 
-      /* La console du navigateur pense que 404 est une erreur HTTP mais non,
-      c'est ce que renvoie le back pour préciser que cet utilisateur n'a pas de wallet
-     A voir si c'est pas possible de faire mieux */
+      if (response.status === 204) {
+        console.log("No wallet found for this user yet");
+        setNoWallet(true);
+        setWallet(null);
+        return;
+      }
 
       if (!response.ok) {
-        if (response.status === 404) {
-          console.log("No wallet found for this user yet");
-          setNoWallet(true);
-          setWallet(null);
-          return;
-        }
         if (response.status === 500) {
           throw new Error("Une erreur interne s'est produite.");
         }
