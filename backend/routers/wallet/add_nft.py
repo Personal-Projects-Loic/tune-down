@@ -100,7 +100,7 @@ async def upload_nft_picture(
         )
 
 
-@router.post("/add_nft", response=NFTCreateResponse)
+@router.post("/add_nft", response_model=NFTCreateResponse)
 async def add_wallet(
     wallet_secret: str,
     name: str,
