@@ -19,6 +19,20 @@ def test_bucket():
         found = minio.bucket_exists(bucket_name)
         if not found:
             minio.make_bucket(bucket_name)
+        policy = {
+            {
+                "Version": "2012-10-17",
+                "Statement": [
+                    {
+                        "Effect": "Allow",
+                        "Principal": "*",
+                        "Action": ["s3:GetObject"],
+                        "Resource": [f"arn:aws:s3:::{bucket_name}/*"]
+                    }
+                ]
+            }
+        }
+        minio.set_bucket_policy(bucket_name, policy)
     except Exception as e:
         print(e)
 

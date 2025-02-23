@@ -53,7 +53,9 @@ async def get_nft_picture(
         headers = {}
         if download:
             filename = object_name.split('/')[-1]
-            headers["Content-Disposition"] = f'attachment; filename="{filename}"'
+            headers["Content-Disposition"] = (
+                f'attachment; filename="{filename}"'
+            )
         else:
             headers["Content-Disposition"] = "inline"
         # Return the image as a streaming response
