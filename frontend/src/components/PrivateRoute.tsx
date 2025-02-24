@@ -6,7 +6,6 @@ const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const token = Cookies.get("access_token");
-  console.log("Token:", token);
 
   if (!token) {
     return <Navigate to="/login" />;
