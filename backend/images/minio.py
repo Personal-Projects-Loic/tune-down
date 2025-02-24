@@ -35,4 +35,3 @@ def test_bucket():
         minio.set_bucket_policy(bucket_name, policy)
     except Exception as e:
         print(e)
-

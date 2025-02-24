@@ -92,9 +92,10 @@ async def batch_get_nfts(db_nfts: list[NFT]):
     for db_nft in db_nfts:
         nft = await nft_getter.xrpl_get_nft(
             db_nft.nft_id,
-            db_nft.user.wallet_id
+            db_nft.wallet_id
         )
-        res.append(nft)
+        if nft:
+            res.append(nft)
     return res
 
 
@@ -105,6 +106,7 @@ async def list_nfts(
     db: AsyncSession = Depends(get_db)
 ):
     db_nfts = await db_get_nfts(db, Request)
+    print(db_nfts)
     nfts = await batch_get_nfts(db_nfts)
     response = [
         Response(

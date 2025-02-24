@@ -27,7 +27,10 @@ class NFTGetter:
 
     def __get_nft_from_cache(self, nft_id, nft_owner):
         if (self.nft_cache.get(nft_owner)):
-            return parse_nft_response(self.nft_cache[nft_id], nft_owner)
+            nft = self.nft_cache[nft_owner].get(nft_id)
+            if not nft:
+                return None
+            return parse_nft_response(nft, nft_owner)
         self.nft_cache[nft_owner] = {}
         return None
 
@@ -44,6 +47,7 @@ class NFTGetter:
         nft_id: str,
         nft_owner: str
     ):
+        print("id", nft_id, "owner", nft_owner)
         client = AsyncJsonRpcClient(XRPL_RPC_URL)
         res = self.__get_nft_from_cache(nft_id, nft_owner)
         if (res):
