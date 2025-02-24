@@ -1,8 +1,8 @@
 import React from "react";
 import { Product } from "../../types/nft";
 import { useNavigate } from "react-router-dom";
-
-const Card: React.FC<Product> = (nft) => {
+import { Box, Image, Text, BackgroundImage } from "@mantine/core";
+const NFTCard: React.FC<Product> = (nft) => {
   const navigate = useNavigate();
   return (
     <div style={styles.card} onClick={() => navigate(`/nft/${nft.id}`, { state: nft })}>
@@ -14,6 +14,36 @@ const Card: React.FC<Product> = (nft) => {
     </div>
   );
 };
+
+export const NewCard: React.FC<Product> = (nft) => {
+  const navigate = useNavigate();
+
+  return(
+    <Box
+    w={200}
+    h={300}
+    onClick={() => navigate(`/nft/${nft.id}`, { state: nft })}
+    style={{
+      borderRadius: "10px",
+      overflow: "hidden",
+      cursor: "pointer",
+      transition: "transform 0.2s ease-in-out",
+    }}
+  >
+    <BackgroundImage src={nft.url} radius="md" h={300}  w={200}>
+      <Box p="md" style={{ backgroundColor: "rgba(0, 0, 0, 0.5)", borderRadius: "10px" }}>
+        <Text color="white"  size="lg" >
+          {nft.name}
+        </Text>
+        <Text color="white" size="md">
+          {nft.price}
+        </Text>
+      </Box>
+    </BackgroundImage>
+  </Box>
+      
+  )
+}
 
 const styles = {
   card: {
@@ -43,4 +73,4 @@ const styles = {
   },
 };
 
-export default Card;
+export default NFTCard;

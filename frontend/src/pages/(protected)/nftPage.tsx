@@ -1,7 +1,6 @@
 import React from "react";
 import { Product } from "../../types/nft";
 import { useLocation } from "react-router-dom";
-import Layout from "../../components/layout";
 
 export default function TestNftPage() {
   
@@ -13,16 +12,13 @@ export default function TestNftPage() {
   }
 
   return (
-    <Layout>
-      <div style={styles.card} onClick={() => console.log(nft.name)}>
-        <img src={nft.url} alt={nft.name} style={styles.image} />
-        <div style={styles.overlay}>
-          <h2 style={styles.text}>{nft.name}</h2>
-          <p style={styles.text}>{nft.price}</p>
-        </div>
+    <div style={styles.card} onClick={() => console.log(nft.name)}>
+      <img src={nft.url} alt={nft.name} style={styles.image} />
+      <div style={styles.overlay}>
+        <h2 style={styles.text}>{nft.name}</h2>
+        <p style={styles.text}>{nft.price}</p>
       </div>
-    </Layout>
-
+    </div>
   );
 };
 

@@ -1,41 +1,56 @@
-import React, { CSSProperties } from "react";
+import React from "react";
 import headerLogo from "../assets/tuneDownLogo.png";
 import "../assets/fonts/Poppins-Roboto/Poppins/Poppins-Regular.ttf";
 import "./fonts.css";
 import { useNavigate } from "react-router-dom";
-import DeconnectionButton from "./auth/DeconnectionButton";
+import { AppShellHeader, Group, ActionIcon, Box, Divider, Image, Avatar, Menu } from "@mantine/core";
+import { IconBell, IconLogout, IconUser } from "@tabler/icons-react";
 
-const Header: React.FC = () => {
+const HeaderShell: React.FC = () => {
   const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      sessionStorage.removeItem("access_token");
+      console.log("User logged out");
+      navigate("/login");
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
+
   return (
-    <header style={styles.header}>
-      <img src={headerLogo} alt="Logo" style={styles.logo} onClick={() => navigate("/home")}/>
-      <div style={{display: "flex", alignItems: "center"}}>
-      <text style={styles.title} onClick={() => navigate("/profil")}>Profil</text>
-      <DeconnectionButton />
-      </div>
-    </header>
-  );
+    <AppShellHeader bg={'#F5F5F5'}>
+      <Group h="100%" px="md" justify="space-between" align="center">
+        <Box>
+          <Image src={headerLogo} alt="Logo" height={40} onClick={() => navigate("/home")} />
+        </Box>
+        <Group>
+
+          <Menu shadow="md" width={200}>
+            <Menu.Target>
+              <ActionIcon variant="transparent" c="dark">
+                <IconBell />
+              </ActionIcon>
+            </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Item onClick={() => {}}>Aucune Notification</Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
+          <Divider orientation="vertical" />
+          <Menu shadow="md" width={200}>
+            <Menu.Target>
+              <Avatar color="initials" variant="initial">P</Avatar>
+            </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Item onClick={() => navigate("/profil")} leftSection={<IconUser size={14} />}>Profil</Menu.Item>
+              <Menu.Item onClick={() => handleLogout()} leftSection={<IconLogout size={14} />}>Se deconnecter</Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
+        </Group>
+      </Group>
+    </AppShellHeader>
+  )
 };
 
-const styles: { [key: string]: CSSProperties } = {
-  header: {
-    padding: "10px",
-    backgroundColor: "#f8f9fa",
-    textAlign: "center",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  logo: {
-    height: "40px",
-    marginRight: "10px",
-  },
-  title: {
-    color: "#1139b9",
-    fontFamily: "Poppins, sans-serif",
-    marginRight: "10px",
-  }
-};
-
-export default Header;
+export default HeaderShell;

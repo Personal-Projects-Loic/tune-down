@@ -7,8 +7,10 @@ import NewHome from "./pages/(protected)/home";
 import TestNftPage from "./pages/(protected)/nftPage";
 import Profil from "./pages/(protected)/profil";
 import PrivateRoute from "./components/PrivateRoute";
-import "./App.css";
-
+//import "./App.css";
+import '@mantine/core/styles.css';
+import { MantineProvider } from '@mantine/core';
+import Layout from "./components/Layout";
 // Define route configurations
 const protectedRoutes = [
   { path: "/", element: <Wallet /> },
@@ -24,23 +26,30 @@ const publicRoutes = [
 
 const App: React.FC = () => {
   return (
-    <Router>
-      <div className="App">
-        <Routes>
-          {protectedRoutes.map(({ path, element }) => (
-            <Route
-              key={path}
-              path={path}
-              element={<PrivateRoute>{element}</PrivateRoute>}
-            />
-          ))}
-
-          {publicRoutes.map(({ path, element }) => (
-            <Route key={path} path={path} element={element} />
-          ))}
-        </Routes>
-      </div>
-    </Router>
+    <MantineProvider>
+      <Router>
+        <div>
+          <Routes>
+            {protectedRoutes.map(({ path, element }) => (
+              <Route
+                key={path}
+                path={path}
+                element={
+                  <PrivateRoute>
+                    <Layout>
+                      {element}
+                    </Layout>
+                  </PrivateRoute>
+                }
+              />
+            ))}
+            {publicRoutes.map(({ path, element }) => (
+                <Route key={path} path={path} element={element} />
+            ))}
+          </Routes>
+        </div>
+      </Router>
+    </MantineProvider>
   );
 };
 
