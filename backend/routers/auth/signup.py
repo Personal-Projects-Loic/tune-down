@@ -1,18 +1,17 @@
 from pydantic import BaseModel, field_validator
-from fastapi import APIRouter, Depends, HTTPException
-from routers.validators import (
-    validate_password,
-    validate_email,
-    validate_username
-)
+from fastapi import APIRouter, Depends, HTTPException, Response as FastAPIResponse, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
-from fastapi import status
 
 from db.models import User
 from db.database import get_db
 from utils.password import hash_password
 from utils.jwt import create_jwt, JWTContent
+from routers.validators import (
+    validate_password,
+    validate_email,
+    validate_username
+)
 
 router = APIRouter()
 
@@ -36,8 +35,7 @@ class Request(BaseModel):
 
 
 class Response(BaseModel):
-    access_token: str = None
-    pass
+    message: str = "Signup successful"
 
 
 async def db_create_user(db: AsyncSession, request: Request):
@@ -61,10 +59,8 @@ async def db_create_user(db: AsyncSession, request: Request):
 
 
 @router.post("/signup", response_model=Response)
-async def signup(request: Request, db: AsyncSession = Depends(get_db)):
-    print(request)
+async def signup(request: Request, response: FastAPIResponse, db: AsyncSession = Depends(get_db)):
     new_user = await db_create_user(db, request)
-    print(new_user)
 
     jwt_content = JWTContent(
         email=request.email,
@@ -72,5 +68,15 @@ async def signup(request: Request, db: AsyncSession = Depends(get_db)):
         username=request.username
     )
 
-    token_payload = create_jwt(jwt_content)
-    return Response(access_token=token_payload)
+    access_token = create_jwt(jwt_content)
+
+    response.set_cookie(
+        key="access_token",
+        value=access_token,
+        httponly=False,
+        secure=True,
+        samesite="strict",
+        max_age=3600
+    )
+
+    return Response(message="Signup successful")

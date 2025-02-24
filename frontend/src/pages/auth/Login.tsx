@@ -34,19 +34,10 @@ const Login: React.FC = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        setError(errorData.detail[0].message);
-        console.error("Login failed:", errorData.detail[0].message);
-        throw new Error(errorData.detail[0].message || "Login failed");
+        setError(errorData.detail || "Login failed");
+        console.error("Login failed:", errorData.detail);
+        throw new Error(errorData.detail || "Login failed");
       }
-
-      const data = await response.json();
-      console.log("Login successful:", data);
-
-      if (!data.access_token) {
-        throw new Error("No access token received");
-      }
-
-      sessionStorage.setItem("access_token", data.access_token);
 
       navigate("/");
     } catch (err: unknown) {

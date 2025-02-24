@@ -1,8 +1,7 @@
 from pydantic import BaseModel
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response as FastAPIResponse, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
-from fastapi import status
 
 from db.models import User
 from db.database import get_db
@@ -13,15 +12,12 @@ GENERAL_ERROR = "Invalid email/username or password"
 
 router = APIRouter()
 
-
 class Request(BaseModel):
     email_or_username: str
     password: str
 
-
 class Response(BaseModel):
-    access_token: str = None
-
+    message: str = "Login successful"
 
 async def db_get_user(db: AsyncSession, email_or_username: str):
     query = select(User).filter(
@@ -37,9 +33,9 @@ async def db_get_user(db: AsyncSession, email_or_username: str):
         )
     return user
 
-
 @router.post("/signin", response_model=Response)
-async def signin(request: Request, db: AsyncSession = Depends(get_db)):
+async def signin(request: Request, response: FastAPIResponse, db: AsyncSession = Depends(get_db)):
+    print(f"Received request: {request}")
     user = await db_get_user(db, request.email_or_username)
     if not verify_password(request.password, user.password):
         raise HTTPException(
@@ -53,4 +49,15 @@ async def signin(request: Request, db: AsyncSession = Depends(get_db)):
         username=user.username
     )
     access_token = create_jwt(jwt_content)
-    return Response(access_token=access_token)
+    print(f"Generated access token: {access_token}")
+
+    response.set_cookie(
+        key="access_token",
+        value=access_token,
+        httponly=False,
+        secure=True,
+        samesite="strict",
+        max_age=3600
+    )
+
+    return Response(message="Login successful")

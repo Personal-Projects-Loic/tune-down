@@ -9,7 +9,6 @@ import Profil from "./pages/(protected)/profil";
 import PrivateRoute from "./components/PrivateRoute";
 import "./App.css";
 
-// Define route configurations
 const protectedRoutes = [
   { path: "/", element: <Wallet /> },
   { path: "/profil", element: <Profil /> },

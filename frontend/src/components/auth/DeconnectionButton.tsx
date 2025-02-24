@@ -6,11 +6,20 @@ const DeconnectionButton: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      sessionStorage.removeItem("access_token");
-      console.log("User logged out");
+      const response = await fetch("http://localhost:8000/auth/signout", {
+        method: "POST",
+        credentials: "include",
+        mode: "cors",
+      });
+
+      if (!response.ok) {
+        throw new Error("Logout failed");
+      }
+
+      console.log("Logout successful");
       navigate("/login");
-    } catch (error) {
-      console.error("Error logging out:", error);
+    } catch (err) {
+      console.error("Logout error:", err);
     }
   };
 

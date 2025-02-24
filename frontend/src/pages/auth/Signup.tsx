@@ -36,8 +36,6 @@ const Signup: React.FC = () => {
       const data = await response.json();
       console.log("Signup successful:", data);
 
-      sessionStorage.setItem("access_token", data.access_token);
-
       navigate("/");
     } catch (err: unknown) {
       if (err instanceof Error) {
