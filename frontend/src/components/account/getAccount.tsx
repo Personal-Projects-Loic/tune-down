@@ -30,9 +30,7 @@ const Wallet: React.FC = () => {
         `http://localhost:8000/wallet/?wallet_id=${classicAddress.trim()}`,
         {
           method: "GET",
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
-          },
+          credentials: "include",
         },
       );
 
