@@ -38,8 +38,8 @@ const WalletManager: React.FC = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
         },
+        credentials: "include",
         body: JSON.stringify({
           wallet_id: walletId.trim(),
         }),
@@ -66,9 +66,7 @@ const WalletManager: React.FC = () => {
     try {
       const response = await fetch("http://localhost:8000/wallet/", {
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
-        },
+        credentials: "include",
       });
 
       if (response.status === 204) {
