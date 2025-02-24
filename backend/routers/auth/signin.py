@@ -35,7 +35,6 @@ async def db_get_user(db: AsyncSession, email_or_username: str):
 
 @router.post("/signin", response_model=Response)
 async def signin(request: Request, response: FastAPIResponse, db: AsyncSession = Depends(get_db)):
-    print(f"Received request: {request}")
     user = await db_get_user(db, request.email_or_username)
     if not verify_password(request.password, user.password):
         raise HTTPException(
