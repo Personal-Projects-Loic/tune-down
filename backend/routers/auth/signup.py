@@ -1,5 +1,6 @@
 from pydantic import BaseModel, field_validator
-from fastapi import APIRouter, Depends, HTTPException, Response as FastAPIResponse, status
+from fastapi import APIRouter, Depends, HTTPException
+from fastapi import Response as FastAPIResponse, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
 
@@ -59,7 +60,8 @@ async def db_create_user(db: AsyncSession, request: Request):
 
 
 @router.post("/signup", response_model=Response)
-async def signup(request: Request, response: FastAPIResponse, db: AsyncSession = Depends(get_db)):
+async def signup(request: Request, response: FastAPIResponse,
+    db: AsyncSession = Depends(get_db)):
     new_user = await db_create_user(db, request)
 
     jwt_content = JWTContent(

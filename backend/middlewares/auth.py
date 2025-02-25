@@ -1,13 +1,14 @@
 from typing import Annotated
 from fastapi import Depends
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from fastapi import Cookie, Depends, HTTPException
+from fastapi import Cookie, HTTPException
 from utils.jwt import verify_jwt
 
 bearer_scheme = HTTPBearer(auto_error=False)
 
 async def auth_middleware(
-    token: Annotated[HTTPAuthorizationCredentials, Depends(bearer_scheme)] = None,
+    token: Annotated[HTTPAuthorizationCredentials,
+        Depends(bearer_scheme)] = None,
     access_token: str = Cookie(None)
 ):
     if token and token.credentials:

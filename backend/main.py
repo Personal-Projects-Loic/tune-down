@@ -29,7 +29,6 @@ async def init_db():
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request, exc):
-    # Customize the error response
     errors = []
     for error in exc.errors():
         error_details = {

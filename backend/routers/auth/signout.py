@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, Response, status, Cookie
-from utils.jwt import create_jwt, JWTContent, verify_jwt
+from utils.jwt import verify_jwt
 
 router = APIRouter()
 

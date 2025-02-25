@@ -1,5 +1,6 @@
 from pydantic import BaseModel
-from fastapi import APIRouter, Depends, HTTPException, Response as FastAPIResponse, status
+from fastapi import APIRouter, Depends, HTTPException
+from fastapi import Response as FastAPIResponse, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
@@ -34,7 +35,8 @@ async def db_get_user(db: AsyncSession, email_or_username: str):
     return user
 
 @router.post("/signin", response_model=Response)
-async def signin(request: Request, response: FastAPIResponse, db: AsyncSession = Depends(get_db)):
+async def signin(request: Request, response: FastAPIResponse,
+    db: AsyncSession = Depends(get_db)):
     user = await db_get_user(db, request.email_or_username)
     if not verify_password(request.password, user.password):
         raise HTTPException(
