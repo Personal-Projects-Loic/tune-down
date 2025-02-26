@@ -16,7 +16,6 @@ const DeconnectionButton: React.FC = () => {
         throw new Error("Logout failed");
       }
 
-      console.log("Logout successful");
       navigate("/login");
     } catch (err) {
       console.error("Logout error:", err);
