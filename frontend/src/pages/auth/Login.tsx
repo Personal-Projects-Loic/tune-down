@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import "./Auth.css";
 import logo from "../../assets/tunedown.png";
@@ -8,6 +9,34 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const accessToken = Cookies.get("access_token");
+    const isAuthenticated = Cookies.get("is_authenticated");
+
+    if (accessToken || isAuthenticated) {
+      const handleLogout = async () => {
+        try {
+          const response = await fetch("http://localhost:8000/auth/signout", {
+            method: "POST",
+            credentials: "include",
+            mode: "cors",
+          });
+
+          if (!response.ok) {
+            throw new Error("Logout failed");
+          }
+
+          console.log("Logout successful");
+          navigate("/login");
+        } catch (err) {
+          console.error("Logout error:", err);
+        }
+      };
+
+      handleLogout();
+    }
+  }, [navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
