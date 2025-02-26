@@ -93,6 +93,41 @@ const WalletManager: React.FC = () => {
     }
   };
 
+  const deleteWallet = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(
+        "http://localhost:8000/wallet/delete_wallet",
+        {
+          method: "DELETE",
+          credentials: "include",
+        },
+      );
+
+      if (!response.ok) {
+        const errorData: ApiErrorResponse = await response.json();
+        throw new Error(
+          errorData.detail || "Erreur lors de la suppression du wallet",
+        );
+      }
+
+      setWallet(null);
+      setNoWallet(true);
+      console.log("Wallet supprimé avec succès");
+    } catch (err) {
+      const error = err as Error;
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /* désole arthur, je sais que mettre cette fonction ici
+  et ne pas faire de composant pour ca c'est pas très bien.
+ J'espère que ce ne sera pas trop chiant à ranger ^^ */
+
   useEffect(() => {
     fetchWallet();
   }, []);
@@ -129,6 +164,13 @@ const WalletManager: React.FC = () => {
             <p>
               <strong>Balance :</strong> {wallet.balance}
             </p>
+            <button
+              className="auth-button"
+              onClick={deleteWallet}
+              disabled={loading}
+            >
+              {loading ? "Suppression en cours..." : "Supprimer le Wallet"}
+            </button>
           </div>
         )
       )}
