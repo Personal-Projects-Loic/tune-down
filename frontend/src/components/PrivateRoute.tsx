@@ -5,13 +5,14 @@ import Cookies from "js-cookie";
 const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const token = Cookies.get("access_token");
+  const isAuthenticated = Cookies.get("is_authenticated");
 
-  if (!token) {
+  if (!isAuthenticated) {
     return <Navigate to="/login" />;
+  } else {
+    console.log("Authenticated");
+    return <>{children}</>;
   }
-
-  return <>{children}</>;
 };
 
 export default PrivateRoute;

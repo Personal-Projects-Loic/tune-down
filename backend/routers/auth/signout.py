@@ -6,6 +6,7 @@ router = APIRouter()
 @router.post("/signout")
 async def signout(response: Response):
     response.delete_cookie("access_token")
+    response.delete_cookie("is_authenticated")
     return {"message": "Logout successful"}
 
 async def get_current_user(access_token: str = Cookie(None)):
