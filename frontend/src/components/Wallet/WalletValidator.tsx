@@ -165,7 +165,7 @@ const WalletManager: React.FC = () => {
               <strong>Balance :</strong> {wallet.balance}
             </p>
             <button
-              className="auth-button"
+              // className="auth-button"
               onClick={deleteWallet}
               disabled={loading}
             >
