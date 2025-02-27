@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.future import select
 from pydantic import BaseModel
 
 from db.database import get_db, AsyncSession
@@ -32,7 +33,10 @@ async def verify_secret(wallet_secret: str, user_id: int, db: AsyncSession):
 
 
 async def db_add_price(db: AsyncSession, nft_id: str, price: int):
-    nft = await db.get(NFT, nft_id)
+    result = await db.execute(
+        select(NFT).filter(NFT.nft_id == nft_id)
+    )
+    nft = result.scalar_one_or_none()
     if not nft:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -58,12 +62,13 @@ async def add_wallet(
     db: AsyncSession = Depends(get_db),
 ):
     await verify_secret(request.wallet_private_key, user.id, db)
-
     xrpl_res = await xrpl_create_offer(
         amount=request.price,
         is_sell_offer=True,
         nft_id=request.nft_id,
         wallet_seed=request.wallet_private_key
     )
+
+    await db_add_price(db, request.nft_id, request.price)
 
     return Response(**xrpl_res.model_dump())

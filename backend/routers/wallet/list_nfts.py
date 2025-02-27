@@ -42,6 +42,7 @@ class User(BaseModel):
 
 class Response(BaseModel):
     nft_infos: NFTInfos
+    price: Optional[int]
     user: User
 
 
@@ -111,6 +112,7 @@ async def list_nfts(
     response = [
         Response(
             nft_infos=nft,
+            price=db_nfts[i].price,
             user=User(username=db_nfts[i].user.username)
         ) for i, nft in enumerate(nfts)
     ]

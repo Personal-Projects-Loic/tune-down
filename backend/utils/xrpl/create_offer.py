@@ -4,6 +4,7 @@ from xrpl.wallet import Wallet
 from xrpl.asyncio.transaction import submit_and_wait
 from xrpl.models.transactions import NFTokenCreateOffer
 from xrpl.models.transactions.nftoken_create_offer import NFTokenCreateOfferFlag
+from xrpl.constants import XRPLException
 from pydantic import BaseModel
 from fastapi import HTTPException
 
@@ -62,10 +63,12 @@ def parse_result(result) -> NFTOffer:
     )
 
 
-def handle_error(error_result: dict[str, any]):
-    error_code = error_result.get("error")
-    if error_code in ERROR_MAPPING:
-        status_code, message = ERROR_MAPPING[error_code]
+def handle_error(error_result: XRPLException):
+    error_str = error_result.args[0]
+    for key, value in ERROR_MAPPING.items():
+        if key not in error_str:
+            continue
+        status_code, message = value
         raise HTTPException(status_code=status_code, detail=message)
     raise HTTPException(status_code=500, detail="An unknown error occurred.")
 
@@ -91,10 +94,9 @@ async def xrpl_create_offer(
         destination=destination,
         expiration=expiration
     )
-
-    response = await submit_and_wait(offer_tx, client, wallet)
-
-    if not response.is_successful():
-        handle_error(response.result)
-    print(response.result)
+    response = None
+    try:
+        response = await submit_and_wait(offer_tx, client, wallet)
+    except XRPLException as e:
+        handle_error(e)
     return parse_result(response.result)
