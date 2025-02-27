@@ -1,7 +1,7 @@
 import pikapute from "../../assets/pikapute.png";
-import Card from "../../components/nfts/nftCard";
-import { Product } from "../../types/nft";
-import Layout from "../../components/layout";
+import { NewCard } from "../../components/nfts/nftCard";
+import { Product, NFT } from "../../types/nft";
+import { Stack, Title, Card, Flex, Avatar, Box, SimpleGrid, Text, Button } from "@mantine/core";
 
 const generateProducts = (length: number): Product[] => {
   return Array.from({ length }, (_, i) => ({
@@ -12,25 +12,24 @@ const generateProducts = (length: number): Product[] => {
   }));
 };
 
-
 export default function NewHome() {
   const nftList = generateProducts(10);
   return (
-    <Layout>
-      <div>
-        <p>Home page</p>
+    <Stack align="center">
+      <SimpleGrid cols={6} spacing="xl">
+      {nftList.map((product, index) => (
         <div>
-          {nftList.map((product, index) => (
-            <Card
-              key={index}
-              id={product.id}
-              url={product.url}
-              name={product.name}
-              price={product.price}
-            />
-          ))}
+          <NewCard
+            key={index}
+            id={product.id}
+            url={product.url}
+            name={product.name}
+            price={product.price}
+          />
         </div>
-      </div>
-    </Layout>
+          
+        ))}
+      </SimpleGrid>
+    </Stack>
   )
 }

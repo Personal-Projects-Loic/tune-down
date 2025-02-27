@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
-import "./Auth.css";
 import logo from "../../assets/tunedown.png";
+import { TextInput, PasswordInput, Button, Paper, Title, Text, Anchor, Center, Stack } from '@mantine/core';
 
 const Login: React.FC = () => {
   const [emailOrUsername, setEmailOrUsername] = useState<string>("");
@@ -79,37 +79,41 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="auth-container">
-      <img src={logo} alt="tunedown" className="auth-logo" />
-      <h2>Login</h2>
-      <form className="auth-form" onSubmit={handleLogin}>
-        <div className="form-group">
-          <label>Email or Username:</label>
-          <input
-            type="text"
-            value={emailOrUsername}
-            onChange={(e) => setEmailOrUsername(e.target.value)}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        {error && <p className="error-message">{error}</p>}
-        <button type="submit" className="auth-button">
-          Login
-        </button>
-      </form>
-      <p className="auth-link">
-        Don't have an account? <a href="/sign-up">Sign up</a>
-      </p>
-    </div>
+    <Center style={{ height: '100vh' }}>
+      <Paper shadow="md" p="xl" radius="md" withBorder style={{ width: 400 }}>
+        <Center>
+          <img src={logo} alt="tunedown" style={{ width: 300, marginBottom: 20 }} />
+        </Center>
+        <Title order={2} >Login</Title>
+        <form onSubmit={handleLogin}>
+          <Stack mt="md">
+            <TextInput
+              label="Email ou Pseudo"
+              placeholder="ton email ou pseudo"
+              value={emailOrUsername}
+              onChange={(e) => setEmailOrUsername(e.target.value)}
+              required
+            />
+            <PasswordInput
+              label="Mot de passe"
+              placeholder="ton mot de passe"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            {error && <Text color="red" size="sm">{error}</Text>}
+            <Button 
+              type="submit"
+              disabled={!emailOrUsername || !password}
+              color="blue"
+            >Se connecter</Button>
+          </Stack>
+        </form>
+        <Text mt="md" size="sm">
+          Pas de compte? <Anchor href="/sign-up">S'inscrire</Anchor>
+        </Text>
+      </Paper>
+    </Center>
   );
 };
 

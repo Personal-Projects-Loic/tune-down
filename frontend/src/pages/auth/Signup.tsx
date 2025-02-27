@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./Auth.css";
 import logo from "../../assets/tunedown.png";
+import { TextInput, PasswordInput, Button, Paper, Title, Text, Anchor, Center, Stack, Card, Image } from '@mantine/core';
 
 const Signup: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -47,46 +47,44 @@ const Signup: React.FC = () => {
   };
 
   return (
-    <div className="auth-container">
-      <img src={logo} alt="tunedown" className="auth-logo" />
-      <h2>Signup</h2>
-      <form className="auth-form" onSubmit={handleSignup}>
-        <div className="form-group">
-          <label>Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Username:</label>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        {error && <p className="error-message">{error}</p>}
-        <button type="submit" className="auth-button">
-          Signup
-        </button>
-      </form>
-      <p className="auth-link">
-        Already have an account? <a href="/login">Login</a>
-      </p>
-    </div>
+    <Center style={{ height: '100vh' }}>
+      <Card shadow="xs" padding="xl" style={{ width: 400 }}>
+        <Image src={logo} alt="Logo" height={40} style={{ marginBottom: 20 }} />
+        <Title order={1}>Créer un compte</Title>
+        <form onSubmit={handleSignup}>
+          <Stack>
+            <TextInput
+              label="Email"
+              placeholder="ton email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.currentTarget.value)}
+            />
+            <TextInput
+              label="Pseudo"
+              placeholder="ton Pseudo"
+              required
+              value={username}
+              onChange={(e) => setUsername(e.currentTarget.value)}
+            />
+            <PasswordInput
+              label="Mot de passe"
+              placeholder="Ton mot de passe"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.currentTarget.value)}
+            />
+            {error && <Text color="red">{error}</Text>}
+            <Button type="submit" color="blue" disabled={!email || !username || !password}>
+              S'inscrire
+            </Button>
+            <Text size="sm" mt="md">
+              Déjà un compte? <Anchor href="/login">Se connecter</Anchor>
+            </Text>
+          </Stack>
+        </form>
+      </Card>
+    </Center>
   );
 };
 
