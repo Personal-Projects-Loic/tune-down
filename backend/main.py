@@ -6,8 +6,13 @@ from routers.main import main_router as router
 from fastapi.exception_handlers import RequestValidationError
 from fastapi.responses import JSONResponse
 from images.minio import test_bucket
+import os
 
 app = FastAPI()
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
+XRPL_RPC_URL = os.getenv("XRPL_RPC_URL")
 
 origins = [
     "http://localhost:5173",
