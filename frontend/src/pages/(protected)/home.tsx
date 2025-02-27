@@ -1,7 +1,7 @@
 import pikapute from "../../assets/pikapute.png";
 import { NewCard } from "../../components/nfts/nftCard";
-import { Product, NFT } from "../../types/nft";
-import { Stack, Title, Card, Flex, Avatar, Box, SimpleGrid, Text, Button } from "@mantine/core";
+import { Product } from "../../types/nft";
+import { Stack, SimpleGrid } from "@mantine/core";
 
 const generateProducts = (length: number): Product[] => {
   return Array.from({ length }, (_, i) => ({

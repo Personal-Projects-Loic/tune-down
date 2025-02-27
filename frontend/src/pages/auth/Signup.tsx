@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/tunedown.png";
-import { TextInput, PasswordInput, Button, Paper, Title, Text, Anchor, Center, Stack, Card, Image } from '@mantine/core';
+import { TextInput, PasswordInput, Button, Title, Text, Anchor, Center, Stack, Card, Image } from '@mantine/core';
 
 const Signup: React.FC = () => {
   const [email, setEmail] = useState<string>("");

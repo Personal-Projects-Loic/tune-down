@@ -1,12 +1,11 @@
 import React from "react";
 import { Product } from "../../types/nft";
-import { Card, Text, Group, useMantineTheme, Image } from '@mantine/core';
+import { Card, Text, Group, Image } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import classes from './ImageCard.module.css';
 
 export const NewCard: React.FC<Product> = ({ id, url, name, price }) => {
   const navigate = useNavigate();
-  const theme = useMantineTheme();
 
   return (
     <Card

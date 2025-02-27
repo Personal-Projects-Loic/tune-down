@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Product } from "../../types/nft";
 import { useLocation } from "react-router-dom";
-import { Stack, Title, Card, Box, Avatar, Tabs, Grid, SimpleGrid, Text, Button, Image, Space, Divider, Group, Paper } from "@mantine/core";
+import { Stack, Card, Tabs, Grid, Text, Button, Image, Divider, Group } from "@mantine/core";
 import { getUserData } from "../../api/getUser";
 import { User } from "../../types/user";
 
@@ -43,6 +43,7 @@ export function Nft() {
     };
 
     fetchData();
+    console.log(userData);
   }, []);
 
   if (!nft) {

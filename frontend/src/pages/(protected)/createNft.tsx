@@ -1,35 +1,7 @@
-import { useState, useEffect } from "react";
-import { getUserData } from "../../api/getUser";
-import { getWallet } from "../../api/wallet/getWallet";
-import { User } from "../../types/user";
-import { Wallet } from "../../types/wallet";
+import { useState } from "react";
 import { IconUpload, IconPhoto, IconX } from "@tabler/icons-react";
-import { Stack, Title, Card, Group, Flex, Avatar, NumberInput, SimpleGrid, Textarea, TextInput, PasswordInput, Autocomplete, Text, Button, Space, Image } from "@mantine/core";
+import { Stack, Title, Card, Group, NumberInput, SimpleGrid, Textarea, TextInput, PasswordInput, Autocomplete, Text, Button, Space, Image } from "@mantine/core";
 import { Dropzone, IMAGE_MIME_TYPE, FileWithPath } from '@mantine/dropzone';
-
-
-function NftDropzone () {
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-
-  const handleDrop = (files: FileWithPath[]): void => {
-    // Get the first file (you can modify this to handle multiple files)
-    const file = files[0];
-    
-    // Create a URL for the file
-    const url = URL.createObjectURL(file);
-    
-    // Set the URL in state
-    setImageUrl(url);
-  };
-
-  return (
-    <Dropzone
-      onDrop={handleDrop}
-    >
-
-    </Dropzone>
-  )
-}
 
 export default function CreateNft() {
   const [imageUrl, setImageUrl] = useState<string | null>(null);

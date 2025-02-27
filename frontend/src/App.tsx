@@ -4,14 +4,14 @@ import Wallet from "./pages/Home";
 import Login from "./pages/auth/Login";
 import Signup from "./pages/auth/Signup";
 import NewHome from "./pages/(protected)/home";
-import TestNftPage, {Nft} from "./pages/(protected)/nftPage";
+import {Nft} from "./pages/(protected)/nftPage";
 import Profil from "./pages/(protected)/profil";
 import CreateNft from "./pages/(protected)/createNft";
 import PrivateRoute from "./components/PrivateRoute";
 //import "./App.css";
 import '@mantine/core/styles.css';
 import { MantineProvider } from '@mantine/core';
-import Layout from "./components/Layout";
+import Layout from "./components/layout";
 
 const protectedRoutes = [
   { path: "/", element: <Wallet /> },

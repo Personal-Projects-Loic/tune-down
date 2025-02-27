@@ -4,9 +4,8 @@ export const getWallet = async (): Promise<Wallet | null> => {
   try {
     const response = await fetch("http://localhost:8000/wallet/", {
       method: "GET",
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("access_token")}`,
-      },
+      credentials: "include",
+      mode: "cors",
     });
 
     if (!response.ok) {
