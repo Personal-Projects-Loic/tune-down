@@ -1,5 +1,5 @@
 import pikapute from "../../assets/pikapute.png";
-import NFTCard, { NewCard } from "../../components/nfts/nftCard";
+import { NewCard } from "../../components/nfts/nftCard";
 import { Product, NFT } from "../../types/nft";
 import { Stack, Title, Card, Flex, Avatar, Box, SimpleGrid, Text, Button } from "@mantine/core";
 
@@ -11,7 +11,6 @@ const generateProducts = (length: number): Product[] => {
     price: `$${(Math.random() * 100).toFixed(2)}`
   }));
 };
-
 
 export default function NewHome() {
   const nftList = generateProducts(10);

@@ -1,6 +1,9 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import { Product } from "../../types/nft";
 import { useLocation } from "react-router-dom";
+import { Stack, Title, Card, Box, Avatar, Tabs, Grid, SimpleGrid, Text, Button, Image, Space, Divider, Group, Paper } from "@mantine/core";
+import { getUserData } from "../../api/getUser";
+import { User } from "../../types/user";
 
 export default function TestNftPage() {
   
@@ -22,6 +25,77 @@ export default function TestNftPage() {
   );
 };
 
+
+export function Nft() {
+  const location = useLocation();
+  const nft = location.state as Product | undefined;
+  const [userData, setUserData] = useState<User | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const user = await getUserData();
+        setUserData(user);
+        console.log("User Data:", user);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (!nft) {
+    return <h2>No item found</h2>;
+  }
+
+  return (
+    <Stack align="center">
+      <Grid justify="center">
+        {/* Image du NFT */}
+        <Grid.Col span={4} style={{ display: "flex", justifyContent: "center" }}>
+          <Card w={1000} shadow="xs" withBorder>
+            <Image src={nft.url} alt={nft.name} fit="contain" />
+          </Card>
+        </Grid.Col>
+
+        <Grid.Col span={4} ml={10} w={300}>
+          <Card shadow="xs" withBorder radius="md">
+            <Stack>
+              <Text>Nom : {nft.name}</Text>
+              <Text>Prix : {nft.price} €</Text>
+            </Stack>
+            <Divider my="sm" />
+            <Group>
+              <Button variant="light">Acheter</Button>
+              <Button variant="light">Faire une offre</Button>
+            </Group>
+          </Card>
+
+          {/* Onglets Description & Détails */}
+          <Card shadow="xs" withBorder radius="md" mt="sm" h={200}>
+            <Tabs defaultValue="description">
+              <Tabs.List>
+                <Tabs.Tab value="description">Description</Tabs.Tab>
+                <Tabs.Tab value="details">Détails</Tabs.Tab>
+              </Tabs.List>
+
+              <Tabs.Panel value="description">
+                <Text lineClamp={6} >"sddsjdsjkdsfjkdsjkdsjksdjjlsdjsdfjsdkjsdjksdfbjsdfbj;sdfbjsfbjsdfbjsdfkjsgbkjgsfhjsdfkjsfkhjfsdhjsdfjlhsdfhjlfdshjlsdfhjlsfhli"sddsjdsjkdsfjkdsjkdsjksdjjlsdjsdfjsdkjsdjksdfbjsdfbj;sdfbjsfbjsdfbjsdfkjsgbkjgsfhjsdfkjsfkhjfsdhjsdfjlhsdfhjlfdshjlsdfhjlsfhli</Text>
+              </Tabs.Panel>
+              <Tabs.Panel value="details" pt="xs">
+                <Text>Proprietaire: </Text>
+                <Text>créateur:</Text>
+                <Text>Token ID:</Text>
+                <Text>Royalties:</Text>
+              </Tabs.Panel>
+            </Tabs>
+          </Card>
+        </Grid.Col>
+      </Grid>
+    </Stack>
+  );
+}
 
 const styles = {
   card: {

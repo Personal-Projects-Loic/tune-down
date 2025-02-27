@@ -4,8 +4,7 @@ import HeaderShell from "./header";
 
 const Layout = ({ children }: { children: ReactNode }) => {
   return (
-    <AppShell 
-      style={{ minHeight: "100vh" }} 
+    <AppShell
       header={{ height: 60 }}
     >
       <HeaderShell />
