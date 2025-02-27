@@ -78,6 +78,7 @@ async def xrpl_create_offer(
     nft_id: str,
     amount: float,
     is_sell_offer: bool,
+    owner: str = None,
     destination: str = None,
     expiration: int = None
 ):
@@ -92,11 +93,13 @@ async def xrpl_create_offer(
         nftoken_id=nft_id,
         amount=str(int(amount * (10**6))),
         destination=destination,
-        expiration=expiration
+        expiration=expiration,
+        owner=owner
     )
     response = None
     try:
         response = await submit_and_wait(offer_tx, client, wallet)
     except XRPLException as e:
+        print("aze", e)
         handle_error(e)
     return parse_result(response.result)
