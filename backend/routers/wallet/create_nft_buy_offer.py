@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status, HTTPException
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 from middlewares.auth import auth_middleware
 from utils.jwt import JWTContent

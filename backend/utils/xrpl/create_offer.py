@@ -3,7 +3,9 @@ from xrpl.asyncio.clients import AsyncJsonRpcClient
 from xrpl.wallet import Wallet
 from xrpl.asyncio.transaction import submit_and_wait
 from xrpl.models.transactions import NFTokenCreateOffer
-from xrpl.models.transactions.nftoken_create_offer import NFTokenCreateOfferFlag
+from xrpl.models.transactions.nftoken_create_offer import (
+    NFTokenCreateOfferFlag
+)
 from xrpl.constants import XRPLException
 from pydantic import BaseModel
 from fastapi import HTTPException
