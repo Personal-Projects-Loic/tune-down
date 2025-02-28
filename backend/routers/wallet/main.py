@@ -13,6 +13,9 @@ from routers.wallet.create_nft_sell_offer import (
 from routers.wallet.create_nft_buy_offer import (
     router as create_nft_buy_offer_router
 )
+from routers.wallet.get_nft_sell_offers import (
+    router as get_nft_sell_offers_router
+)
 
 
 router = APIRouter(
@@ -27,3 +30,4 @@ router.include_router(get_nft_router)
 router.include_router(delete_wallet_router)
 router.include_router(create_nft_sell_offer_router)
 router.include_router(create_nft_buy_offer_router)
+router.include_router(get_nft_sell_offers_router)
