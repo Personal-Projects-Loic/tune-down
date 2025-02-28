@@ -35,6 +35,7 @@ async def db_delete_wallet_id(
             detail="Failed to delete wallet_id due to integrity error"
         )
 
+
 @router.delete("/delete_wallet", response_model=DeleteWalletResponse)
 async def delete_wallet(
     user: JWTContent = Depends(auth_middleware),

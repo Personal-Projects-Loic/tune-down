@@ -1,12 +1,13 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.future import select
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 
 from db.database import get_db, AsyncSession
 from db.helpers import db_get_user
 from db.models import NFT
 from middlewares.auth import auth_middleware
+from routers.validators import validate_token_id
 from utils.jwt import JWTContent
 from utils.xrpl.create_offer import xrpl_create_offer
 from utils.xrpl.helpers import xrpl_verify_secret_with_address
@@ -25,6 +26,10 @@ class Request(BaseModel):
     nft_id: str
     wallet_private_key: str
     price: float
+
+    @field_validator("nft_id")
+    def validate_nft_id(cls, v):
+        return validate_token_id(v)
 
 
 async def verify_secret(wallet_secret: str, user_id: int, db: AsyncSession):
