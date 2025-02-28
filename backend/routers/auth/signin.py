@@ -13,12 +13,15 @@ GENERAL_ERROR = "Invalid email/username or password"
 
 router = APIRouter()
 
+
 class Request(BaseModel):
     email_or_username: str
     password: str
 
+
 class Response(BaseModel):
     message: str = "Login successful"
+
 
 async def db_get_user(db: AsyncSession, email_or_username: str):
     query = select(User).filter(
@@ -34,9 +37,13 @@ async def db_get_user(db: AsyncSession, email_or_username: str):
         )
     return user
 
+
 @router.post("/signin", response_model=Response)
-async def signin(request: Request, response: FastAPIResponse,
-    db: AsyncSession = Depends(get_db)):
+async def signin(
+    request: Request,
+    response: FastAPIResponse,
+    db: AsyncSession = Depends(get_db)
+):
     user = await db_get_user(db, request.email_or_username)
     if not verify_password(request.password, user.password):
         raise HTTPException(

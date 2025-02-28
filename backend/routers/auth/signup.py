@@ -60,8 +60,11 @@ async def db_create_user(db: AsyncSession, request: Request):
 
 
 @router.post("/signup", response_model=Response)
-async def signup(request: Request, response: FastAPIResponse,
-    db: AsyncSession = Depends(get_db)):
+async def signup(
+    request: Request,
+    response: FastAPIResponse,
+    db: AsyncSession = Depends(get_db)
+):
     new_user = await db_create_user(db, request)
 
     jwt_content = JWTContent(
