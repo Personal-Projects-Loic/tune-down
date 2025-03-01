@@ -8,6 +8,11 @@ export const getWallet = async (): Promise<Wallet | null> => {
       mode: "cors",
     });
 
+    if (response.status === 204) {
+      console.log("Aucun portefeuille trouvé pour cet utilisateur");
+      return null
+    }
+
     if (!response.ok) {
       throw new Error("Erreur lors de la récupération des données du portefeuille");
     }
