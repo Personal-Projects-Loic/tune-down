@@ -1,6 +1,4 @@
-from fastapi import UploadFile, APIRouter, File, Depends, HTTPException, status
-from middlewares.auth import auth_middleware
-from utils.jwt import JWTContent
+from fastapi import UploadFile, File, Depends, HTTPException, status
 from images.minio import minio_client, Minio, buckets
 import os
 import io
@@ -8,14 +6,9 @@ import uuid
 from datetime import datetime
 
 
-router = APIRouter()
-
-
-@router.post("/upload_picture")
 async def upload_picture(
     file: UploadFile = File(...),
     minio: Minio = Depends(minio_client),
-    _: JWTContent = Depends(auth_middleware)
 ):
     try:
         content_type = file.content_type
@@ -51,10 +44,7 @@ async def upload_picture(
             content_type=content_type
         )
 
-        # Generate the correct URL format for MinIO
-        # This assumes MinIO is configured with a proper endpoint
-        url = minio.presigned_get_object(bucket_name, new_filename)
-        return {"url": url}
+        return {"url": new_filename}
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
