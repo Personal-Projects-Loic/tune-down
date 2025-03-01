@@ -63,7 +63,6 @@ async def add_nft(
     wallet_secret: str = Form(...),
     name: str = Form(...),
     collection: str = Form(...),
-    description: str = Form(...),
     file: UploadFile = File(...),
     user: JWTContent = Depends(auth_middleware),
     db: AsyncSession = Depends(get_db),

@@ -1,20 +1,100 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { IconUpload, IconPhoto, IconX } from "@tabler/icons-react";
-import { Stack, Title, Card, Group, NumberInput, SimpleGrid, Textarea, TextInput, PasswordInput, Autocomplete, Text, Button, Space, Image } from "@mantine/core";
+import { Stack, Title, Card, Group, NumberInput, SimpleGrid, Textarea, TextInput, PasswordInput, Autocomplete, Text, Button, Space, Image, Anchor } from "@mantine/core";
 import { Dropzone, IMAGE_MIME_TYPE, FileWithPath } from '@mantine/dropzone';
+import { Wallet } from "../../types/wallet";
+import { addNft } from "../../api/wallet/addNft";
+import { getWallet } from "../../api/wallet/getWallet";
+import { newNFT } from "../../types/nft";
+
+
+export const uploadPicture = async (file: File): Promise<string | null> => {
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await fetch("http://localhost:8000/images/upload_picture", {
+      method: "POST",
+      credentials: "include",
+      mode: "cors",
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error("Erreur lors de l'envoi de l'image");
+    }
+
+    const data = await response.json();
+    console.log("Image envoyée avec succès :", data);
+    return data.url;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+};
 
 export default function CreateNft() {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [wallet, setWalletData] = useState<Wallet | null>(null);
+  const [secretKey, setSecretKey] = useState<string>("");
+  const [privateKeyError, setPrivateKeyError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const [nft, setNft] = useState<newNFT>({
+    name: "",
+    description: "",
+    price: 0,
+    collection: "",
+    image:  null 
+  });
+  
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const walletData = await getWallet();
+        setWalletData(walletData);
+        console.log("Wallet Data:", walletData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleDrop = (files: FileWithPath[]): void => {
-    // Get the first file (you can modify this to handle multiple files)
-    const file = files[0];
+    // Get the first file
+    const droppedFile = files[0];
     
-    // Create a URL for the file
-    const url = URL.createObjectURL(file);
+    // Save the file for later upload
+    setNft({...nft, image: droppedFile});
     
-    // Set the URL in state
+    // Create a preview URL for the file
+    const url = URL.createObjectURL(droppedFile);
     setImageUrl(url);
+  };
+
+  const handleNewNft = async () => {
+
+    if (nft.image === null) {
+      console.error("No image uploaded");
+      return;
+    }
+
+    // Use the actual file object that was saved when dropped
+    setLoading(true);
+    const data = await addNft(nft, secretKey);
+
+    if (data === null) {
+      console.error("Error creating NFT");
+      return;
+    }
+    setLoading(false);
+    console.log("NFT created");
+    
+    // Additional logic to handle the newly created NFT could go here
+    // For example, collecting form data and sending it to another API
   };
 
   return (
@@ -43,9 +123,6 @@ export default function CreateNft() {
             <Text size="xl" inline>
               Déposez une image pour votre NFT ici
             </Text>
-            <Text size="sm" c="dimmed" inline mt={7}>
-              le fichier ne doit pas depasser 5Mo
-            </Text>
           </div>
         </Group>
 }
@@ -60,22 +137,27 @@ export default function CreateNft() {
             label="Nom du NFT"
             placeholder="Nom de ton NFT"
             required
+            onChange={(e) => setNft({...nft, name: e.currentTarget.value})}
           />
           <Autocomplete
             label="Collection du nft"
             placeholder="Pick value or enter anything"
             data={['pokemon', 'cb', 'donneur d\'organe', 'yo gy yo']}
+            required
+            onChange={(value) => setNft({...nft, collection: value})}
           />
           <NumberInput
             label="Prix du NFT"
             placeholder="Prix de ton NFT"
+            defaultValue={1}
             required
+            onChange={(value) => setNft({...nft, price: typeof value === 'number' ? value : 0})}
           />
           <NumberInput
             label="Quantité du NFT"
             placeholder="Quantité de ton NFT"
             defaultValue={1}
-            required
+          
           />
           </SimpleGrid>
           <Textarea
@@ -89,11 +171,13 @@ export default function CreateNft() {
           label="Clé privée"
           placeholder="Entrez votre clé privée"
           required
+          error={privateKeyError}
+          onChange={(e) => setSecretKey(e.currentTarget.value)}
         />
         <Space h="lg" />
-        <Button color="blue">Créer le NFT</Button>
-
-      </Card>
+        <Button color="blue" disabled={!wallet} onClick={() => handleNewNft()} loading={loading}>Créer le NFT</Button>
+        {wallet != null ? <Text></Text> : <Text size="sm" c="dimmed" mt="sm">Vous devez être connecté à votre wallet pour créer un NFT <Anchor href="/profil">Ajouter un wallet</Anchor></Text>}
+      </Card> 
     </Stack>
   );
 }
