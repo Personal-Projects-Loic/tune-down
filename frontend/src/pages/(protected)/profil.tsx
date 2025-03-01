@@ -3,27 +3,46 @@ import { getUserData } from "../../api/getUser";
 import { getWallet } from "../../api/wallet/getWallet";
 import { User } from "../../types/user";
 import { Wallet } from "../../types/wallet";
-import { Stack, Title, Card, Flex, Avatar, Box, SimpleGrid, Text, Button } from "@mantine/core";
+import { Stack, Title, Card, Flex, Avatar, Box, SimpleGrid, Text, Button, TextInput } from "@mantine/core";
+import { addWallet } from "../../api/wallet/addWallet";
 
-export default function Profil() {
+export default function Profile() {
   const [userData, setUserData] = useState<User | null>(null);
   const [wallet, setWalletData] = useState<Wallet | null>(null);
+  const [createWalletClicked, setCreateWalletClicked] = useState<boolean>(false);
+  const [walletPublicKey, setWalletPublicKey] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const fetchData = async () => {
+    try {
+      const [user, walletData] = await Promise.all([getUserData(), getWallet()]);
+      setUserData(user);
+      setWalletData(walletData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [user, walletData] = await Promise.all([getUserData(), getWallet()]);
-        setUserData(user);
-        setWalletData(walletData);
-        console.log("User Data:", user);
-        console.log("Wallet Data:", walletData);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
     fetchData();
   }, []);
+
+  const handleAddWallet = async () => {
+    if (!walletPublicKey) return;
+    
+    setIsLoading(true);
+    try {
+      const result = await addWallet(walletPublicKey);
+      if (result) {
+        await fetchData(); // Refresh wallet data after successful addition
+        setCreateWalletClicked(false);
+      }
+    } catch (error) {
+      console.error("Error adding wallet:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <Stack gap="xl">
@@ -55,8 +74,37 @@ export default function Profil() {
       ) : (
         <Flex justify="center" align="center" style={{ height: "100px" }}>
           <Stack align="center">
-            <Text>Vous n'avez pas de wallet Connecté</Text>
-            <Button variant="light">Ajouter un wallet</Button>
+            {createWalletClicked ? (
+                <>
+                <TextInput
+                  label="Clé publique"
+                  placeholder="Clé publique"
+                  required
+                  value={walletPublicKey}
+                  onChange={(e) => setWalletPublicKey(e.currentTarget.value)}
+                />
+                <Button
+                  variant="light"
+                  loading={isLoading}
+                  onClick={handleAddWallet}
+                  disabled={!walletPublicKey}
+                >
+                  {"Ajouter le Wallet"}
+                </Button>
+                </>
+            ) :
+              (
+                <>
+                  <Text>Vous n'avez pas de wallet Connecté</Text>
+                  <Button variant="light"
+                    onClick={() => {
+                      window.open('https://xrpl.org/resources/dev-tools/xrp-faucets', '_blank', 'noopener,noreferrer')
+                      setCreateWalletClicked(true)
+                    }}
+                  >Ajouter un wallet</Button>
+                </>
+              )
+            }
           </Stack>
         </Flex>
       )}
