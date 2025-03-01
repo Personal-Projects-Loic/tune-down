@@ -44,10 +44,14 @@ async def upload_picture(
             content_type=content_type
         )
         print(f"Uploaded file to Minio: {new_filename}")
+        endpoint = os.getenv("MINIO_ENDPOINT", "localhost:9000")
+        
+        # Construct direct URL based on public bucket policy
+        url = f"http://{endpoint}/{bucket_name}/{new_filename}"
         return {
             "status": "success",
             "status_code": 200,
-            "url": new_filename
+            "url": url
         }
     except Exception as e:
         raise HTTPException(
