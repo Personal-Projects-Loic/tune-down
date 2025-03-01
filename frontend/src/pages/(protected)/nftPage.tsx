@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Product } from "../../types/nft";
+import { Product, Nft } from "../../types/nft";
 import { useLocation } from "react-router-dom";
 import { Stack, Card, Tabs, Grid, Text, Button, Image, Divider, Group } from "@mantine/core";
 import { getUserData } from "../../api/getUser";
@@ -26,9 +26,9 @@ export default function TestNftPage() {
 };
 
 
-export function Nft() {
+export function NftPage() {
   const location = useLocation();
-  const nft = location.state as Product | undefined;
+  const nft = location.state as Nft | undefined;
   const [userData, setUserData] = useState<User | null>(null);
 
   useEffect(() => {
@@ -56,14 +56,14 @@ export function Nft() {
         {/* Image du NFT */}
         <Grid.Col span={4} style={{ display: "flex", justifyContent: "center" }}>
           <Card w={1000} shadow="xs" withBorder>
-            <Image src={nft.url} alt={nft.name} fit="contain" />
+            <Image src={nft.nft_infos.uri} alt={nft.nft_infos.id} fit="contain" />
           </Card>
         </Grid.Col>
 
         <Grid.Col span={4} ml={10} w={300}>
           <Card shadow="xs" withBorder radius="md">
             <Stack>
-              <Text>Nom : {nft.name}</Text>
+              <Text>Nom : {nft.nft_infos.id}</Text>
               <Text>Prix : {nft.price} €</Text>
             </Stack>
             <Divider my="sm" />

@@ -1,7 +1,7 @@
 import pikapute from "../../assets/pikapute.png";
-import { NewCard } from "../../components/nfts/nftCard";
+import { NewCard, NftCard } from "../../components/nfts/nftCard";
 import { Product } from "../../types/nft";
-import { Stack, SimpleGrid, Image } from "@mantine/core";
+import { Stack, SimpleGrid, Text } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { listNft } from "../../api/wallet/listNft";
 import { Nft } from "../../types/nft";
@@ -34,12 +34,21 @@ export default function NewHome() {
   return (
     <Stack align="center">
       <SimpleGrid cols={6} spacing="xl">
-        {nftData?.map((product, index) => (
-          <div key={index}>
-            <Image src={product.nft_infos.uri} alt={product.nft_infos.id} fit="contain" />
-          </div>
-        ))}
-      {nftList.map((product, index) => (
+        {nftData ? (
+          nftData.length > 0 ?
+          nftData.map((nft, index) => (
+            <div>
+              <NftCard
+                key={index}
+                nft_infos={nft.nft_infos}
+                price={nft.price}
+                user={nft.user}
+              />
+            </div>
+          ))
+          : <Text>Aucune Nft à afficher</Text>
+        ) : <Text>loading</Text>}
+      {/*nftList.map((product, index) => (
         <div>
           <NewCard
             key={index}
@@ -50,7 +59,7 @@ export default function NewHome() {
           />
         </div>
           
-        ))}
+        ))*/}
       </SimpleGrid>
     </Stack>
   )

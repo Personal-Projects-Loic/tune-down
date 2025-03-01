@@ -4,7 +4,7 @@ import Wallet from "./pages/Home";
 import Login from "./pages/auth/Login";
 import Signup from "./pages/auth/Signup";
 import NewHome from "./pages/(protected)/home";
-import {Nft} from "./pages/(protected)/nftPage";
+import {NftPage} from "./pages/(protected)/nftPage";
 import Profil from "./pages/(protected)/profil";
 import CreateNft from "./pages/(protected)/createNft";
 import PrivateRoute from "./components/PrivateRoute";
@@ -17,7 +17,7 @@ const protectedRoutes = [
   { path: "/", element: <Wallet /> },
   { path: "/profil", element: <Profil /> },
   { path: "/home", element: <NewHome /> },
-  { path: "/nft/:id", element: <Nft /> },
+  { path: "/nft/:id", element: <NftPage /> },
   { path: "/new-nft", element: <CreateNft /> },
 ];
 
