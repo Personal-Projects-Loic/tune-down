@@ -27,13 +27,13 @@ async def upload_picture(
                 detail="Empty file"
             )
 
-        # Generate a unique filename
-        file_extension = os.path.splitext(file.filename)[1]
+        # Génération d'un nom de fichier unique
+        file_extension = os.path.splitext(file.filename or "")[1]
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         unique_id = str(uuid.uuid4().hex[:8])
         new_filename = f"{timestamp}_{unique_id}{file_extension}"
 
-        # Upload the file to Minio
+        # Upload du fichier sur Minio
         file_object = io.BytesIO(file_data)
         bucket_name = buckets['nft-tests']
         minio.put_object(
@@ -43,8 +43,12 @@ async def upload_picture(
             file_size,
             content_type=content_type
         )
-
-        return {"url": new_filename}
+        print(f"Uploaded file to Minio: {new_filename}")
+        return {
+            "status": "success",
+            "status_code": 200,
+            "url": new_filename
+        }
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
