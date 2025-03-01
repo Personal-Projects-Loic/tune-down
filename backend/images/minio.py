@@ -1,5 +1,6 @@
 from minio import Minio
 import os
+import json
 
 buckets = {
     "nft-tests": "nft-tests",
@@ -29,12 +30,14 @@ def test_bucket():
             "Statement": [
                 {
                     "Effect": "Allow",
-                    "Principal": "*",
+                    "Principal": {"AWS": ["*"]},
                     "Action": ["s3:GetObject"],
                     "Resource": [f"arn:aws:s3:::{buckets['nft-tests']}/*"]
                 }
             ]
         }
-        minio.set_bucket_policy(buckets["nft-tests"], policy)
+        # Convert the policy dictionary to a JSON string
+        policy_json = json.dumps(policy)
+        minio.set_bucket_policy(buckets["nft-tests"], policy_json)
     except Exception as e:
         print(e)
