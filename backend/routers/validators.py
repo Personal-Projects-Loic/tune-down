@@ -34,6 +34,16 @@ def validate_wallet_id(v: str):
     return v
 
 
+def validate_wallet_secret(v: str):
+    if (len(v) < 25 or len(v) > 35):
+        raise ValueError('Invalid wallet secret')
+    if not v.isalnum():
+        raise ValueError('Invalid wallet secret')
+    if not v.startswith('s'):
+        raise ValueError('Invalid wallet secret')
+    return v
+
+
 def validate_token_id(v: str):
     if (len(v) != 64):
         raise ValueError('Token length must be 64')
