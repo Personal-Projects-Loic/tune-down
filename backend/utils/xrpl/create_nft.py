@@ -68,7 +68,6 @@ async def xrpl_create_nft(
             else:
                 # Use a string representation or a default value
                 uri = str(uri)
-        
         tx = NFTokenMint(
             account=wallet.classic_address,
             flags=flags,
@@ -87,7 +86,6 @@ async def xrpl_create_nft(
                 "error": "Failed to create NFT",
                 "details": str(e)
             }
-            
     except Exception as e:
         # Catch any other unexpected errors
         error_message = str(e)

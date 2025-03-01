@@ -18,7 +18,7 @@ from utils.xrpl.create_nft import xrpl_create_nft
 from db.models import NFT
 from images.minio import minio_client, Minio
 from images.upload_picture import upload_picture
-
+from images.delete_picture import delete_picture
 router = APIRouter()
 TEMP_LINK = (
     "https://yt3.googleusercontent.com/bZ_SbVBaTDsmrkvA-"
@@ -71,28 +71,39 @@ async def add_nft(
     try:
         user = await db_get_user(db, user.id)
         link = await upload_picture(file, minio)
+        if link.get("status") != "success":
+            return JSONResponse(
+                status_code=500,
+                content=link
+            )
 
-        xrpl_res = await xrpl_create_nft(wallet_secret, link)
-        # Check if xrpl_create_nft returned an error
-        if isinstance(xrpl_res, dict) and xrpl_res.get("success") is False:
+        xrpl_res = await xrpl_create_nft(wallet_secret, link.get("url"))
+
+        if isinstance(xrpl_res, dict) and not xrpl_res.get("success", True):
+            await delete_picture(link.get("url"), minio)
             return JSONResponse(
                 status_code=406,
                 content=xrpl_res
             )
-        # If we got here, the NFT creation was successful
+
+        nft_id = xrpl_res.get("nft", {}).get("id")
+        if not nft_id:
+            raise ValueError("NFT ID missing from XRPL response")
+
         await db_create_nft(
             db,
             nft=NFT(
-                nft_id=xrpl_res.nft.id,
+                nft_id=nft_id,
                 name=name,
                 collection=collection,
                 user_id=user.id,
                 wallet_id=user.wallet_id
             )
         )
+
         return xrpl_res
+
     except Exception as e:
-        # Handle any other exceptions that might occur
         error_message = str(e)
         print(f"Error in add_nft: {error_message}")
         return JSONResponse(

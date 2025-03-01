@@ -37,7 +37,7 @@ export default function CreateNft() {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [wallet, setWalletData] = useState<Wallet | null>(null);
   const [secretKey, setSecretKey] = useState<string>("");
-  const [privateKeyError, setPrivateKeyError] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   const [nft, setNft] = useState<newNFT>({
@@ -87,10 +87,14 @@ export default function CreateNft() {
     const data = await addNft(nft, secretKey);
 
     if (data === null) {
-      console.error("Error creating NFT");
+      console.log("Error creating NFT");
+      setErrorMessage("Erreur lors de la création du NFT");
+      setLoading(false);
+
       return;
     }
     setLoading(false);
+    setErrorMessage(null);
     console.log("NFT created");
     
     // Additional logic to handle the newly created NFT could go here
@@ -171,12 +175,12 @@ export default function CreateNft() {
           label="Clé privée"
           placeholder="Entrez votre clé privée"
           required
-          error={privateKeyError}
           onChange={(e) => setSecretKey(e.currentTarget.value)}
         />
         <Space h="lg" />
         <Button color="blue" disabled={!wallet} onClick={() => handleNewNft()} loading={loading}>Créer le NFT</Button>
         {wallet != null ? <Text></Text> : <Text size="sm" c="dimmed" mt="sm">Vous devez être connecté à votre wallet pour créer un NFT <Anchor href="/profil">Ajouter un wallet</Anchor></Text>}
+        {errorMessage && <Text color="red" size="sm">{errorMessage}</Text>}
       </Card> 
     </Stack>
   );
