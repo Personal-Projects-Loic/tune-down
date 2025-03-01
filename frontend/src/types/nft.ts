@@ -21,3 +21,14 @@ export type NFT = {
   date: string;
   image: string;
 };
+
+export type newNFT = {
+  name: string;
+  description: string;
+  price: number;
+  image: File | null;
+  //quantity: number;
+  //royalties: number;
+  //taxon: number;
+  collection: string;
+};
