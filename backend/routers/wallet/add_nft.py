@@ -19,6 +19,7 @@ from db.models import NFT
 from images.minio import minio_client, Minio
 from images.upload_picture import upload_picture
 from images.delete_picture import delete_picture
+
 router = APIRouter()
 TEMP_LINK = (
     "https://yt3.googleusercontent.com/bZ_SbVBaTDsmrkvA-"
@@ -79,14 +80,14 @@ async def add_nft(
 
         xrpl_res = await xrpl_create_nft(wallet_secret, link.get("url"))
 
-        if isinstance(xrpl_res, dict) and not xrpl_res.get("success", True):
+        if isinstance(xrpl_res, dict) and not xrpl_res["success"]:
             await delete_picture(link.get("url"), minio)
             return JSONResponse(
                 status_code=406,
                 content=xrpl_res
             )
 
-        nft_id = xrpl_res.get("nft", {}).get("id")
+        nft_id = xrpl_res.nft.id
         if not nft_id:
             raise ValueError("NFT ID missing from XRPL response")
 

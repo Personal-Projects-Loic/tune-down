@@ -5,22 +5,23 @@ export type Product = {
   price: string;
 };
 
-export type NFT = {
+export type Nft_infos = {
   id: string;
-  uri: string;
-  flags: Array<string>;
-  taxon: number;
-  collection: string;
-  onSale: boolean;
-  price: string;
-  name: string;
-  description: string;
+  issuer: string;
   owner: string;
-  creator: string;
-  royalties: number;
-  date: string;
-  image: string;
+  uri: string;
+  flags: number;
+  transfer_fee: number;
+  taxon: number;
 };
+
+export type Nft = {
+  nft_infos: Nft_infos;
+  price: number | null;
+  user : {
+    username: string;
+  }
+}
 
 export type newNFT = {
   name: string;
