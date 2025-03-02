@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import "./Auth.css";
 import logo from "../../assets/tunedown.png";
 
@@ -16,6 +16,7 @@ const Login: React.FC = () => {
 
     if (accessToken || isAuthenticated) {
       const handleLogout = async () => {
+        console.log("Logging out...");
         try {
           const response = await fetch(
             "http://159.69.154.76:8000/auth/signout",
@@ -71,6 +72,7 @@ const Login: React.FC = () => {
         throw new Error(errorData.detail || "Login failed");
       }
 
+      console.log("Login successful, je m'anvol vers");
       navigate("/");
     } catch (err: unknown) {
       if (err instanceof Error) {

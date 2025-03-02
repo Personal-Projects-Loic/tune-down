@@ -77,8 +77,9 @@ async def signup(request: Request, response: FastAPIResponse,
         value=access_token,
         httponly=True,
         secure=True,
-        samesite="strict",
-        max_age=3600
+        samesite="None",
+        max_age=3600,
+        path="/",
     )
 
     response.set_cookie(
@@ -86,8 +87,9 @@ async def signup(request: Request, response: FastAPIResponse,
         value="true",
         httponly=False,
         secure=True,
-        samesite="strict",
-        max_age=3600
+        samesite="None",
+        max_age=3600,
+        path="/",
     )
 
     return Response(message="Signup successful")

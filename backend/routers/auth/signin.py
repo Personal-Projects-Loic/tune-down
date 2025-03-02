@@ -56,18 +56,20 @@ async def signin(request: Request, response: FastAPIResponse,
         key="access_token",
         value=access_token,
         httponly=True,
-        secure=True,
-        samesite="strict",
-        max_age=3600
+        secure=False,
+        samesite="Lax",
+        max_age=3600,
+        path="/",
     )
 
     response.set_cookie(
         key="is_authenticated",
         value="true",
         httponly=False,
-        secure=True,
-        samesite="strict",
-        max_age=3600
+        secure=False,
+        samesite="Lax",
+        max_age=3600,
+        path="/",
     )
 
     return Response(message="Login successful")
