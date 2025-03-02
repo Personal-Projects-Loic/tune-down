@@ -59,7 +59,7 @@ async def signin(request: Request, response: FastAPIResponse,
         secure=False,
         samesite="None",
         max_age=3600,
-        path="http://tunedown.fr",
+        path="/",
     )
 
     response.set_cookie(
@@ -69,7 +69,7 @@ async def signin(request: Request, response: FastAPIResponse,
         secure=False,
         samesite="None",
         max_age=3600,
-        path="http://tunedown.fr",
+        path="/",
     )
 
     return Response(message="Login successful")
