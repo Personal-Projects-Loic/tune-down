@@ -56,3 +56,15 @@ class NFTGetter:
         response = await client.request(request)
 
         return self.__find_nft_from_result(nft_id, nft_owner, response.result)
+
+
+async def get_account_nfts(address: str, limit: int, page: int):
+    client = AsyncJsonRpcClient(XRPL_RPC_URL)
+    request = AccountNFTs(
+        account=address,
+        limit=limit,
+        marker=page
+    )
+    response = await client.request(request)
+
+    return parse_nft_response(response.result)
