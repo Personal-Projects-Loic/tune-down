@@ -4,38 +4,19 @@ import { useLocation } from "react-router-dom";
 import { Stack, Card, Tabs, Grid, Text, Button, Image, Divider, Group, Anchor } from "@mantine/core";
 import { getSellOffer } from "../../api/nft/getSellOffer";
 import { NftOffer } from "../../types/nftOffer";
-import useWalletStore from "../../utils/store";
+import { getWallet } from "../../api/wallet/getWallet";
+import { Wallet } from "../../types/wallet";
 
-export default function TestNftPage() {
-  
-  const location = useLocation();
-  const nft = location.state as Product;
-
-  if (!nft) {
-    return <h2>No item found</h2>;
-  }
-
-  return (
-    <div style={styles.card} onClick={() => console.log(nft.name)}>
-      <img src={nft.url} alt={nft.name} style={styles.image} />
-      <div style={styles.overlay}>
-        <h2 style={styles.text}>{nft.name}</h2>
-        <p style={styles.text}>{nft.price}</p>
-      </div>
-    </div>
-  );
-};
-
-
-export function NftPage() {
+export default function OwnerNftPage() {
   const location = useLocation();
   const nft = location.state as Nft | undefined;
+  const [walletData, setWalletData] = useState<Wallet | null>(null);
   const [sellOffer, setSellOffer] = useState<NftOffer | null>(null);
-  const { wallet } = useWalletStore();
 
   const fetchData = async () => {
     try {
-      const nftOffer = await getSellOffer(nft?.nft_infos.id ?? "");
+      const [wallet, nftOffer] = await Promise.all([getWallet(), getSellOffer(nft?.nft_infos.id ?? "")]);
+      setWalletData(wallet);
       setSellOffer(nftOffer);
       console.log("wallet Data:", wallet);
     } catch (error) {
@@ -45,6 +26,7 @@ export function NftPage() {
 
   useEffect(() => {
     fetchData();
+    console.log(walletData);
   }, []);
 
   if (!nft) {
@@ -69,9 +51,9 @@ export function NftPage() {
             </Stack>
             <Divider my="sm" />
             <Group>
-              <Button variant="light" disabled={!wallet || !sellOffer}>{sellOffer ? <Text>Acheter</Text> : <Text>Aucune offre de vente</Text>}</Button>
-              <Button variant="light" disabled={!wallet}>Faire une offre</Button>
-              {!wallet && <Text>Connectez-vous pour acheter ou faire une offre <Anchor href="/profil">Ajouter un wallet</Anchor></Text>}
+              <Button variant="light" disabled={!walletData || !sellOffer}>{sellOffer ? <Text>Acheter</Text> : <Text>Aucune offre de vente</Text>}</Button>
+              <Button variant="light" disabled={!walletData}>Faire une offre</Button>
+              {!walletData && <Text>Connectez-vous pour acheter ou faire une offre <Anchor href="/profil">Ajouter un wallet</Anchor></Text>}
             </Group>
           </Card>
 

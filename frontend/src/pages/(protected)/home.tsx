@@ -41,14 +41,12 @@ export default function NewHome() {
         {nftData ? (
           nftData.length > 0 ?
           nftData.map((nft, index) => (
-            <div>
               <NftCard
                 key={index}
                 nft_infos={nft.nft_infos}
                 price={nft.price}
                 user={nft.user}
               />
-            </div>
           ))
           : <Text>Aucune Nft à afficher</Text>
         ) : <Text>loading</Text>}
