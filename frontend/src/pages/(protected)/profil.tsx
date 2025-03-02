@@ -10,14 +10,14 @@ import {
   Box,
   SimpleGrid,
   Text,
-  Button,
-  TextInput
 } from "@mantine/core";
 import { addWallet } from "../../api/wallet/addWallet";
-import { NftCard } from "../../components/nfts/nftCard";
 import { Nft } from "../../types/nft";
 import pikapute from "../../assets/pikapute.png";
 import useWalletStore from "../../utils/store";
+import { listUserNft } from "../../api/nft/listUserNft";
+import NftGrid from "../../components/profil/nftGrid";
+import WalletCard from "../../components/profil/walletCard";
 
 const generateNfts = (length: number): Nft[] => {
   return Array.from({ length }, (_, i) => ({
@@ -55,10 +55,19 @@ export default function Profile() {
   };
 
   useEffect(() => {
-    console.log("wallet:", wallet);
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (wallet) {
+      listUserNft().then((nfts) => {
+        if (nfts) {
+          console.log("NFTs de l'utilisateur récupérés avec succès :", nfts);
+        }
+      });
+    }
+  }, [wallet]);
+  
   const handleAddWallet = async () => {
     if (!walletPublicKey) return;
     
@@ -93,71 +102,16 @@ export default function Profile() {
         </Flex>
       </Card>
       <Title order={3}>Infos wallet</Title>
-      <Card shadow="xs" withBorder>
-      {wallet ? (
-        <Flex align="center">
-          <Box flex={1}>
-            <SimpleGrid cols={{ base: 1, md: 2 }}>
-              <Text key="address">Address : {wallet?.address ?? "Non renseigné"}</Text>
-              <Text key="balance">Balance : {wallet?.balance ?? "Non renseigné"}</Text>
-            </SimpleGrid>
-          </Box>
-        </Flex>
-      ) : (
-        <Flex justify="center" align="center" style={{ height: "100px" }}>
-          <Stack align="center">
-            {createWalletClicked ? (
-                <>
-                <TextInput
-                  label="Clé publique"
-                  placeholder="Clé publique"
-                  required
-                  value={walletPublicKey}
-                  onChange={(e) => setWalletPublicKey(e.currentTarget.value)}
-                />
-                <Button
-                  variant="light"
-                  loading={isLoading}
-                  onClick={handleAddWallet}
-                  disabled={!walletPublicKey}
-                >
-                  {"Ajouter le Wallet"}
-                </Button>
-                </>
-            ) :
-              (
-                <>
-                  <Text>Vous n'avez pas de wallet Connecté</Text>
-                  <Button variant="light"
-                    onClick={() => {
-                      window.open('https://xrpl.org/resources/dev-tools/xrp-faucets', '_blank', 'noopener,noreferrer')
-                      setCreateWalletClicked(true)
-                    }}
-                  >Ajouter un wallet</Button>
-                </>
-              )
-            }
-          </Stack>
-        </Flex>
-      )}
-    </Card>
-    {wallet ? (
-      <>
-        <Title order={3}>Mes Nft</Title>
-        <SimpleGrid cols={6} spacing="xl">
-          {nftList.map((nft, index) => (
-              <NftCard
-                key={index}
-                nft_infos={nft.nft_infos}
-                price={nft.price}
-                user={nft.user}
-              />
-          ))}
-        </SimpleGrid>
-      </>
-    ) : (
-      <Text></Text>
-    )}
+      <WalletCard
+        wallet={wallet}
+        createWalletClicked={createWalletClicked}
+        walletPublicKey={walletPublicKey}
+        setWalletPublicKey={setWalletPublicKey}
+        isLoading={isLoading}
+        handleAddWallet={handleAddWallet}
+        setCreateWalletClicked={setCreateWalletClicked}
+      />
+      <NftGrid wallet={wallet} nftList={nftList} />
     </Stack>
   );
 }

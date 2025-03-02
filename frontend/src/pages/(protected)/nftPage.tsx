@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Product, Nft } from "../../types/nft";
 import { useLocation } from "react-router-dom";
 import { Stack, Card, Tabs, Grid, Text, Button, Image, Divider, Group, Anchor } from "@mantine/core";
@@ -29,32 +29,17 @@ export default function TestNftPage() {
 
 export function NftPage() {
   const location = useLocation();
-  const nft = location.state as Nft | undefined;
+  const nft = location.state?.nft as Nft | undefined;
   const [sellOffer, setSellOffer] = useState<NftOffer | null>(null);
   const { wallet } = useWalletStore();
 
-  const fetchData = async () => {
-    try {
-      const nftOffer = await getSellOffer(nft?.nft_infos.id ?? "");
-      setSellOffer(nftOffer);
-      console.log("wallet Data:", wallet);
-    } catch (error) {
-      console.error("Error fetching wallet data:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
   if (!nft) {
-    return <h2>No item found</h2>;
+    return <h2>Erreur : Aucun NFT trouvé</h2>;
   }
 
   return (
     <Stack align="center">
       <Grid justify="center">
-        {/* Image du NFT */}
         <Grid.Col span={4} style={{ display: "flex", justifyContent: "center" }}>
           <Card w={1000} shadow="xs" withBorder>
             <Image src={nft.nft_infos.uri} alt={nft.nft_infos.id} fit="contain" />
@@ -69,13 +54,14 @@ export function NftPage() {
             </Stack>
             <Divider my="sm" />
             <Group>
-              <Button variant="light" disabled={!wallet || !sellOffer}>{sellOffer ? <Text>Acheter</Text> : <Text>Aucune offre de vente</Text>}</Button>
+              <Button variant="light" disabled={!wallet || !sellOffer}>
+                {sellOffer ? <Text>Acheter</Text> : <Text>Aucune offre de vente</Text>}
+              </Button>
               <Button variant="light" disabled={!wallet}>Faire une offre</Button>
               {!wallet && <Text>Connectez-vous pour acheter ou faire une offre <Anchor href="/profil">Ajouter un wallet</Anchor></Text>}
             </Group>
           </Card>
 
-          {/* Onglets Description & Détails */}
           <Card shadow="xs" withBorder radius="md" mt="sm" h={200}>
             <Tabs defaultValue="description">
               <Tabs.List>
@@ -84,12 +70,12 @@ export function NftPage() {
               </Tabs.List>
 
               <Tabs.Panel value="description">
-                <Text lineClamp={6} >"sddsjdsjkdsfjkdsjkdsjksdjjlsdjsdfjsdkjsdjksdfbjsdfbj;sdfbjsfbjsdfbjsdfkjsgbkjgsfhjsdfkjsfkhjfsdhjsdfjlhsdfhjlfdshjlsdfhjlsfhli"sddsjdsjkdsfjkdsjkdsjksdjjlsdjsdfjsdkjsdjksdfbjsdfbj;sdfbjsfbjsdfbjsdfkjsgbkjgsfhjsdfkjsfkhjfsdhjsdfjlhsdfhjlfdshjlsdfhjlsfhli</Text>
+                <Text lineClamp={6}>Description du NFT...</Text>
               </Tabs.Panel>
               <Tabs.Panel value="details" pt="xs">
-                <Text>Proprietaire: </Text>
-                <Text>créateur:</Text>
-                <Text>Token ID:</Text>
+                <Text>Propriétaire: {nft.user.username}</Text>
+                <Text>Créateur:</Text>
+                <Text>Token ID: {nft.nft_infos.id}</Text>
                 <Text>Royalties:</Text>
               </Tabs.Panel>
             </Tabs>
@@ -99,6 +85,8 @@ export function NftPage() {
     </Stack>
   );
 }
+
+
 
 const styles = {
   card: {

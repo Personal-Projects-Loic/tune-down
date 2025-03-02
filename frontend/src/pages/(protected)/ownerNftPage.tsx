@@ -35,49 +35,7 @@ export default function OwnerNftPage() {
 
   return (
     <Stack align="center">
-      <Grid justify="center">
-        {/* Image du NFT */}
-        <Grid.Col span={4} style={{ display: "flex", justifyContent: "center" }}>
-          <Card w={1000} shadow="xs" withBorder>
-            <Image src={nft.nft_infos.uri} alt={nft.nft_infos.id} fit="contain" />
-          </Card>
-        </Grid.Col>
-
-        <Grid.Col span={4} ml={10} w={300}>
-          <Card shadow="xs" withBorder radius="md">
-            <Stack>
-              <Text>Nom : {nft.nft_infos.id}</Text>
-              <Text>Prix : {nft.price} €</Text>
-            </Stack>
-            <Divider my="sm" />
-            <Group>
-              <Button variant="light" disabled={!walletData || !sellOffer}>{sellOffer ? <Text>Acheter</Text> : <Text>Aucune offre de vente</Text>}</Button>
-              <Button variant="light" disabled={!walletData}>Faire une offre</Button>
-              {!walletData && <Text>Connectez-vous pour acheter ou faire une offre <Anchor href="/profil">Ajouter un wallet</Anchor></Text>}
-            </Group>
-          </Card>
-
-          {/* Onglets Description & Détails */}
-          <Card shadow="xs" withBorder radius="md" mt="sm" h={200}>
-            <Tabs defaultValue="description">
-              <Tabs.List>
-                <Tabs.Tab value="description">Description</Tabs.Tab>
-                <Tabs.Tab value="details">Détails</Tabs.Tab>
-              </Tabs.List>
-
-              <Tabs.Panel value="description">
-                <Text lineClamp={6} >"sddsjdsjkdsfjkdsjkdsjksdjjlsdjsdfjsdkjsdjksdfbjsdfbj;sdfbjsfbjsdfbjsdfkjsgbkjgsfhjsdfkjsfkhjfsdhjsdfjlhsdfhjlfdshjlsdfhjlsfhli"sddsjdsjkdsfjkdsjkdsjksdjjlsdjsdfjsdkjsdjksdfbjsdfbj;sdfbjsfbjsdfbjsdfkjsgbkjgsfhjsdfkjsfkhjfsdhjsdfjlhsdfhjlfdshjlsdfhjlsfhli</Text>
-              </Tabs.Panel>
-              <Tabs.Panel value="details" pt="xs">
-                <Text>Proprietaire: </Text>
-                <Text>créateur:</Text>
-                <Text>Token ID:</Text>
-                <Text>Royalties:</Text>
-              </Tabs.Panel>
-            </Tabs>
-          </Card>
-        </Grid.Col>
-      </Grid>
+      <Text>My nft</Text>
     </Stack>
   );
 }
