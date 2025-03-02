@@ -15,7 +15,11 @@ JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
 XRPL_RPC_URL = os.getenv("XRPL_RPC_URL")
 
 origins = [
-    "*"
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "http://159.69.154.76:3000",
+    "http://159.69.154.76:8000",
+    "http://tunedown.fr",
 ]
 
 app.add_middleware(
@@ -55,8 +59,6 @@ async def lifespan(api: FastAPI):
     yield
 
 app.router.lifespan_context = lifespan
-
-print(DATABASE_URL, JWT_SECRET_KEY, XRPL_RPC_URL)
 
 if __name__ == "__main__":
     import uvicorn
