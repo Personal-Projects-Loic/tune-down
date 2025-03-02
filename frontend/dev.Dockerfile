@@ -6,5 +6,4 @@ RUN ls -lah
 
 COPY package.json ./
 
-
 RUN npm install

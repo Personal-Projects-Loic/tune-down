@@ -27,7 +27,7 @@ const NFTSellOfferRequest: React.FC = () => {
 
     try {
       const response = await axios.post(
-        "http://tunedown.fr:8000/create-nft-sell-offer",
+        "http://159.69.154.76:8000/create-nft-sell-offer",
         {
           wallet_seed: walletSeed,
           nft_id: nftId,

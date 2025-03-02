@@ -22,7 +22,7 @@ const WalletTransaction: React.FC = () => {
 
     try {
       const response = await axios.post(
-        "http://tunedown.fr:8000/transfer-xrps",
+        "http://159.69.154.76:8000/transfer-xrps",
         {
           sender_seed: senderSeed,
           receiver_address: receiverAddress,

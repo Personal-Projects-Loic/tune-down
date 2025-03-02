@@ -58,7 +58,7 @@ services:
       - minio_data:/data
     command: server --console-address ":9001" /data
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://tunedown.fr:9000/minio/health/live"]
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
       interval: 30s
       timeout: 20s
       retries: 3

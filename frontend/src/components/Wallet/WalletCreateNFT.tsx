@@ -21,10 +21,13 @@ const WalletCreateNFT: React.FC = () => {
     setTransactionResult(null);
 
     try {
-      const response = await axios.post("http://tunedown.fr:8000/create-nft", {
-        wallet_seed: wallet_seed,
-        uri: nft_uri,
-      });
+      const response = await axios.post(
+        "http://159.69.154.76:8000/create-nft",
+        {
+          wallet_seed: wallet_seed,
+          uri: nft_uri,
+        },
+      );
       setTransactionResult(response.data);
     } catch (err) {
       setError("Erreur lors de la transaction");

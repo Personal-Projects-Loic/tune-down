@@ -27,7 +27,7 @@ const Wallet: React.FC = () => {
 
     try {
       const response = await fetch(
-        `http://tunedown.fr:8000/wallet/?wallet_id=${classicAddress.trim()}`,
+        `http://159.69.154.76:8000/wallet/?wallet_id=${classicAddress.trim()}`,
         {
           method: "GET",
           credentials: "include",

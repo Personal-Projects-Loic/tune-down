@@ -6,6 +6,6 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 3000,
-    allowedHosts: ["tunedown.fr"],
+    allowedHosts: ["159.69.154.76"],
   },
 });
