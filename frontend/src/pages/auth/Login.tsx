@@ -17,7 +17,7 @@ const Login: React.FC = () => {
     if (accessToken || isAuthenticated) {
       const handleLogout = async () => {
         try {
-          const response = await fetch("http://localhost:8000/auth/signout", {
+          const response = await fetch("http://tunedown.fr:8000/auth/signout", {
             method: "POST",
             credentials: "include",
             mode: "cors",
@@ -49,7 +49,7 @@ const Login: React.FC = () => {
       });
       console.log("Request Body:", requestBody);
 
-      const response = await fetch("http://localhost:8000/auth/signin", {
+      const response = await fetch("http://tunedown.fr:8000/auth/signin", {
         method: "POST",
         credentials: "include",
         mode: "cors",
