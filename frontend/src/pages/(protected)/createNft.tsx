@@ -7,32 +7,6 @@ import { addNft } from "../../api/nft/addNft";
 import { getWallet } from "../../api/wallet/getWallet";
 import { newNFT } from "../../types/nft";
 
-
-export const uploadPicture = async (file: File): Promise<string | null> => {
-  try {
-    const formData = new FormData();
-    formData.append("file", file);
-
-    const response = await fetch("http://localhost:8000/images/upload_picture", {
-      method: "POST",
-      credentials: "include",
-      mode: "cors",
-      body: formData,
-    });
-
-    if (!response.ok) {
-      throw new Error("Erreur lors de l'envoi de l'image");
-    }
-
-    const data = await response.json();
-    console.log("Image envoyée avec succès :", data);
-    return data.url;
-  } catch (err) {
-    console.error(err);
-    return null;
-  }
-};
-
 export default function CreateNft() {
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [wallet, setWalletData] = useState<Wallet | null>(null);
