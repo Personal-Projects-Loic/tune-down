@@ -1,20 +1,10 @@
+import { Wallet } from "../../types/wallet";
+
 interface ApiErrorResponse {
   detail: string;
 }
 
-interface WalletResponse {
-  address: string;
-  balance: string;
-  sequence: number;
-  ledger_index: number;
-  flags: number;
-  owner_count: number;
-  previous_txn_id: string;
-  previous_txn_lgr_seq: number;
-  sufficient_balance: boolean;
-}
-
-export const addWallet = async (walletPublicKey: string): Promise<WalletResponse | null> => {
+export const addWallet = async (walletPublicKey: string): Promise<Wallet | null> => {
   try {
     const response = await fetch("http://localhost:8000/wallet/add_wallet", {
       method: "POST",
@@ -32,7 +22,7 @@ export const addWallet = async (walletPublicKey: string): Promise<WalletResponse
       throw new Error(errorData.detail || "Erreur lors de l'ajout du wallet");
     }
 
-    const data: WalletResponse = await response.json();
+    const data: Wallet = await response.json();
     return data;
   } catch (err) {
     console.error(err);
