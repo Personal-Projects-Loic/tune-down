@@ -18,7 +18,7 @@ class Request(BaseModel):
         return validate_token_id(value)
 
 
-@router.post("/get_nft_sell_offer", response_model=list[NFTOffer])
+@router.get("/get_nft_sell_offer", response_model=list[NFTOffer])
 async def add_wallet(
     request: Request,
     _: JWTContent = Depends(auth_middleware),
