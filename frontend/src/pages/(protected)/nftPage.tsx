@@ -1,10 +1,8 @@
-import React from "react";
 import { Product } from "../../types/nft";
 import { useLocation } from "react-router-dom";
 import Layout from "../../components/layout";
 
 export default function TestNftPage() {
-  
   const location = useLocation();
   const nft = location.state as Product;
 
@@ -22,10 +20,8 @@ export default function TestNftPage() {
         </div>
       </div>
     </Layout>
-
   );
-};
-
+}
 
 const styles = {
   card: {

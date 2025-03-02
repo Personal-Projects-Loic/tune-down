@@ -12,7 +12,7 @@ export default defineConfig({
       protocol: "ws",
     },
     cors: {
-      origin: "http://tunedown.fr",
+      origin: "http://tunedown.fr:8000",
       credentials: true,
     },
   },
