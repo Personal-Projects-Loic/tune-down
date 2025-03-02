@@ -5,6 +5,7 @@ import { Stack, SimpleGrid, Text } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { listNft } from "../../api/nft/listNft";
 import { Nft } from "../../types/nft";
+import { notify } from "../../utils/notify";
 
 const generateProducts = (length: number): Product[] => {
   return Array.from({ length }, (_, i) => ({
@@ -18,17 +19,20 @@ const generateProducts = (length: number): Product[] => {
 export default function NewHome() {
   const nftList = generateProducts(10);
   const [nftData, setNftData] = useState<Nft[] | null>([]);
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const nftData = await listNft();
-        setNftData(nftData);
-        console.log("NFT Data:", nftData);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
+  
+  const fetchData = async () => {
+    try {
+      const nftData = await listNft();
+      setNftData(nftData);
+      console.log("NFT Data:", nftData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
+  }
+
+  useEffect(() => {
     fetchData();
+    notify({title: "Bienvenue", message: "Bienvenue sur la page d'accueil", type: "info"});
   }, []);
 
   return (
