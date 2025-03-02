@@ -56,6 +56,8 @@ async def lifespan(api: FastAPI):
 
 app.router.lifespan_context = lifespan
 
+print(DATABASE_URL, JWT_SECRET_KEY, XRPL_RPC_URL)
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(
