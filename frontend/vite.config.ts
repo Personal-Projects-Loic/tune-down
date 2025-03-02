@@ -7,6 +7,10 @@ export default defineConfig({
   server: {
     port: 3000,
     allowedHosts: ["tunedown.fr", "159.69.154.76:*"],
+    hmr: {
+      host: "tunedown.fr",
+      protocol: "ws",
+    },
     cors: {
       origin: "http://tunedown.fr",
       credentials: true,
