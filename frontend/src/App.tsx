@@ -10,7 +10,9 @@ import CreateNft from "./pages/(protected)/createNft";
 import PrivateRoute from "./components/PrivateRoute";
 //import "./App.css";
 import '@mantine/core/styles.css';
+import '@mantine/notifications/styles.css';
 import { MantineProvider } from '@mantine/core';
+import { Notifications } from '@mantine/notifications';
 import Layout from "./components/layout";
 
 const protectedRoutes = [
@@ -29,6 +31,7 @@ const publicRoutes = [
 const App: React.FC = () => {
   return (
     <MantineProvider>
+      <Notifications />
       <Router>
         <div>
           <Routes>
