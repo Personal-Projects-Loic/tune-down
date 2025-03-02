@@ -15,9 +15,7 @@ JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
 XRPL_RPC_URL = os.getenv("XRPL_RPC_URL")
 
 origins = [
-    "http://localhost:5173",
-    "http://localhost:3000",
-    "http://localhost:8000/"
+    "*"
 ]
 
 app.add_middleware(
