@@ -26,7 +26,9 @@ const NFTOffers: React.FC = () => {
     const nft_id = formData.get("nft_id") as string;
 
     try {
-      const response = await axios.get(`http://localhost:8000/get-nft-offers/${nft_id}`);
+      const response = await axios.get(
+        `http://tunedown.fr:8000/get-nft-offers/${nft_id}`,
+      );
       setOffers(response.data);
       console.log(response.data);
     } catch (err) {

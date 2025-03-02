@@ -23,7 +23,9 @@ const WalletGetNfts: React.FC = () => {
     setNfts(null);
 
     try {
-      const response = await axios.get(`http://localhost:8000/get-nfts/${address}`);
+      const response = await axios.get(
+        `http://tunedown.fr:8000/get-nfts/${address}`,
+      );
       setNfts(response.data);
     } catch (err) {
       setError("Erreur lors de la récupération des NFTs");

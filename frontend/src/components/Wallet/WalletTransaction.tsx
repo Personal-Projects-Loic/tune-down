@@ -21,11 +21,14 @@ const WalletTransaction: React.FC = () => {
     setTransactionResult(null);
 
     try {
-      const response = await axios.post("http://localhost:8000/transfer-xrps", {
-        sender_seed: senderSeed,
-        receiver_address: receiverAddress,
-        amount: amount,
-      });
+      const response = await axios.post(
+        "http://tunedown.fr:8000/transfer-xrps",
+        {
+          sender_seed: senderSeed,
+          receiver_address: receiverAddress,
+          amount: amount,
+        },
+      );
       setTransactionResult(response.data);
     } catch (err) {
       setError("Erreur lors de la transaction");

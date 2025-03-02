@@ -21,16 +21,21 @@ const NFTSellOfferRequest: React.FC = () => {
     const nftId = formData.get("nft_id") as string;
     const amount = Number(formData.get("amount"));
     const destination = formData.get("destination") as string | null;
-    const expiration = formData.get("expiration") ? Number(formData.get("expiration")) : null;
+    const expiration = formData.get("expiration")
+      ? Number(formData.get("expiration"))
+      : null;
 
     try {
-      const response = await axios.post("http://localhost:8000/create-nft-sell-offer", {
-        wallet_seed: walletSeed,
-        nft_id: nftId,
-        amount: amount,
-        destination: destination || undefined,
-        expiration: expiration || undefined,
-      });
+      const response = await axios.post(
+        "http://tunedown.fr:8000/create-nft-sell-offer",
+        {
+          wallet_seed: walletSeed,
+          nft_id: nftId,
+          amount: amount,
+          destination: destination || undefined,
+          expiration: expiration || undefined,
+        },
+      );
       setResponse(response.data);
     } catch (err) {
       setError("Erreur lors de la création de l'offre de vente");
