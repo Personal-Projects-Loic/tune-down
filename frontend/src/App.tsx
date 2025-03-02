@@ -7,6 +7,7 @@ import NewHome from "./pages/(protected)/home";
 import {NftPage} from "./pages/(protected)/nftPage";
 import Profil from "./pages/(protected)/profil";
 import CreateNft from "./pages/(protected)/createNft";
+import OwnerNftPage from "./pages/(protected)/ownerNftPage";
 import PrivateRoute from "./components/PrivateRoute";
 //import "./App.css";
 import '@mantine/core/styles.css';
@@ -21,6 +22,7 @@ const protectedRoutes = [
   { path: "/home", element: <NewHome /> },
   { path: "/nft/:id", element: <NftPage /> },
   { path: "/new-nft", element: <CreateNft /> },
+  { path: "/my-nft/:id", element: <OwnerNftPage /> },
 ];
 
 const publicRoutes = [
