@@ -3,7 +3,7 @@ import { IconUpload, IconPhoto, IconX } from "@tabler/icons-react";
 import { Stack, Title, Card, Group, NumberInput, SimpleGrid, Textarea, TextInput, PasswordInput, Autocomplete, Text, Button, Space, Image, Anchor } from "@mantine/core";
 import { Dropzone, IMAGE_MIME_TYPE, FileWithPath } from '@mantine/dropzone';
 import { Wallet } from "../../types/wallet";
-import { addNft } from "../../api/wallet/addNft";
+import { addNft } from "../../api/nft/addNft";
 import { getWallet } from "../../api/wallet/getWallet";
 import { newNFT } from "../../types/nft";
 

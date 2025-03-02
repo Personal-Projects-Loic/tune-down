@@ -3,7 +3,7 @@ import { NewCard, NftCard } from "../../components/nfts/nftCard";
 import { Product } from "../../types/nft";
 import { Stack, SimpleGrid, Text } from "@mantine/core";
 import { useEffect, useState } from "react";
-import { listNft } from "../../api/wallet/listNft";
+import { listNft } from "../../api/nft/listNft";
 import { Nft } from "../../types/nft";
 
 const generateProducts = (length: number): Product[] => {
