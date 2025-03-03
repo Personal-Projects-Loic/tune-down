@@ -16,7 +16,7 @@ const Signup: React.FC = () => {
     try {
       const requestBody = JSON.stringify({ email, username, password });
 
-      const response = await fetch("http://localhost:8000/auth/signup", {
+      const response = await fetch(`${import.meta.env.VITE_TUNEDOWN_API_URL}/auth/signup`, {
         method: "POST",
         credentials: "include",
         mode: "cors",
