@@ -19,6 +19,7 @@ origins = [
     "http://localhost:3000",
     "http://159.69.154.76:3000",
     "http://159.69.154.76:8000",
+    "http://tunedown.fr",
     "https://tunedown.fr",
     "https://api.tunedown.fr",
 ]
