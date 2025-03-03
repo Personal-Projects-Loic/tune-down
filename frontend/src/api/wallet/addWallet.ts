@@ -16,7 +16,7 @@ interface WalletResponse {
 
 export const addWallet = async (walletPublicKey: string): Promise<WalletResponse | null> => {
   try {
-    const response = await fetch("http://localhost:8000/wallet/add_wallet", {
+    const response = await fetch(`${import.meta.env.VITE_TUNEDOWN_API_URL}/wallet/add_wallet`, {
       method: "POST",
       credentials: "include",
       headers: {

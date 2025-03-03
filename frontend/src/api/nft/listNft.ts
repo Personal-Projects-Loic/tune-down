@@ -2,7 +2,7 @@ import { Nft } from "../../types/nft";
 
 export const listNft = async (): Promise<Nft[] | null> => {
   try {
-    const response = await fetch("http://localhost:8000/wallet/list", {
+    const response = await fetch(`${import.meta.env.VITE_TUNEDOWN_API_URL}/wallet/list`, {
       method: "POST",
       credentials: "include",
       mode: "cors",

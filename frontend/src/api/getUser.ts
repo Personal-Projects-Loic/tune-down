@@ -2,7 +2,7 @@ import { User } from "../types/user";
 
 export const getUserData = async (): Promise<User | null> => {
   try {
-    const response = await fetch("http://localhost:8000/user/", {
+    const response = await fetch(`${import.meta.env.VITE_TUNEDOWN_API_URL}/user/`, {
       method: "GET",
       credentials: "include",
       mode: "cors",
