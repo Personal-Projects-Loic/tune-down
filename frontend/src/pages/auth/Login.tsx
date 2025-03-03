@@ -2,7 +2,17 @@ import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/tunedown.png";
-import { TextInput, PasswordInput, Button, Paper, Title, Text, Anchor, Center, Stack } from '@mantine/core';
+import {
+  TextInput,
+  PasswordInput,
+  Button,
+  Paper,
+  Title,
+  Text,
+  Anchor,
+  Center,
+  Stack,
+} from "@mantine/core";
 
 const Login: React.FC = () => {
   const [emailOrUsername, setEmailOrUsername] = useState<string>("");
@@ -19,7 +29,7 @@ const Login: React.FC = () => {
         console.log("Logging out...");
         try {
           const response = await fetch(
-            "https://api.tunedown.fr/api/auth/signout",
+            `${import.meta.env.VITE_TUNEDOWN_API_URL}/auth/signout`,
             {
               method: "POST",
               credentials: "include",
@@ -83,12 +93,16 @@ const Login: React.FC = () => {
   };
 
   return (
-    <Center style={{ height: '100vh' }}>
+    <Center style={{ height: "100vh" }}>
       <Paper shadow="md" p="xl" radius="md" withBorder style={{ width: 400 }}>
         <Center>
-          <img src={logo} alt="tunedown" style={{ width: 300, marginBottom: 20 }} />
+          <img
+            src={logo}
+            alt="tunedown"
+            style={{ width: 300, marginBottom: 20 }}
+          />
         </Center>
-        <Title order={2} >Login</Title>
+        <Title order={2}>Login</Title>
         <form onSubmit={handleLogin}>
           <Stack mt="md">
             <TextInput
@@ -105,12 +119,18 @@ const Login: React.FC = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
             />
-            {error && <Text color="red" size="sm">{error}</Text>}
-            <Button 
+            {error && (
+              <Text color="red" size="sm">
+                {error}
+              </Text>
+            )}
+            <Button
               type="submit"
               disabled={!emailOrUsername || !password}
               color="blue"
-            >Se connecter</Button>
+            >
+              Se connecter
+            </Button>
           </Stack>
         </form>
         <Text mt="md" size="sm">

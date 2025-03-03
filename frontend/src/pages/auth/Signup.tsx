@@ -1,7 +1,18 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import logo from "../../assets/tunedown.png";
-import { TextInput, PasswordInput, Button, Title, Text, Anchor, Center, Stack, Card, Image } from '@mantine/core';
+import {
+  TextInput,
+  PasswordInput,
+  Button,
+  Title,
+  Text,
+  Anchor,
+  Center,
+  Stack,
+  Card,
+  Image,
+} from "@mantine/core";
 
 const Signup: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -16,15 +27,18 @@ const Signup: React.FC = () => {
     try {
       const requestBody = JSON.stringify({ email, username, password });
 
-      const response = await fetch("https://api.tunedown.fr/api/auth/signup", {
-        method: "POST",
-        credentials: "include",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `${import.meta.env.VITE_TUNEDOWN_API_URL}/auth/signup`,
+        {
+          method: "POST",
+          credentials: "include",
+          mode: "cors",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: requestBody,
         },
-        body: requestBody,
-      });
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -47,7 +61,7 @@ const Signup: React.FC = () => {
   };
 
   return (
-    <Center style={{ height: '100vh' }}>
+    <Center style={{ height: "100vh" }}>
       <Card shadow="xs" padding="xl" style={{ width: 400 }}>
         <Image src={logo} alt="Logo" height={40} style={{ marginBottom: 20 }} />
         <Title order={1}>Créer un compte</Title>
@@ -75,7 +89,11 @@ const Signup: React.FC = () => {
               onChange={(e) => setPassword(e.currentTarget.value)}
             />
             {error && <Text color="red">{error}</Text>}
-            <Button type="submit" color="blue" disabled={!email || !username || !password}>
+            <Button
+              type="submit"
+              color="blue"
+              disabled={!email || !username || !password}
+            >
               S'inscrire
             </Button>
             <Text size="sm" mt="md">
