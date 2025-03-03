@@ -1,9 +1,9 @@
-# Commandes à faire :
+# Commandes à faire:
 
-- Aller à la racine de l'app et exécuter la commande suivante :
++ Cloner le repo
++ Trouver le .env, attention y'en a deux (prod et dev) #lireLeDiscord
++ Ne pas travailler sur main, mais dev svp
 
 ```bash
 docker compose up --build -d
 ```
-
-Dev branch
