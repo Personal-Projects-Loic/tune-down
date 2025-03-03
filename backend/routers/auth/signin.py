@@ -1,3 +1,4 @@
+from typing_extensions import Doc
 from pydantic import BaseModel
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi import Response as FastAPIResponse, status
@@ -57,9 +58,10 @@ async def signin(request: Request, response: FastAPIResponse,
         value=access_token,
         httponly=True,
         secure=True,
-        samesite="None",
+        samesite="Lax",
         max_age=3600,
         path="/",
+        domain=".tunedown.fr",
     )
 
     response.set_cookie(
@@ -67,9 +69,10 @@ async def signin(request: Request, response: FastAPIResponse,
         value="true",
         httponly=False,
         secure=True,
-        samesite="None",
+        samesite="Lax",
         max_age=3600,
         path="/",
+        domain=".tunedown.fr",
     )
 
     return Response(message="Login successful")
