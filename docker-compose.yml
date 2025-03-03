@@ -4,7 +4,7 @@ services:
       context: ./frontend
       dockerfile: dev.Dockerfile
     environment:
-      NODE_ENV: prod
+      NODE_ENV: production
     ports:
       - "3000:3000"
     volumes:
