@@ -6,11 +6,14 @@ const DeconnectionButton: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch("https://api.tunedown.fr/api/auth/signout", {
-        method: "POST",
-        credentials: "include",
-        mode: "cors",
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_TUNEDOWN_API_URL}/auth/signout`,
+        {
+          method: "POST",
+          credentials: "include",
+          mode: "cors",
+        },
+      );
 
       if (!response.ok) {
         throw new Error("Logout failed");
