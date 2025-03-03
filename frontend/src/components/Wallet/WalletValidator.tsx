@@ -56,7 +56,6 @@ const WalletManager: React.FC = () => {
       const data: WalletResponse = await response.json();
       setWallet(data);
       setNoWallet(false);
-      console.log("Wallet ajouté avec succès :", data);
     } catch (err) {
       const error = err as Error;
       setError(error.message);
@@ -89,7 +88,6 @@ const WalletManager: React.FC = () => {
       const data: WalletResponse = await response.json();
       setWallet(data);
       setNoWallet(false);
-      console.log("Wallet récupéré avec succès :", data);
     } catch (err) {
       const error = err as Error;
       setError(error.message);
@@ -118,7 +116,6 @@ const WalletManager: React.FC = () => {
 
       setWallet(null);
       setNoWallet(true);
-      console.log("Wallet supprimé avec succès");
     } catch (err) {
       const error = err as Error;
       setError(error.message);
