@@ -72,7 +72,6 @@ const Login: React.FC = () => {
         throw new Error(errorData.detail || "Login failed");
       }
 
-      console.log("Login successful, je m'anvol vers");
       navigate("/");
     } catch (err: unknown) {
       if (err instanceof Error) {
