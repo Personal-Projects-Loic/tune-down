@@ -20,3 +20,5 @@ export default defineConfig({
     },
   },
 });
+
+/* Pareil, evite de toucher mdr */

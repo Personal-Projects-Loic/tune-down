@@ -64,7 +64,7 @@ async def signin(
         key="access_token",
         value=access_token,
         httponly=True,
-        secure=True,
+        secure=True,            # Seulement en production
         samesite="Lax",
         max_age=3600,
         path="/",
@@ -75,7 +75,7 @@ async def signin(
         key="is_authenticated",
         value="true",
         httponly=False,
-        secure=True,
+        secure=True,            # Seulement en production
         samesite="Lax",
         max_age=3600,
         path="/",

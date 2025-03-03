@@ -12,7 +12,7 @@ app = FastAPI()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
-XRPL_RPC_URL = os.getenv("XRPL_RPC_URL")
+XRPL_RPC_URL = os.getenv("XRPL_RPC_URL")                # si c ptete utilsé dans le back, c ici que ça se load
 POSTGRES_USER = os.getenv("DATABASE_USER")
 POSTGRES_PASSWORD = os.getenv("DATABASE_PASSWORD")
 POSTGRES_DB = os.getenv("DATABASE_NAME")
@@ -21,8 +21,8 @@ origins = [
     "http://localhost:5173",
     "http://localhost:3000",
     "http://159.69.154.76:3000",
-    "http://159.69.154.76:8000",
-    "http://tunedown.fr",
+    "http://159.69.154.76:8000",       # Ne jamais, sous aucun pretexte, toucher ces urls
+    "http://tunedown.fr",              # à moins d'être sur....
     "https://tunedown.fr",
     "https://api.tunedown.fr",
 ]
@@ -31,15 +31,13 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"], # j'ai laissé le PUT parce que on est fancy ic
     allow_headers=["Content-Type", "Authorization"],
 )
-
 
 async def init_db():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
-
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request, exc):
@@ -58,7 +56,6 @@ async def validation_exception_handler(request, exc):
     )
 
 app.include_router(router, prefix="/api")
-
 
 @asynccontextmanager
 async def lifespan(api: FastAPI):
