@@ -4,13 +4,13 @@ services:
       context: ./frontend
       dockerfile: dev.Dockerfile
     environment:
-      NODE_ENV: production
+      NODE_ENV: prod
     ports:
       - "3000:3000"
     volumes:
       - ./frontend:/app
       - /app/node_modules
-    command: npm run build
+    command: npm run dev
     networks:
       - app-network
 
