@@ -7,13 +7,9 @@ const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const isAuthenticated = Cookies.get("is_authenticated");
 
-  console.log("isAuthenticated:", isAuthenticated);
-
   if (!isAuthenticated) {
-    console.log("go prison");
     return <Navigate to="/login" />;
   } else {
-    console.log("libérez le");
     console.log("Authenticated");
     return <>{children}</>;
   }

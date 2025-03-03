@@ -35,7 +35,7 @@ const WalletManager: React.FC = () => {
 
     try {
       const response = await fetch(
-        "http://159.69.154.76:8000/wallet/add_wallet",
+        "https://api.tunedown.fr/api/wallet/add_wallet",
         {
           method: "POST",
           headers: {
@@ -67,7 +67,7 @@ const WalletManager: React.FC = () => {
 
   const fetchWallet = async () => {
     try {
-      const response = await fetch("http://159.69.154.76:8000/wallet/", {
+      const response = await fetch("https://api.tunedown.fr/api/wallet/", {
         method: "GET",
         credentials: "include",
       });
@@ -102,7 +102,7 @@ const WalletManager: React.FC = () => {
 
     try {
       const response = await fetch(
-        "http://159.69.154.76:8000/wallet/delete_wallet",
+        "https://api.tunedown.fr/api/wallet/delete_wallet",
         {
           method: "DELETE",
           credentials: "include",

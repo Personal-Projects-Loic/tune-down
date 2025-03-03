@@ -22,7 +22,7 @@ const WalletCreateNFT: React.FC = () => {
 
     try {
       const response = await axios.post(
-        "http://159.69.154.76:8000/create-nft",
+        "https://api.tunedown.fr/api/create-nft",
         {
           wallet_seed: wallet_seed,
           uri: nft_uri,

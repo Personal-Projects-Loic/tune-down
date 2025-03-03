@@ -24,7 +24,7 @@ const WalletGetNfts: React.FC = () => {
 
     try {
       const response = await axios.get(
-        `http://159.69.154.76:8000/get-nfts/${address}`,
+        `https://api.tunedown.fr/api/get-nfts/${address}`,
       );
       setNfts(response.data);
     } catch (err) {

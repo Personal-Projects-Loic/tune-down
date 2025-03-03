@@ -17,7 +17,7 @@ const WalletGenerator: React.FC = () => {
     setError(null);
     try {
       const response = await axios.get(
-        "http://159.69.154.76:8000/generate-wallet",
+        "https://api.tunedown.fr/api/generate-wallet",
       );
       setWallet(response.data);
     } catch (err) {

@@ -16,7 +16,7 @@ const Signup: React.FC = () => {
     try {
       const requestBody = JSON.stringify({ email, username, password });
 
-      const response = await fetch("http://159.69.154.76:8000/auth/signup", {
+      const response = await fetch("https://api.tunedown.fr/api/auth/signup", {
         method: "POST",
         credentials: "include",
         mode: "cors",

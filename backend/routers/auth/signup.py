@@ -75,21 +75,23 @@ async def signup(request: Request, response: FastAPIResponse,
     response.set_cookie(
         key="access_token",
         value=access_token,
-        # httponly=True,
-        secure=False,
-        samesite="None",
+        httponly=True,
+        secure=True,
+        samesite="Lax",
         max_age=3600,
-        path="http://tunedown.fr",
+        path="/",
+        domain=".tunedown.fr",
     )
 
     response.set_cookie(
         key="is_authenticated",
         value="true",
-        # httponly=False,
-        secure=False,
-        samesite="None",
+        httponly=False,
+        secure=True,
+        samesite="Lax",
         max_age=3600,
-        path="http://tunedown.fr",
+        path="/",
+        domain=".tunedown.fr",
     )
 
     return Response(message="Signup successful")

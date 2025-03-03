@@ -27,7 +27,7 @@ const NFTOffers: React.FC = () => {
 
     try {
       const response = await axios.get(
-        `http://159.69.154.76:8000/get-nft-offers/${nft_id}`,
+        `https://api.tunedown.fr/api/get-nft-offers/${nft_id}`,
       );
       setOffers(response.data);
       console.log(response.data);
