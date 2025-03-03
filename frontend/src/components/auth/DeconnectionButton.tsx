@@ -6,7 +6,7 @@ const DeconnectionButton: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch("http://159.69.154.76:8000/auth/signout", {
+      const response = await fetch("https://api.tunedown.fr/api/auth/signout", {
         method: "POST",
         credentials: "include",
         mode: "cors",
