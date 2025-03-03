@@ -3,7 +3,7 @@ import { notify } from "../../utils/notify";
 
 export const getWallet = async (): Promise<Wallet | null> => {
   try {
-    const response = await fetch("http://localhost:8000/wallet/", {
+    const response = await fetch(`${import.meta.env.VITE_TUNEDOWN_API_URL}/wallet/`, {
       method: "GET",
       credentials: "include",
       mode: "cors",

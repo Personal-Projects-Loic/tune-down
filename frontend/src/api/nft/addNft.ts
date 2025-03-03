@@ -18,7 +18,7 @@ export const addNft = async (newNft: newNFT, secretKey: string): Promise<Wallet 
       formData.append("file", newNft.image);
     }
     
-    const response = await fetch("http://localhost:8000/wallet/add_nft", {
+    const response = await fetch(`${import.meta.env.VITE_TUNEDOWN_API_URL}/wallet/add_nft`, {
       method: "POST",
       credentials: "include",
       mode: "cors",
