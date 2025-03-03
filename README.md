@@ -13,12 +13,11 @@ L'objectif est de simplifier et de démocratiser l'accès à l'investissement da
 
 # Commandes à faire:
 
-Si t'es l'un de ceux qui souhaitent cloner le projet, suis ces étapes :
+Si t'es un mec du groupe, fais ça mdr :
 
-+ Cloner le projet depuis GitHub
-+ Créer un fichier **à la racine du projet** .env à partir du fichier .env-template
-+ Créer un fichier **dans le dossier frontend** .env à partir du fichier .env-template
-+ Aller à la racine de l'app et exécuter la commande suivante :
++ Cloner le repo
++ Trouver le .env, attention y'en a deux (prod et dev) #lireLeDiscord
++ Ne pas travailler sur main, mais dev svp
 
 ```bash
 docker compose up --build -d
