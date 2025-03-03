@@ -32,9 +32,11 @@ app.add_middleware(
     allow_headers=["Content-Type", "Authorization"],
 )
 
+
 async def init_db():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request, exc):
@@ -53,6 +55,7 @@ async def validation_exception_handler(request, exc):
     )
 
 app.include_router(router, prefix="/api")
+
 
 @asynccontextmanager
 async def lifespan(api: FastAPI):

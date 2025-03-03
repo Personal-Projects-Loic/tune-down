@@ -1,4 +1,4 @@
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError
@@ -10,8 +10,10 @@ from utils.jwt import JWTContent
 
 router = APIRouter()
 
+
 class DeleteWalletResponse(BaseModel):
     message: str
+
 
 async def db_delete_wallet_id(
     db: AsyncSession,
@@ -34,6 +36,7 @@ async def db_delete_wallet_id(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Failed to delete wallet_id due to integrity error"
         )
+
 
 @router.delete("/delete_wallet", response_model=DeleteWalletResponse)
 async def delete_wallet(

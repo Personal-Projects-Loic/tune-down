@@ -33,5 +33,6 @@ class NFT(BaseModel):
     collection = Column(String, index=True)
     user_id = mapped_column(Integer, ForeignKey('users.id'))
     wallet_id = Column(String, nullable=True)
+    price = Column(Integer, nullable=True)
 
     user = relationship("User", back_populates="nfts")
