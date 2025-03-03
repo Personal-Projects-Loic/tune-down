@@ -28,8 +28,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"],
 )
 
 async def init_db():
@@ -52,7 +52,7 @@ async def validation_exception_handler(request, exc):
         content={"detail": errors}
     )
 
-app.include_router(router)
+app.include_router(router, prefix="/api")
 
 @asynccontextmanager
 async def lifespan(api: FastAPI):
