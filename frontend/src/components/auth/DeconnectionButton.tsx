@@ -6,7 +6,7 @@ const DeconnectionButton: React.FC = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch("http://localhost:8000/auth/signout", {
+      const response = await fetch(`${import.meta.env.VITE_TUNEDOWN_API_URL}/auth/signout`, {
         method: "POST",
         credentials: "include",
         mode: "cors",
