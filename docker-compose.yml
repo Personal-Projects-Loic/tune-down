@@ -27,11 +27,13 @@ services:
   db:
     image: postgres:13
     environment:
-      POSTGRES_USER: tunedown
-      POSTGRES_PASSWORD: azerty123
-      POSTGRES_DB: tunedown_db
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
     ports:
       - "5432:5432"
+    env_file:
+      - .env
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:

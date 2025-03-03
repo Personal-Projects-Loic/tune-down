@@ -13,6 +13,9 @@ app = FastAPI()
 DATABASE_URL = os.getenv("DATABASE_URL")
 JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY")
 XRPL_RPC_URL = os.getenv("XRPL_RPC_URL")
+POSTGRES_USER = os.getenv("DATABASE_USER")
+POSTGRES_PASSWORD = os.getenv("DATABASE_PASSWORD")
+POSTGRES_DB = os.getenv("DATABASE_NAME")
 
 origins = [
     "http://localhost:5173",
