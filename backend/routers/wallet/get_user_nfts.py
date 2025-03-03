@@ -1,9 +1,7 @@
 from fastapi import APIRouter, Depends, Query
 from pydantic import BaseModel
-from typing import Annotated, Optional, Tuple
+from typing import Annotated, Optional
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.sql.elements import ColumnElement
-from sqlalchemy import or_, and_
 from sqlalchemy.future import select
 from sqlalchemy.orm import selectinload
 

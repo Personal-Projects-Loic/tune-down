@@ -2,16 +2,10 @@ import { NftOffer } from "../../types/nftOffer";
 
 export const getSellOffer = async (nft_id: string): Promise<NftOffer | null> => {
   try {
-    const response = await fetch("http://localhost:8000/wallet/getSellOffer", {
+    const response = await fetch(`http://localhost:8000/wallet/getSellOffer?nft_id=${nft_id}`, {
       method: "GET",
       credentials: "include",
       mode: "cors",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify({
-        nft_id,
-      }),
     });
 
     if (response.status === 404) {
