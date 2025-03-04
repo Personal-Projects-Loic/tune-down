@@ -1,7 +1,8 @@
 import { NftOffer as nftOffer, newNftOffer } from "../../types/nftOffer";
 
 
-export const creatSellOffer = async (newOffer: newNftOffer): Promise<nftOffer | null> => {
+export const createSellOffer = async (newOffer: newNftOffer): Promise<nftOffer | null> => {
+  console.log("newOffer :", newOffer);
   try {
     const response = await fetch("http://localhost:8000/wallet/create_nft_sell_offer", {
       method: "POST",

@@ -1,22 +1,24 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, JSX } from "react";
 import { Nft } from "../../types/nft";
 import { NftOffer } from "../../types/nftOffer";
 import { useLocation } from "react-router-dom";
-import { Stack, Card, Tabs, Grid, Text, Button, Image, Divider, Group, Anchor } from "@mantine/core";
+import { Stack, Card, Tabs, Grid, Text, Button, Image, Divider, Group, Anchor, Table } from "@mantine/core";
 import useWalletStore from "../../utils/store";
 import { useDisclosure } from "@mantine/hooks";
-import { CreateSellOfferModal, newSellOfferModal } from "../../components/nfts/modals/createSellOfferModal";
+import { CreateOfferModal } from "../../components/nfts/modals/createOfferModal";
 import { getBuyOffers } from "../../api/nft/getBuyOffers";
+import { createSellOffer } from "../../api/nft/createSellOffer";
+import { newOfferModal } from "../../types/nftOffer";
 
 export default function OwnerNftPage() {
   const location = useLocation();
   const nft = location.state?.nft as Nft | undefined;
   const { wallet } = useWalletStore();
-  const [newSelOffer, setNewSellOffer] = useState<newSellOfferModal | null>(null);
-  const [buyOffers, setBuyOffers] = useState<NftOffer[] | null>(null);
-  const [updateModal, { 
-    open: openUpdateModal,
-    close: closeUpdateModal 
+  const [newSelOffer, setNewSellOffer] = useState<newOfferModal | null>(null);
+  const [buyOffers, setBuyOffers] = useState<JSX.Element[] | undefined>(undefined);
+  const [offerModal, { 
+    open: openOfferModal,
+    close: closeOfferModal 
   }] = useDisclosure(false);
 
   if (!nft) {
@@ -25,14 +27,38 @@ export default function OwnerNftPage() {
 
   const fetchData = async () => {
     const Offers = await getBuyOffers(nft.nft_infos.id);
-    setBuyOffers(Offers);
+    const rows = Offers?.map((offer) => (
+      <Table.Tr key={offer.account}>
+        <Table.Td>{offer.account}</Table.Td>
+        <Table.Td>{offer.price}</Table.Td>
+      </Table.Tr>
+    ))
+
+    setBuyOffers(rows);
   };
+
+  const sellData = async () => {
+    const sellOffer = await createSellOffer({
+      price: newSelOffer?.price ?? 0,
+      wallet_private_key: newSelOffer?.privateKey ?? "",
+      nft_id: nft.nft_infos.id
+    });
+
+    console.log("Sell offer:", sellOffer);
+  }
 
   useEffect(() => {
     if (nft) {
       fetchData();
     }
   }, []);
+
+  useEffect(() => {
+    if (newSelOffer) {
+      console.log("New sell offer:", newSelOffer);
+      sellData();
+    }
+  }, [newSelOffer]);
 
   return (
     <Stack align="center">
@@ -55,7 +81,7 @@ export default function OwnerNftPage() {
               <Button 
                 variant="light"
                 disabled={!wallet}
-                onClick={openUpdateModal}
+                onClick={openOfferModal}
               >Mettre en vente</Button>
               {!wallet && <Text>Connectez-vous pour acheter ou faire une offre <Anchor href="/profil">Ajouter un wallet</Anchor></Text>}
             </Group>
@@ -79,12 +105,27 @@ export default function OwnerNftPage() {
               </Tabs.Panel>
             </Tabs>
           </Card>
+          <Card shadow="xs" withBorder radius="md" mt="sm" h={200} style={{ width: "100%" }}>
+  <Table striped style={{ width: "100%" }}>
+    <Table.Thead>
+      <Table.Tr>
+        <Table.Th>Account</Table.Th>
+        <Table.Th>Prix</Table.Th>
+      </Table.Tr>
+    </Table.Thead>
+    <Table.Tbody>
+      {buyOffers}
+    </Table.Tbody>
+  </Table>
+</Card>
         </Grid.Col>
       </Grid>
-      <CreateSellOfferModal
-        nft={nft}
-        isOpen={updateModal}
-        onClose={closeUpdateModal}
+      <CreateOfferModal
+        title="Mettre en vente ce Nft"
+        isOpen={offerModal}
+        blueButtonText="Mettre en vente"
+        onClose={closeOfferModal}
+        setSellOffer={setNewSellOffer}
       />
     </Stack>
   );

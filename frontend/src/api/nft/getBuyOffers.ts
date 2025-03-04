@@ -10,6 +10,7 @@ export const getBuyOffers = async (nft_id: string): Promise<NftOffer[] | null> =
 
     if (response.status === 404) {
       console.log("No buy offers found for this NFT");
+      console.log(response.json());
       return null;
     }
 

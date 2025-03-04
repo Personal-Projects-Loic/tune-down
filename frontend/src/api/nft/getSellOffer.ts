@@ -2,7 +2,7 @@ import { NftOffer } from "../../types/nftOffer";
 
 export const getSellOffer = async (nft_id: string): Promise<NftOffer | null> => {
   try {
-    const response = await fetch(`http://localhost:8000/wallet/getSellOffer?nft_id=${nft_id}`, {
+    const response = await fetch(`http://localhost:8000/wallet/get_nft_sell_offer?nft_id=${nft_id}`, {
       method: "GET",
       credentials: "include",
       mode: "cors",
@@ -10,6 +10,7 @@ export const getSellOffer = async (nft_id: string): Promise<NftOffer | null> => 
 
     if (response.status === 404) {
       console.log("No sell offer found for this NFT");
+      console.log(response)
       return null
     }
 

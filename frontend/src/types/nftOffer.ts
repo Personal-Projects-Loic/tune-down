@@ -6,14 +6,20 @@ export type NftOffer = {
 };
 
 export type buyOffer = {
-  nftId: string;
+  nft_id: string;
   price: number;
-  walletPrivateKey: string;
-  nftOwner: string;
+  wallet_private_key: string;
+  nft_owner: string;
 }
 
 export type newNftOffer = {
   nft_id: string;
   price: number;
-  walletPrivateKey: string;
+  wallet_private_key: string;
 };
+
+
+export type newOfferModal = {
+  price: number;
+  privateKey: string;
+}
