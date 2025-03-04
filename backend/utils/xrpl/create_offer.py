@@ -49,6 +49,7 @@ class NFTOffer(BaseModel):
     account: str
     nft_id: str
     price: float
+    offer_id: str
     is_sell_offer: bool
 
 
@@ -61,7 +62,8 @@ def parse_result(result) -> NFTOffer:
         account=tx_json.get("Account"),
         nft_id=tx_json.get("NFTokenID"),
         price=amount_in_xrp,
-        is_sell_offer=is_sell_offer
+        is_sell_offer=is_sell_offer,
+        offer_id=result.get("meta").get("offer_id")
     )
 
 

@@ -24,6 +24,7 @@ def parse_result(result, is_sell_offer):
             nft_id=result.get("nft_id"),
             is_sell_offer=is_sell_offer,
             price=int(offer.get("amount")) / (10**6),
+            offer_id=offer.get("nft_offer_index")
         ) for offer in result["offers"]]
 
 
