@@ -6,8 +6,8 @@ import { Stack, Card, Tabs, Grid, Text, Button, Image, Divider, Group, Anchor, T
 import useWalletStore from "../../utils/store";
 import { useDisclosure } from "@mantine/hooks";
 import { CreateOfferModal } from "../../components/nfts/modals/createOfferModal";
-import { getBuyOffers } from "../../api/nft/getBuyOffers";
-import { createSellOffer } from "../../api/nft/createSellOffer";
+import { getBuyOffers } from "../../api/offers/getBuyOffers";
+import { createSellOffer } from "../../api/offers/createSellOffer";
 import { newOfferModal } from "../../types/nftOffer";
 
 export default function OwnerNftPage() {
@@ -24,6 +24,10 @@ export default function OwnerNftPage() {
   if (!nft) {
     return <h2>No item found</h2>;
   }
+
+  //annuler la mise en vente
+  //afficher que l'nft est en vente
+
 
   const fetchData = async () => {
     const Offers = await getBuyOffers(nft.nft_infos.id);

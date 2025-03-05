@@ -4,9 +4,9 @@ from xrpl.asyncio.clients import AsyncJsonRpcClient
 from xrpl.models.transactions import NFTokenAcceptOffer
 from xrpl.wallet import Wallet
 from xrpl.asyncio.transaction import submit_and_wait
-from xrpl.utils import ripple_time_to_datetime
 
 XRPL_RPC_URL = os.getenv("XRPL_RPC_URL")
+
 
 async def xrpl_accept_offer(
     private_key: str,

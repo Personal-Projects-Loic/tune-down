@@ -4,25 +4,31 @@ import { Stack, Card, Tabs, Grid, Text, Button, Image, Divider, Group, Anchor } 
 import { useDisclosure } from "@mantine/hooks";
 
 import { Product, Nft } from "../../types/nft";
-import { getSellOffer } from "../../api/nft/getSellOffer";
+import { getSellOffer } from "../../api/offers/getSellOffer";
 import { NftOffer } from "../../types/nftOffer";
 import useWalletStore from "../../utils/store";
 import { CreateOfferModal } from "../../components/nfts/modals/createOfferModal";
-import { newOfferModal } from "../../types/nftOffer";
-import { createBuyOffer } from "../../api/nft/createBuyOffer";
+import { newOfferModal, AcceptOfferRequest } from "../../types/nftOffer";
+import { createBuyOffer } from "../../api/offers/createBuyOffer";
+import { acceptOffer } from "../../api/offers/acceptOffer";
+import { BuyNftModal } from "../../components/nfts/modals/buyModal";
 
 export function NftPage() {
   const location = useLocation();
   const nft = location.state?.nft as Nft | undefined;
-  const [sellOffer, setSellOffer] = useState<NftOffer | null>(null);
+  const [sellOffer, setSellOffer] = useState<NftOffer[] | null>(null);
   const [newBuyOffer, setNewBuyOffer] = useState<newOfferModal | null>(null);
+  const [privateKey, setPrivateKey] = useState<string | null>(null);
 
   const { wallet } = useWalletStore();
   const [offerModal, { 
-      open: openOfferModal,
-      close: closeOfferModal 
-    }] = useDisclosure(false);
-
+    open: openOfferModal,
+    close: closeOfferModal 
+  }] = useDisclosure(false);
+  const [buyModal, {
+    open: openBuyModal,
+    close: closeBuyModal
+  }] = useDisclosure(false)
 
   const fetchData = async () => {
     try {
@@ -34,7 +40,7 @@ export function NftPage() {
     }
   };
 
-  const buyData = async () => {
+  const postBuyOfferData = async () => {
     console.log("New buy offer:", newBuyOffer);
     const buyOffer = await createBuyOffer({
       price: newBuyOffer?.price ?? 0,
@@ -46,6 +52,18 @@ export function NftPage() {
     console.log("Buy offer:", buyOffer);
   }
 
+  const postAcceptOffer = async () => {
+    const acceptOfferData: AcceptOfferRequest = {
+      nft_id: nft?.nft_infos.id ?? "",
+      private_key: privateKey ?? "",
+      sell_offer_id: sellOffer?.[0].offer_id
+    };
+
+    console.log("Accept offer data:", acceptOfferData);
+    const acceptOfferResponse = await acceptOffer(acceptOfferData);
+    console.log("Accept offer response:", acceptOfferResponse);
+  }
+
   useEffect(() => {
     if (nft) {
       fetchData();
@@ -54,9 +72,15 @@ export function NftPage() {
 
   useEffect(() => {
     if (newBuyOffer) {
-      buyData();
+      postBuyOfferData();
     }
   }, [newBuyOffer]);
+
+  useEffect(() => {
+    if (privateKey) {
+      postAcceptOffer();
+    }
+  }, [privateKey]);
 
   if (!nft) {
     return <h2>Erreur : Aucun NFT trouvé</h2>;
@@ -79,7 +103,7 @@ export function NftPage() {
             </Stack>
             <Divider my="sm" />
             <Group>
-              <Button variant="light" disabled={!wallet || !sellOffer}>
+              <Button variant="light" disabled={!wallet || !sellOffer} onClick={openBuyModal}>
                 {sellOffer ? <Text>Acheter</Text> : <Text>Aucune offre de vente</Text>}
               </Button>
               <Button 
@@ -117,6 +141,13 @@ export function NftPage() {
         blueButtonText="Valider l'offre"
         onClose={closeOfferModal}
         setSellOffer={setNewBuyOffer}
+      />
+      <BuyNftModal
+        title="Acheter ce NFT"
+        isOpen={buyModal}
+        blueButtonText="Acheter"
+        onClose={closeBuyModal}
+        setAcceptOffer={setPrivateKey}
       />
     </Stack>
   );

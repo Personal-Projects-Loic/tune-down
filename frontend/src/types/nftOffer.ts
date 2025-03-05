@@ -3,6 +3,7 @@ export type NftOffer = {
   nft_id: string;
   price: number;
   is_sell_offer: boolean;
+  offer_id: string;
 };
 
 export type buyOffer = {
@@ -23,3 +24,14 @@ export type newOfferModal = {
   price: number;
   privateKey: string;
 }
+
+export type AcceptOfferRequest = {
+  nft_id: string;
+  private_key: string;
+  sell_offer_id?: string;
+  buy_offer_id?: string;
+};
+
+export type AcceptOfferResponse = {
+  success: boolean;
+};
