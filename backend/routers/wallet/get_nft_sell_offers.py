@@ -1,8 +1,8 @@
+from typing import Annotated
 from fastapi import APIRouter, Depends, Query
 from pydantic import BaseModel, field_validator
 
 from middlewares.auth import auth_middleware
-from typing import Annotated
 from routers.validators import validate_token_id
 from utils.jwt import JWTContent
 from utils.xrpl.create_offer import NFTOffer
@@ -20,7 +20,7 @@ class Request(BaseModel):
 
 
 @router.get("/get_nft_sell_offer", response_model=list[NFTOffer])
-async def get_nft_sell_offer(
+async def add_wallet(
     request: Annotated[Request, Query()],
     _: JWTContent = Depends(auth_middleware),
 ):

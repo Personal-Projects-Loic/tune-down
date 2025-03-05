@@ -22,6 +22,7 @@ from routers.wallet.get_nft_buy_offers import (
 from routers.wallet.get_user_nfts import (
     router as get_user_nfts_router
 )
+from routers.wallet.accept_offer import router as accept_offer_router
 
 router = APIRouter(
     dependencies=[Depends(auth_middleware)]
@@ -38,3 +39,4 @@ router.include_router(create_nft_buy_offer_router)
 router.include_router(get_nft_sell_offers_router)
 router.include_router(get_nft_buy_offers_router)
 router.include_router(get_user_nfts_router)
+router.include_router(accept_offer_router)
