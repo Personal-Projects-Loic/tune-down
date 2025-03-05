@@ -2,41 +2,52 @@ import {
   Button,
   Group,
   Modal,
-  NumberInput,
   Stack,
   Text,
   PasswordInput,
 } from "@mantine/core";
-import { newOfferModal } from "../../../types/nftOffer";
 import { useState } from "react";
 
+export enum offerStatus {
+  ACCEPTED = "ACCEPTED",
+  REJECTED = "REJECTED",
+}
+
+export type offerAnswerType = {
+  status: offerStatus;
+  privateKey: string | null;
+}
+
 interface Props {
-  title: string;
+  offerPrice: number;
   isOpen: boolean;
   blueButtonText: string;
   onClose: () => void;
-  setSellOffer: (sellOffer: newOfferModal | null) => void;
+  setSellOffer: (sellOffer: offerAnswerType | null) => void;
 }
 
-export function CreateOfferModal({ title, isOpen, blueButtonText, onClose, setSellOffer }: Props) {
-  let price: string | number = 0;
+export function AcceptOfferModal({ offerPrice, isOpen, blueButtonText, onClose, setSellOffer }: Props) {
   let privateKey = "";
   const [privateKeyError, setPrivateKeyError] = useState<string | null>(null);
-
-  const handleSellOffer = async () => {
-    console.log("price:", price);
-    console.log("privateKey:", privateKey);
+  const handleAcceptOffer = async () => {
     if (!privateKey || privateKey === "") {
       console.log("privateKey is required");
       setPrivateKeyError("Clé privée requise");
       return;
     }
-    setSellOffer({ price: Number(price), privateKey });
+    console.log("privateKey:", privateKey);
+    setSellOffer({ status: offerStatus.ACCEPTED, privateKey });
     onClose();
   }
 
   const handleCancel = () => {
     setSellOffer(null);
+    onClose();
+  }
+
+  const rejectOffer = async () => {
+    console.log("rejecting offer");
+    setSellOffer({ status: offerStatus.REJECTED, privateKey: null });
     onClose();
   }
 
@@ -47,19 +58,12 @@ export function CreateOfferModal({ title, isOpen, blueButtonText, onClose, setSe
       centered
       title={
         <Group gap="xs">
-          <Text>{title}</Text>
+          <Text>Accepter cette offre d'achat</Text>
         </Group>
       }
     >
       <Stack>
-        <NumberInput
-          label="Prix"
-          placeholder="Prix"
-          required
-          min={0}
-          max={100000}
-          onChange={(value) => price = value}
-        />
+        <Text>Prix Proposé: {offerPrice} XRP</Text>
         <PasswordInput
           label="clé privée"
           placeholder="clé privée"
@@ -71,14 +75,21 @@ export function CreateOfferModal({ title, isOpen, blueButtonText, onClose, setSe
           <Button 
             color="red"
             variant="light"
-            onClick={handleCancel}
+            onClick={rejectOffer}
           >
             Annuler
           </Button>
           <Button 
             color="blue"
             variant="light"
-            onClick={handleSellOffer}
+            onClick={handleCancel}
+          >
+            Annuler
+          </Button>
+          <Button 
+            color="green"
+            variant="light"
+            onClick={handleAcceptOffer}
           >
             {blueButtonText}
           </Button>

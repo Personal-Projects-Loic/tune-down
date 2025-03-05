@@ -5,8 +5,10 @@ import { Dropzone, IMAGE_MIME_TYPE, FileWithPath } from '@mantine/dropzone';
 import { addNft } from "../../api/nft/addNft";
 import { newNFT } from "../../types/nft";
 import useWalletStore from "../../utils/store";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateNft() {
+  const navigate = useNavigate();
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [secretKey, setSecretKey] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -53,7 +55,7 @@ export default function CreateNft() {
     setLoading(false);
     setErrorMessage(null);
     console.log("NFT created");
-    
+    navigate("/home");
     // Additional logic to handle the newly created NFT could go here
     // For example, collecting form data and sending it to another API
   };
@@ -103,7 +105,7 @@ export default function CreateNft() {
           <Autocomplete
             label="Collection du nft"
             placeholder="Pick value or enter anything"
-            data={['pokemon', 'cb', 'donneur d\'organe', 'yo gy yo']}
+            data={['prout', 'luxe', 'donneur d\'organe']}
             required
             onChange={(value) => setNft({...nft, collection: value})}
           />

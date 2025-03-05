@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import { Stack, Card, Tabs, Grid, Text, Button, Image, Divider, Group, Anchor } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 
-import { Product, Nft } from "../../types/nft";
+import { Nft } from "../../types/nft";
 import { getSellOffer } from "../../api/offers/getSellOffer";
 import { NftOffer } from "../../types/nftOffer";
 import useWalletStore from "../../utils/store";
@@ -126,7 +126,7 @@ export function NftPage() {
                 <Text lineClamp={6}>Description du NFT...</Text>
               </Tabs.Panel>
               <Tabs.Panel value="details" pt="xs">
-                <Text>Propriétaire: {nft.user.username}</Text>
+                <Text>Propriétaire: {nft.user?.username}</Text>
                 <Text>Créateur:</Text>
                 <Text>Token ID: {nft.nft_infos.id}</Text>
                 <Text>Royalties:</Text>

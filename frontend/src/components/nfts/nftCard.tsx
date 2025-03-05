@@ -29,7 +29,7 @@ export const NftCard: React.FC<NftCardProps> = ({ nft, wallet }) => {
       <Group style={{ position: "absolute", bottom: 0, width: "100%", height: "10%" }}>
         <Group justify="space-between">
           <Text size="lg">
-            {nft.user.username}
+            {nft.user?.username}
           </Text>
         </Group>
       </Group>

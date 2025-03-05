@@ -13,36 +13,17 @@ import {
 } from "@mantine/core";
 import { addWallet } from "../../api/wallet/addWallet";
 import { Nft } from "../../types/nft";
-import pikapute from "../../assets/pikapute.png";
 import useWalletStore from "../../utils/store";
 import { listUserNft } from "../../api/nft/listUserNft";
 import NftGrid from "../../components/profil/nftGrid";
 import WalletCard from "../../components/profil/walletCard";
-
-const generateNfts = (length: number): Nft[] => {
-  return Array.from({ length }, (_, i) => ({
-    nft_infos: {
-      id: `nft_${i + 1}`,
-      issuer: `creator_${i + 1}`,
-      owner: `proprio_${i + 1}`,
-      uri: pikapute,
-      flags: Math.floor(Math.random() * 10),
-      transfer_fee: Math.floor(Math.random() * 100),
-      taxon: Math.floor(Math.random() * 1000),
-    },
-    price: Math.random() > 0.5 ? parseFloat((Math.random() * 1000).toFixed(2)) : null,
-    user: {
-      username: `me Mario`,
-    },
-  }));
-};
 
 export default function Profile() {
   const [userData, setUserData] = useState<User | null>(null);
   const [createWalletClicked, setCreateWalletClicked] = useState<boolean>(false);
   const [walletPublicKey, setWalletPublicKey] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const nftList = generateNfts(10);
+  const [nftList, setNftList] = useState<Nft[] | null>(null);
   const { wallet, fetchWallet } = useWalletStore();
 
   const fetchData = async () => {
@@ -58,13 +39,17 @@ export default function Profile() {
     fetchData();
   }, []);
 
+  const fetchNftList = async () => {
+    const nfts = await listUserNft();
+    console.log("NFTs:", nfts);
+    if (nfts != null) {
+      setNftList(nfts);
+    }
+  };
+
   useEffect(() => {
     if (wallet) {
-      listUserNft().then((nfts) => {
-        if (nfts) {
-          console.log("NFTs de l'utilisateur récupérés avec succès :", nfts);
-        }
-      });
+      fetchNftList();
     }
   }, [wallet]);
   

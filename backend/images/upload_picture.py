@@ -45,7 +45,7 @@ async def upload_picture(
         )
         print(f"Uploaded file to Minio: {new_filename}")
         endpoint = os.getenv("MINIO_ENDPOINT", "localhost:9000")
-        
+
         # Construct direct URL based on public bucket policy
         url = f"http://{endpoint}/{bucket_name}/{new_filename}"
         return {

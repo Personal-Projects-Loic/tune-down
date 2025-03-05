@@ -2,11 +2,12 @@ import {
   Button,
   Group,
   Modal,
-  NumberInput,
   Stack,
   Text,
   PasswordInput,
 } from "@mantine/core";
+import { useState } from "react";
+
 
 export interface Props {
   title: string;
@@ -18,8 +19,13 @@ export interface Props {
 
 export function BuyNftModal({ title, isOpen, blueButtonText, onClose, setAcceptOffer }: Props) {
   let privateKey = "";
-
+  const [privateKeyError, setPrivateKeyError] = useState<string | null>(null);
   const handleAcceptOffer = async () => {
+    if (!privateKey || privateKey === "") {
+      console.log("privateKey is required");
+      setPrivateKeyError("Clé privée requise");
+      return;
+    }
     setAcceptOffer(privateKey);
     onClose();
   }
@@ -46,6 +52,7 @@ export function BuyNftModal({ title, isOpen, blueButtonText, onClose, setAcceptO
           placeholder="clé privée"
           required
           onChange={(e) => privateKey = e.currentTarget.value}
+          error={privateKeyError}
         />
         <Group justify="center">
           <Button onClick={handleCancel} color="red" variant="light">
