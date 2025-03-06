@@ -1,5 +1,5 @@
 import { NftOffer as nftOffer, newNftOffer } from "../../types/nftOffer";
-
+import { notify } from "../../utils/notify";
 
 export const createSellOffer = async (newOffer: newNftOffer): Promise<nftOffer | null> => {
   console.log("newOffer :", newOffer);
@@ -15,11 +15,12 @@ export const createSellOffer = async (newOffer: newNftOffer): Promise<nftOffer |
     });
 
     if (!response.ok) {
+      notify({ title: "Erreur", message: "Erreur lors de la création de l'offre de vente", type: "error" });
       throw new Error("Error creating sell offer");
     }
 
     const data = await response.json();
-    console.log("Sell offer successfully created:", data);
+    notify({ title: "Offre de vente créée", message: "Offre de vente créée avec succès", type: "success" });
     return data;
   } catch (err) {
     console.error(err);

@@ -22,11 +22,11 @@ export default function OwnerNftPage() {
     open: openOfferModal,
     close: closeOfferModal 
   }] = useDisclosure(false);
-  const [acceptModal, {
-    open: openAcceptOfferModal,
-    close: closeAcceptOfferModal
+  const [buyOfferModal, {
+    open: openBuyOfferModal,
+    close: closeBuyOfferModal
   }] = useDisclosure(false);
-  const [offerPrice, setOfferPrice] = useState<number>(0);
+  const [offerPrice, setOfferPrice] = useState<{price: number, id: string | null}>({price: 0, id: null});
   const [offerAnswer, setOfferAnswer] = useState<offerAnswerType | null>(null);
   
   if (!nft) {
@@ -35,8 +35,14 @@ export default function OwnerNftPage() {
 
   //annuler la mise en vente
   //afficher que l'nft est en vente
-  const postOfferAnswer = async () => {
+  const postBuyOfferAnswer = async () => {
     console.log("Offer answer:", offerAnswer);
+
+    if (offerAnswer?.status === "ACCEPTED") {
+      console.log("Accepting offer...");
+    } else if (offerAnswer?.status === "REJECTED") {
+      console.log("Rejecting offer...");
+    }
   };
 
 
@@ -44,8 +50,8 @@ export default function OwnerNftPage() {
     const [Offers, sale] = await Promise.all([getBuyOffers(nft.nft_infos.id), getSellOffer(nft?.nft_infos.id)]);
     const rows = Offers?.map((offer) => (
       <Table.Tr key={offer.account} onClick={() => {
-        setOfferPrice(offer.price);
-        openAcceptOfferModal();
+        setOfferPrice({price: offer.price, id: offer.nft_id});
+        openBuyOfferModal();
       }}>
         <Table.Td>{offer.account}</Table.Td>
         <Table.Td>{offer.price}</Table.Td>
@@ -62,6 +68,11 @@ export default function OwnerNftPage() {
       nft_id: nft.nft_infos.id
     });
 
+    if (!sellOffer) {
+      console.error("Error creating sell offer");
+      return;
+    }
+    setIsOnSale(true);
     console.log("Sell offer:", sellOffer);
   }
 
@@ -80,7 +91,7 @@ export default function OwnerNftPage() {
 
   useEffect(() => {
     if (offerAnswer) {
-      postOfferAnswer();
+      postBuyOfferAnswer();
     }
   }, [offerAnswer]);
 
@@ -152,10 +163,10 @@ export default function OwnerNftPage() {
         setSellOffer={setNewSellOffer}
       />
       <AcceptOfferModal
-        offerPrice={offerPrice}
-        isOpen={acceptModal}
+        offerPrice={offerPrice.price}
+        isOpen={buyOfferModal}
         blueButtonText="Accepter l'offre"
-        onClose={closeAcceptOfferModal}
+        onClose={closeBuyOfferModal}
         setSellOffer={setOfferAnswer}
       />
     </Stack>

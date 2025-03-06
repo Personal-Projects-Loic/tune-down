@@ -1,4 +1,5 @@
 import { NftOffer } from "../../types/nftOffer";
+import { notify } from "../../utils/notify";
 
 export const getSellOffer = async (nft_id: string): Promise<NftOffer[] | null> => {
   try {
@@ -9,8 +10,7 @@ export const getSellOffer = async (nft_id: string): Promise<NftOffer[] | null> =
     });
 
     if (response.status === 404) {
-      console.log("No sell offer found for this NFT");
-      console.log(response)
+      notify({ title: "0 offres", message: "Aucune offre de vente trouvée pour ce NFT", type: "warning" });
       return null
     }
 
@@ -19,7 +19,7 @@ export const getSellOffer = async (nft_id: string): Promise<NftOffer[] | null> =
     }
 
     const data = await response.json();
-    console.log("Sell offer data successfully retrieved:", data);
+    notify({ title: "Offres de vente récupérées", message: "Offres de vente récupérées avec succès", type: "success" });
     return data;
   } catch (err) {
     console.error(err);
