@@ -40,36 +40,41 @@ async def accept_offer(
     await db_update_nft_owner(db, nft_id, user.id)
     return Response(success=True)
 
-# TODO: Implement the function to update the owner of the NFT in the database
-# await db_update_nft_owner(db, nft_id, user.user_id)
-
 
 async def db_update_nft_owner(
     db: AsyncSession,
     nft_id: str,
-    new_owner_id: int  # Doit être un int car user_id est un Integer
+    new_owner_id: int
 ):
-    # Rechercher le NFT par nft_id au lieu de id
+    # Get the NFT by nft_id
     result = await db.execute(select(NFT).where(NFT.nft_id == nft_id))
     nft = result.scalars().first()
-    
     if not nft:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="NFT not found"
         )
-    
-    # Mettre à jour le propriétaire du NFT
+    # Get the new owner to retrieve their wallet_id
+    from db.models import User
+    user_result = await db.execute(select(User).where(User.id == new_owner_id))
+    user = user_result.scalars().first()
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+    # Update both user_id and wallet_id fields
     nft.user_id = new_owner_id
-    
+    nft.wallet_id = user.wallet_id  # Update the wallet_id from the user
+    nft.price = 0
     try:
         await db.commit()
-        await db.refresh(nft)
+        # No refresh needed - just return the updated object
         return nft
-    except IntegrityError:
+    except IntegrityError as e:
         await db.rollback()
+        print(f"IntegrityError: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Failed to update NFT owner due to integrity error"
         )
-

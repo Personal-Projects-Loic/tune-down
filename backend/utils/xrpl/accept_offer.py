@@ -13,7 +13,7 @@ async def xrpl_accept_offer(
     nft_id: str,
     sell_offer_id: Optional[str] = None,
     buy_offer_id: Optional[str] = None,
-):
+) -> str:
     client = AsyncJsonRpcClient(XRPL_RPC_URL)
 
     wallet = Wallet.from_seed(private_key)
@@ -25,16 +25,4 @@ async def xrpl_accept_offer(
     )
 
     response = await submit_and_wait(accept_tx, client, wallet)
-
     return response.result["meta"].get("nftoken_id")
-    
-    
-    #if 'result' in response and 'meta' in response.result:
-    #    nftoken_id = response.result["meta"].get("nftoken_id")
-    #    if nftoken_id:
-    #        return nftoken_id
-    #    else:
-    #        raise ValueError("NFToken ID not found in the response")
-    #else:
-    #    raise ValueError("Invalid response format")
-
