@@ -18,7 +18,7 @@ export type Nft_infos = {
 export type Nft = {
   nft_infos: Nft_infos;
   price: number | null;
-  user : {
+  user? : {
     username: string;
   }
 }
