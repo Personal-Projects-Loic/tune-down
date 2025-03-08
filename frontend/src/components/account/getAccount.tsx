@@ -27,7 +27,7 @@ const Wallet: React.FC = () => {
 
     try {
       const response = await fetch(
-        `https://api.tunedown.fr/api/?wallet_id=${classicAddress.trim()}`,
+        `${import.meta.env.VITE_TUNEDOWN_API_URL}/wallet/?wallet_id=${classicAddress.trim()}`,
         {
           method: "GET",
           credentials: "include",

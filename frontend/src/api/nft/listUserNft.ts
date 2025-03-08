@@ -5,7 +5,7 @@ export const listUserNft = async (): Promise<Nft[] | null> => {
   const limit = 10;
 
   try {
-    const response = await fetch(`http://localhost:8000/wallet/user_nfts?page=${page}&limit=${limit}`, {
+    const response = await fetch(`${import.meta.env.VITE_TUNEDOWN_API_URL}/wallet/user_nfts?page=${page}&limit=${limit}`, {
       method: "GET",
       credentials: "include",
       mode: "cors",

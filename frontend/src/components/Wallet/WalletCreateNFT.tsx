@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
 import "./Wallet.css";
 
 const WalletCreateNFT: React.FC = () => {
@@ -21,14 +20,17 @@ const WalletCreateNFT: React.FC = () => {
     setTransactionResult(null);
 
     try {
-      const response = await axios.post(
-        "https://api.tunedown.fr/api/create-nft",
-        {
+      const response = await fetch(`${import.meta.env.VITE_TUNEDOWN_API_URL}/create-nft`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
           wallet_seed: wallet_seed,
           uri: nft_uri,
-        },
-      );
-      setTransactionResult(response.data);
+        }),
+      });
+      setTransactionResult(await response.json());
     } catch (err) {
       setError("Erreur lors de la transaction");
       console.error(err);

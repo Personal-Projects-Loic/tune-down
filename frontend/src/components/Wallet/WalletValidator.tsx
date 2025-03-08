@@ -34,19 +34,16 @@ const WalletManager: React.FC = () => {
     setError(null);
 
     try {
-      const response = await fetch(
-        "https://api.tunedown.fr/api/wallet/add_wallet",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            wallet_id: walletId.trim(),
-          }),
+      const response = await fetch(`${import.meta.env.VITE_TUNEDOWN_API_URL}/wallet/add_wallet`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        credentials: "include",
+        body: JSON.stringify({
+          wallet_id: walletId,
+        }),
+      });
 
       if (!response.ok) {
         const errorData: ApiErrorResponse = await response.json();
@@ -66,7 +63,7 @@ const WalletManager: React.FC = () => {
 
   const fetchWallet = async () => {
     try {
-      const response = await fetch("https://api.tunedown.fr/api/wallet/", {
+      const response = await fetch(`${import.meta.env.VITE_TUNEDOWN_API_URL}/wallet/`, {
         method: "GET",
         credentials: "include",
       });
@@ -100,7 +97,7 @@ const WalletManager: React.FC = () => {
 
     try {
       const response = await fetch(
-        "https://api.tunedown.fr/api/wallet/delete_wallet",
+        `${import.meta.env.VITE_TUNEDOWN_API_URL}/wallet/delete_wallet`,
         {
           method: "DELETE",
           credentials: "include",

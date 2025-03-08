@@ -3,7 +3,7 @@ import { notify } from "../../utils/notify";
 
 export const createBuyOffer = async (newOffer: buyOffer): Promise<NftOffer | null> => {
   try {
-    const response = await fetch("http://localhost:8000/wallet/create_nft_buy_offer", {
+    const response = await fetch(`${import.meta.env.VITE_TUNEDOWN_API_URL}/wallet/create_nft_buy_offer`, {
       method: "POST",
       credentials: "include",
       mode: "cors",

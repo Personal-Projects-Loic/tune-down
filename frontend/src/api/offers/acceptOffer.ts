@@ -2,7 +2,7 @@ import { AcceptOfferRequest, AcceptOfferResponse } from "../../types/nftOffer";
 
 export const acceptOffer = async (acceptOfferRequest: AcceptOfferRequest): Promise<AcceptOfferResponse | null> => {
   try {
-    const response = await fetch("http://localhost:8000/wallet/accept_offer", {
+    const response = await fetch(`${import.meta.env.VITE_TUNEDOWN_API_URL}/wallet/accept_offer`, {
       method: "POST",
       credentials: "include",
       mode: "cors",
