@@ -27,7 +27,7 @@ const Wallet: React.FC = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:8000/wallet/?wallet_id=${classicAddress.trim()}`,
+        `${import.meta.env.VITE_TUNEDOWN_API_URL}/wallet/?wallet_id=${classicAddress.trim()}`,
         {
           method: "GET",
           credentials: "include",

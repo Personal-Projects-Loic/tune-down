@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
 import "./Wallet.css";
 
 const NFTOffers: React.FC = () => {
@@ -26,9 +25,8 @@ const NFTOffers: React.FC = () => {
     const nft_id = formData.get("nft_id") as string;
 
     try {
-      const response = await axios.get(`http://localhost:8000/get-nft-offers/${nft_id}`);
-      setOffers(response.data);
-      console.log(response.data);
+      const response = await fetch(`${import.meta.env.VITE_TUNEDOWN_API_URL}/get-nft-offers/${nft_id}`);
+      setOffers(await response.json());
     } catch (err) {
       setError("Erreur lors de la récupération des offres");
       console.error(err);

@@ -34,7 +34,7 @@ const WalletManager: React.FC = () => {
     setError(null);
 
     try {
-      const response = await fetch("http://localhost:8000/wallet/add_wallet", {
+      const response = await fetch(`${import.meta.env.VITE_TUNEDOWN_API_URL}/wallet/add_wallet`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -64,7 +64,7 @@ const WalletManager: React.FC = () => {
 
   const fetchWallet = async () => {
     try {
-      const response = await fetch("http://localhost:8000/wallet/", {
+      const response = await fetch(`${import.meta.env.VITE_TUNEDOWN_API_URL}/wallet/`, {
         method: "GET",
         credentials: "include",
       });
@@ -99,7 +99,7 @@ const WalletManager: React.FC = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:8000/wallet/delete_wallet",
+        `${import.meta.env.VITE_TUNEDOWN_API_URL}/wallet/delete_wallet`,
         {
           method: "DELETE",
           credentials: "include",

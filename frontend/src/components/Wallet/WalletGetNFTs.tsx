@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
 import "./Wallet.css";
 
 const WalletGetNfts: React.FC = () => {
@@ -23,8 +22,9 @@ const WalletGetNfts: React.FC = () => {
     setNfts(null);
 
     try {
-      const response = await axios.get(`http://localhost:8000/get-nfts/${address}`);
-      setNfts(response.data);
+      const response = await fetch(`${import.meta.env.VITE_TUNEDOWN_API_URL}/get-nfts/${address}`);
+      const data = await response.json();
+      setNfts(data);
     } catch (err) {
       setError("Erreur lors de la récupération des NFTs");
       console.error(err);

@@ -49,7 +49,7 @@ const Login: React.FC = () => {
       });
       console.log("Request Body:", requestBody);
 
-      const response = await fetch("http://localhost:8000/auth/signin", {
+      const response = await fetch(`${import.meta.env.VITE_TUNEDOWN_API_URL}/auth/signin`, {
         method: "POST",
         credentials: "include",
         mode: "cors",

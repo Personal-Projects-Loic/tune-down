@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
 import "./Wallet.css";
 
 const NFTSellOfferRequest: React.FC = () => {
@@ -24,14 +23,22 @@ const NFTSellOfferRequest: React.FC = () => {
     const expiration = formData.get("expiration") ? Number(formData.get("expiration")) : null;
 
     try {
-      const response = await axios.post("http://localhost:8000/create-nft-sell-offer", {
-        wallet_seed: walletSeed,
-        nft_id: nftId,
-        amount: amount,
-        destination: destination || undefined,
-        expiration: expiration || undefined,
+      const response = await fetch(`${import.meta.env.VITE_TUNEDOWN_API_URL}/create-nft-sell-offer`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          wallet_seed: walletSeed,
+          nft_id: nftId,
+          amount: amount,
+          destination: destination || undefined,
+          expiration: expiration || undefined,
+        }),
       });
-      setResponse(response.data);
+
+      setResponse(await response.json());
     } catch (err) {
       setError("Erreur lors de la création de l'offre de vente");
       console.error(err);

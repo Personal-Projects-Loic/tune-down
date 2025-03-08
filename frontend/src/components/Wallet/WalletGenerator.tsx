@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
 import "./Wallet.css";
 
 const WalletGenerator: React.FC = () => {
@@ -16,8 +15,9 @@ const WalletGenerator: React.FC = () => {
     setLoading(true);
     setError(null);
     try {
-      const response = await axios.get("http://localhost:8000/generate-wallet");
-      setWallet(response.data);
+      const response = await fetch(`${import.meta.env.VITE_TUNEDOWN_API_URL}/generate-wallet`);
+      const data = await response.json();
+      setWallet(data);
     } catch (err) {
       setError("Erreur lors de la génération du wallet");
       console.error(err);
