@@ -16,6 +16,7 @@ class Response(BaseModel):
     nft_id: str
     price: float
     is_sell_offer: bool
+    offer_id: str
 
 
 class Request(BaseModel):
