@@ -53,7 +53,7 @@ async def xrpl_create_nft(
             print(f"Wallet seed error: {error_message}")
             return {
                 "success": False,
-                "error": "Invalid wallet seed format", 
+                "error": "Invalid wallet seed format",
                 "details": error_message,
                 "status_code": 204
             }

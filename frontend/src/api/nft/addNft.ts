@@ -1,5 +1,6 @@
 import { Wallet } from "../../types/wallet";
 import { newNFT } from "../../types/nft";
+import { notify } from "../../utils/notify";
 
 export const addNft = async (newNft: newNFT, secretKey: string): Promise<Wallet | null> => {
   try {
@@ -28,16 +29,19 @@ export const addNft = async (newNft: newNFT, secretKey: string): Promise<Wallet 
 
     if (response.status === 406) {
       console.log("Invalid wallet seed format");
+      notify({ title: "Erreur", message: "Format de clé secrète de portefeuille invalide", type: "error" });
       return null;
     }
 
     if (response.status === 401) {
       console.log("No wallet found for this user");
+      notify({ title: "Erreur", message: "Aucun portefeuille trouvé pour cet utilisateur", type: "error" });
       return null;
     }
     
     if (response.status === 400) {
       console.log("Missing required data");
+      notify({ title: "Erreur", message: "Données manquantes", type: "error" });
       return null;
     }
 
@@ -47,6 +51,7 @@ export const addNft = async (newNft: newNFT, secretKey: string): Promise<Wallet 
 
     const data = await response.json();
     console.log("Wallet data successfully retrieved:", data);
+    notify({ title: "NFT ajouté", message: "NFT ajouté avec succès", type: "success" });
     return data;
   } catch (err) {
     console.error(err);

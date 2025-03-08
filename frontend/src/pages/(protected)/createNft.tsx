@@ -1,19 +1,19 @@
-import { useState, useEffect } from "react";
+import { useState} from "react";
 import { IconUpload, IconPhoto, IconX } from "@tabler/icons-react";
 import { Stack, Title, Card, Group, NumberInput, SimpleGrid, Textarea, TextInput, PasswordInput, Autocomplete, Text, Button, Space, Image, Anchor } from "@mantine/core";
 import { Dropzone, IMAGE_MIME_TYPE, FileWithPath } from '@mantine/dropzone';
-import { Wallet } from "../../types/wallet";
 import { addNft } from "../../api/nft/addNft";
-import { getWallet } from "../../api/wallet/getWallet";
 import { newNFT } from "../../types/nft";
+import useWalletStore from "../../utils/store";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateNft() {
+  const navigate = useNavigate();
   const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [wallet, setWalletData] = useState<Wallet | null>(null);
   const [secretKey, setSecretKey] = useState<string>("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-
+  const { wallet } = useWalletStore();
   const [nft, setNft] = useState<newNFT>({
     name: "",
     description: "",
@@ -21,21 +21,6 @@ export default function CreateNft() {
     collection: "",
     image:  null 
   });
-  
-  
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const walletData = await getWallet();
-        setWalletData(walletData);
-        console.log("Wallet Data:", walletData);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   const handleDrop = (files: FileWithPath[]): void => {
     // Get the first file
@@ -70,7 +55,7 @@ export default function CreateNft() {
     setLoading(false);
     setErrorMessage(null);
     console.log("NFT created");
-    
+    navigate("/home");
     // Additional logic to handle the newly created NFT could go here
     // For example, collecting form data and sending it to another API
   };
@@ -120,7 +105,7 @@ export default function CreateNft() {
           <Autocomplete
             label="Collection du nft"
             placeholder="Pick value or enter anything"
-            data={['pokemon', 'cb', 'donneur d\'organe', 'yo gy yo']}
+            data={['prout', 'luxe', 'donneur d\'organe']}
             required
             onChange={(value) => setNft({...nft, collection: value})}
           />

@@ -1,43 +1,38 @@
 import { useState, useEffect } from "react";
-import { Product, Nft } from "../../types/nft";
 import { useLocation } from "react-router-dom";
 import { Stack, Card, Tabs, Grid, Text, Button, Image, Divider, Group, Anchor } from "@mantine/core";
-import { getSellOffer } from "../../api/nft/getSellOffer";
+import { useDisclosure } from "@mantine/hooks";
+
+import { Nft } from "../../types/nft";
+import { getSellOffer } from "../../api/offers/getSellOffer";
 import { NftOffer } from "../../types/nftOffer";
-import { getWallet } from "../../api/wallet/getWallet";
-import { Wallet } from "../../types/wallet";
-
-export default function TestNftPage() {
-  
-  const location = useLocation();
-  const nft = location.state as Product;
-
-  if (!nft) {
-    return <h2>No item found</h2>;
-  }
-
-  return (
-    <div style={styles.card} onClick={() => console.log(nft.name)}>
-      <img src={nft.url} alt={nft.name} style={styles.image} />
-      <div style={styles.overlay}>
-        <h2 style={styles.text}>{nft.name}</h2>
-        <p style={styles.text}>{nft.price}</p>
-      </div>
-    </div>
-  );
-};
-
+import useWalletStore from "../../utils/store";
+import { CreateOfferModal } from "../../components/nfts/modals/createOfferModal";
+import { newOfferModal, AcceptOfferRequest } from "../../types/nftOffer";
+import { createBuyOffer } from "../../api/offers/createBuyOffer";
+import { acceptOffer } from "../../api/offers/acceptOffer";
+import { BuyNftModal } from "../../components/nfts/modals/buyModal";
 
 export function NftPage() {
   const location = useLocation();
-  const nft = location.state as Nft | undefined;
-  const [walletData, setWalletData] = useState<Wallet | null>(null);
-  const [sellOffer, setSellOffer] = useState<NftOffer | null>(null);
+  const nft = location.state?.nft as Nft | undefined;
+  const [sellOffer, setSellOffer] = useState<NftOffer[] | null>(null);
+  const [newBuyOffer, setNewBuyOffer] = useState<newOfferModal | null>(null);
+  const [privateKey, setPrivateKey] = useState<string | null>(null);
+
+  const { wallet } = useWalletStore();
+  const [offerModal, { 
+    open: openOfferModal,
+    close: closeOfferModal 
+  }] = useDisclosure(false);
+  const [buyModal, {
+    open: openBuyModal,
+    close: closeBuyModal
+  }] = useDisclosure(false)
 
   const fetchData = async () => {
     try {
-      const [wallet, nftOffer] = await Promise.all([getWallet(), getSellOffer(nft?.nft_infos.id ?? "")]);
-      setWalletData(wallet);
+      const nftOffer = await getSellOffer(nft?.nft_infos.id ?? "");
       setSellOffer(nftOffer);
       console.log("wallet Data:", wallet);
     } catch (error) {
@@ -45,19 +40,55 @@ export function NftPage() {
     }
   };
 
+  const postBuyOfferData = async () => {
+    console.log("New buy offer:", newBuyOffer);
+    const buyOffer = await createBuyOffer({
+      price: newBuyOffer?.price ?? 0,
+      wallet_private_key: newBuyOffer?.privateKey ?? "",
+      nft_id: nft?.nft_infos.id ?? "",
+      nft_owner: nft?.nft_infos.owner ?? ""
+    });
+
+    console.log("Buy offer:", buyOffer);
+  }
+
+  const postAcceptOffer = async () => {
+    const acceptOfferData: AcceptOfferRequest = {
+      nft_id: nft?.nft_infos.id ?? "",
+      private_key: privateKey ?? "",
+      sell_offer_id: sellOffer?.[0].offer_id
+    };
+
+    console.log("Accept offer data:", acceptOfferData);
+    const acceptOfferResponse = await acceptOffer(acceptOfferData);
+    console.log("Accept offer response:", acceptOfferResponse);
+  }
+
   useEffect(() => {
-    fetchData();
-    console.log(walletData);
+    if (nft) {
+      fetchData();
+    }
   }, []);
 
+  useEffect(() => {
+    if (newBuyOffer) {
+      postBuyOfferData();
+    }
+  }, [newBuyOffer]);
+
+  useEffect(() => {
+    if (privateKey) {
+      postAcceptOffer();
+    }
+  }, [privateKey]);
+
   if (!nft) {
-    return <h2>No item found</h2>;
+    return <h2>Erreur : Aucun NFT trouvé</h2>;
   }
 
   return (
     <Stack align="center">
       <Grid justify="center">
-        {/* Image du NFT */}
         <Grid.Col span={4} style={{ display: "flex", justifyContent: "center" }}>
           <Card w={1000} shadow="xs" withBorder>
             <Image src={nft.nft_infos.uri} alt={nft.nft_infos.id} fit="contain" />
@@ -72,13 +103,18 @@ export function NftPage() {
             </Stack>
             <Divider my="sm" />
             <Group>
-              <Button variant="light" disabled={!walletData || !sellOffer}>{sellOffer ? <Text>Acheter</Text> : <Text>Aucune offre de vente</Text>}</Button>
-              <Button variant="light" disabled={!walletData}>Faire une offre</Button>
-              {!walletData && <Text>Connectez-vous pour acheter ou faire une offre <Anchor href="/profil">Ajouter un wallet</Anchor></Text>}
+              <Button variant="light" disabled={!wallet || !sellOffer} onClick={openBuyModal}>
+                {sellOffer ? <Text>Acheter</Text> : <Text>Aucune offre de vente</Text>}
+              </Button>
+              <Button 
+                variant="light"
+                disabled={!wallet}
+                onClick={openOfferModal}
+              >Faire une offre</Button>
+              {!wallet && <Text>Connectez-vous pour acheter ou faire une offre <Anchor href="/profil">Ajouter un wallet</Anchor></Text>}
             </Group>
           </Card>
 
-          {/* Onglets Description & Détails */}
           <Card shadow="xs" withBorder radius="md" mt="sm" h={200}>
             <Tabs defaultValue="description">
               <Tabs.List>
@@ -87,46 +123,32 @@ export function NftPage() {
               </Tabs.List>
 
               <Tabs.Panel value="description">
-                <Text lineClamp={6} >"sddsjdsjkdsfjkdsjkdsjksdjjlsdjsdfjsdkjsdjksdfbjsdfbj;sdfbjsfbjsdfbjsdfkjsgbkjgsfhjsdfkjsfkhjfsdhjsdfjlhsdfhjlfdshjlsdfhjlsfhli"sddsjdsjkdsfjkdsjkdsjksdjjlsdjsdfjsdkjsdjksdfbjsdfbj;sdfbjsfbjsdfbjsdfkjsgbkjgsfhjsdfkjsfkhjfsdhjsdfjlhsdfhjlfdshjlsdfhjlsfhli</Text>
+                <Text lineClamp={6}>Description du NFT...</Text>
               </Tabs.Panel>
               <Tabs.Panel value="details" pt="xs">
-                <Text>Proprietaire: </Text>
-                <Text>créateur:</Text>
-                <Text>Token ID:</Text>
+                <Text>Propriétaire: {nft.user?.username}</Text>
+                <Text>Créateur:</Text>
+                <Text>Token ID: {nft.nft_infos.id}</Text>
                 <Text>Royalties:</Text>
               </Tabs.Panel>
             </Tabs>
           </Card>
         </Grid.Col>
       </Grid>
+      <CreateOfferModal
+        title="Faire une offre sur ce NFT"
+        isOpen={offerModal}
+        blueButtonText="Valider l'offre"
+        onClose={closeOfferModal}
+        setSellOffer={setNewBuyOffer}
+      />
+      <BuyNftModal
+        title="Acheter ce NFT"
+        isOpen={buyModal}
+        blueButtonText="Acheter"
+        onClose={closeBuyModal}
+        setAcceptOffer={setPrivateKey}
+      />
     </Stack>
   );
 }
-
-const styles = {
-  card: {
-    position: "relative" as "relative",
-    width: "200px",
-    height: "300px",
-    overflow: "hidden" as "hidden",
-    borderRadius: "10px",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-  },
-  image: {
-    width: "100%",
-    height: "100%",
-    objectFit: "cover" as "cover",
-  },
-  overlay: {
-    position: "absolute" as "absolute",
-    bottom: "0",
-    background: "rgba(0, 0, 0, 0.5)",
-    color: "white",
-    width: "100%",
-    padding: "10px",
-    textAlign: "center" as "center",
-  },
-  text: {
-    margin: "5px 0",
-  },
-};

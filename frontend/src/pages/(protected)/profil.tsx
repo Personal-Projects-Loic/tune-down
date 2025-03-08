@@ -1,23 +1,35 @@
 import { useState, useEffect } from "react";
 import { getUserData } from "../../api/getUser";
-import { getWallet } from "../../api/wallet/getWallet";
 import { User } from "../../types/user";
-import { Wallet } from "../../types/wallet";
-import { Stack, Title, Card, Flex, Avatar, Box, SimpleGrid, Text, Button, TextInput } from "@mantine/core";
+import { 
+  Stack,
+  Title,
+  Card,
+  Flex,
+  Avatar,
+  Box,
+  SimpleGrid,
+  Text,
+} from "@mantine/core";
 import { addWallet } from "../../api/wallet/addWallet";
+import { Nft } from "../../types/nft";
+import useWalletStore from "../../utils/store";
+import { listUserNft } from "../../api/nft/listUserNft";
+import NftGrid from "../../components/profil/nftGrid";
+import WalletCard from "../../components/profil/walletCard";
 
 export default function Profile() {
   const [userData, setUserData] = useState<User | null>(null);
-  const [wallet, setWalletData] = useState<Wallet | null>(null);
   const [createWalletClicked, setCreateWalletClicked] = useState<boolean>(false);
   const [walletPublicKey, setWalletPublicKey] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [nftList, setNftList] = useState<Nft[] | null>(null);
+  const { wallet, fetchWallet } = useWalletStore();
 
   const fetchData = async () => {
     try {
-      const [user, walletData] = await Promise.all([getUserData(), getWallet()]);
+      const user = await getUserData();
       setUserData(user);
-      setWalletData(walletData);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -27,6 +39,20 @@ export default function Profile() {
     fetchData();
   }, []);
 
+  const fetchNftList = async () => {
+    const nfts = await listUserNft();
+    console.log("NFTs:", nfts);
+    if (nfts != null) {
+      setNftList(nfts);
+    }
+  };
+
+  useEffect(() => {
+    if (wallet) {
+      fetchNftList();
+    }
+  }, [wallet]);
+  
   const handleAddWallet = async () => {
     if (!walletPublicKey) return;
     
@@ -34,7 +60,7 @@ export default function Profile() {
     try {
       const result = await addWallet(walletPublicKey);
       if (result) {
-        await fetchData(); // Refresh wallet data after successful addition
+        fetchWallet();
         setCreateWalletClicked(false);
       }
     } catch (error) {
@@ -61,54 +87,16 @@ export default function Profile() {
         </Flex>
       </Card>
       <Title order={3}>Infos wallet</Title>
-      <Card shadow="xs" withBorder>
-      {wallet ? (
-        <Flex align="center">
-          <Box flex={1}>
-            <SimpleGrid cols={{ base: 1, md: 2 }}>
-              <Text key="address">Address : {wallet?.address ?? "Non renseigné"}</Text>
-              <Text key="balance">Balance : {wallet?.balance ?? "Non renseigné"}</Text>
-            </SimpleGrid>
-          </Box>
-        </Flex>
-      ) : (
-        <Flex justify="center" align="center" style={{ height: "100px" }}>
-          <Stack align="center">
-            {createWalletClicked ? (
-                <>
-                <TextInput
-                  label="Clé publique"
-                  placeholder="Clé publique"
-                  required
-                  value={walletPublicKey}
-                  onChange={(e) => setWalletPublicKey(e.currentTarget.value)}
-                />
-                <Button
-                  variant="light"
-                  loading={isLoading}
-                  onClick={handleAddWallet}
-                  disabled={!walletPublicKey}
-                >
-                  {"Ajouter le Wallet"}
-                </Button>
-                </>
-            ) :
-              (
-                <>
-                  <Text>Vous n'avez pas de wallet Connecté</Text>
-                  <Button variant="light"
-                    onClick={() => {
-                      window.open('https://xrpl.org/resources/dev-tools/xrp-faucets', '_blank', 'noopener,noreferrer')
-                      setCreateWalletClicked(true)
-                    }}
-                  >Ajouter un wallet</Button>
-                </>
-              )
-            }
-          </Stack>
-        </Flex>
-      )}
-    </Card>
+      <WalletCard
+        wallet={wallet}
+        createWalletClicked={createWalletClicked}
+        walletPublicKey={walletPublicKey}
+        setWalletPublicKey={setWalletPublicKey}
+        isLoading={isLoading}
+        handleAddWallet={handleAddWallet}
+        setCreateWalletClicked={setCreateWalletClicked}
+      />
+      <NftGrid wallet={wallet} nftList={nftList} />
     </Stack>
   );
 }
